@@ -1,0 +1,41 @@
+es:
+  meta:
+    title: "Ejercicios gratuitos de idiomas · Axolingua"
+    description: "Ejercicios interactivos gratuitos para practicar español, creados por Axolingua. Nuestro banco de ejercicios sigue creciendo."
+  hero:
+    eyebrow: "Axolingua · Recursos gratuitos"
+    headline: "Practica el idioma, no memorices reglas."
+    sub: "Estos ejercicios interactivos nacieron para los estudiantes de nuestras clases particulares — y los compartimos gratis para quien quiera practicar por su cuenta. Este banco de ejercicios sigue creciendo, así que el sitio irá cambiando con el tiempo. Vuelve pronto por más."
+  picker:
+    label: "¿Qué idioma quieres practicar?"
+    spanish:
+      tag: "Español"
+      title: "Practicar español"
+      text: "Memoramas, tabú, historias para completar y repasos guiados de tiempos verbales."
+      link: "Ver ejercicios de español →"
+    english:
+      tag: "English"
+      title: "Practicar inglés"
+      text: "Muy pronto: ejercicios interactivos para practicar inglés."
+      link: "Ver ejercicios de inglés →"
+
+en:
+  meta:
+    title: "Free Language Exercises · Axolingua"
+    description: "Free interactive exercises to practice Spanish, made by Axolingua. Our exercise library keeps growing."
+  hero:
+    eyebrow: "Axolingua · Free resources"
+    headline: "Practice the language, don't just memorize the rules."
+    sub: "These interactive exercises were originally built for the students in our private classes — and we're sharing them for free with anyone who wants to practice on their own. This library keeps growing, so the site will keep changing over time. Check back soon for more."
+  picker:
+    label: "Which language do you want to practice?"
+    spanish:
+      tag: "Spanish"
+      title: "Practice Spanish"
+      text: "Memory games, taboo, fill-in-the-blank stories, and guided verb-tense drills."
+      link: "See Spanish exercises →"
+    english:
+      tag: "English"
+      title: "Practice English"
+      text: "Coming soon: interactive exercises to practice English."
+      link: "See English exercises →"

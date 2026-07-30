@@ -1,0 +1,61 @@
+// ═══════════════════════════════════════════════════════════════════
+// AXOLINGUA — DESIGN TOKENS v1.0
+// Single extractable partial. The student portal (chat.axolingua.com)
+// and the reference site (reference.axolingua.com) will reuse this
+// file — keep it free of site-specific selectors. Tokens only.
+// Source of truth: axolingua-brand-styleguide.html
+// Direction: Refined · Calm · Curious · Warmly human
+// ═══════════════════════════════════════════════════════════════════
+
+:root {
+  /* BACKGROUNDS — ivory is dominant; warm, never cold, never pure white */
+  --ivory:       #F7F3EE;
+  --cream:       #F0EAE1;
+  --sand:        #E6DDCF;
+  --linen:       #D8CFBF;
+  --feather:     #FAF7F3;
+
+  /* PINK — axolotl signature, warmth, primary CTA · Spanish for Expats */
+  --pink-deep:   #B8524A;
+  --pink-mid:    #D0736C;
+  --pink-soft:   #E49E99;
+  --pink-pale:   #F2CECC;
+  --pink-wash:   #FBF0EF;
+
+  /* JADE — depth, curiosity, secondary accent · English for Mexicans */
+  --jade-deep:   #2A6B5F;
+  --jade-mid:    #3D8876;
+  --jade-soft:   #6AADA0;
+  --jade-pale:   #B5D9D3;
+  --jade-wash:   #EAF4F2;
+
+  /* OCHRE — warmth, Mexico City earth, grounding · SSP */
+  --ochre-deep:  #9E6B35;
+  --ochre-mid:   #BC8A52;
+  --ochre-soft:  #D4AE84;
+  --ochre-pale:  #ECDBC4;
+  --ochre-wash:  #F9F1E6;
+
+  /* NEUTRALS — warm-toned, never pure grey, never pure black */
+  --charcoal:    #2C2A27;
+  --slate:       #5A5652;
+  --stone:       #8A847E;
+  --pebble:      #BEB8B2;
+
+  /* FONTS */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body:    'Outfit', system-ui, sans-serif;
+  --font-mono:    'DM Mono', 'Courier New', monospace;
+
+  /* SPACING — 4px base unit */
+  --s1: .25rem;  --s2: .5rem;   --s3: .75rem;  --s4: 1rem;
+  --s5: 1.25rem; --s6: 1.5rem;  --s8: 2rem;    --s10: 2.5rem;
+  --s12: 3rem;   --s16: 4rem;   --s20: 5rem;   --s24: 6rem;
+
+  /* RADIUS */
+  --r-sm: 4px; --r-md: 10px; --r-lg: 16px; --r-xl: 24px; --r-pill: 999px;
+
+  /* MOTION */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur: 220ms;
+}

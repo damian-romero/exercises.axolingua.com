@@ -1,0 +1,81 @@
+// ── BASE — resets, typography, layout primitives ──
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--ivory);
+  color: var(--charcoal);
+  line-height: 1.65;
+}
+
+img { max-width: 100%; height: auto; }
+
+a { color: var(--jade-mid); transition: color var(--dur) var(--ease); }
+a:hover { color: var(--jade-deep); }
+
+::selection { background: var(--pink-pale); }
+
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--jade-pale);
+  border-radius: var(--r-sm);
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--charcoal);
+  color: white;
+  padding: var(--s3) var(--s5);
+  z-index: 999;
+  border-radius: 0 0 var(--r-md) 0;
+
+  &:focus { left: 0; }
+}
+
+.wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 var(--s6);
+}
+
+.section { padding: var(--s20) 0; }
+.section--tight { padding: var(--s16) 0; }
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--jade-mid);
+  margin-bottom: var(--s2);
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+  font-weight: 400;
+  color: var(--charcoal);
+  line-height: 1.2;
+  margin-bottom: var(--s8);
+}
+
+.lead {
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: var(--slate);
+  line-height: 1.7;
+  max-width: 640px;
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s6); }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s5); }
+
+@media (max-width: 760px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .section { padding: var(--s16) 0; }
+}

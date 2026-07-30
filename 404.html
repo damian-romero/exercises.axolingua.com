@@ -1,0 +1,35 @@
+---
+layout: default
+page_id: notfound
+permalink: /404.html
+sitemap: false
+noindex: true
+---
+{% comment %}
+  404 — excluded from localization (Netlify serves a single /404.html),
+  so it shows both languages. Copy from _data/pages/notfound.yml.
+{% endcomment %}
+{% assign t = site.data.strings[site.active_lang] %}
+{% if site.active_lang == site.default_lang %}{% assign lang_prefix = '' %}{% else %}{% assign lang_prefix = '/' | append: site.active_lang %}{% endif %}
+{% assign es = site.data.pages.notfound.es %}
+{% assign en = site.data.pages.notfound.en %}
+
+<section class="simple-page">
+  <div class="wrap">
+    <div lang="es">
+      <h1 class="simple-page__heading">{{ es.heading }}</h1>
+      <p class="simple-page__text">{{ es.text }}</p>
+      <div class="simple-page__actions">
+        <a class="btn btn-pink" href="/ejercicios/">{{ es.home }}</a>
+      </div>
+    </div>
+    <hr style="border:none; height:1px; background: var(--linen); max-width:200px; margin: var(--s10) auto;">
+    <div lang="en">
+      <h2 class="simple-page__heading" style="font-size:1.4rem;">{{ en.heading }}</h2>
+      <p class="simple-page__text">{{ en.text }}</p>
+      <div class="simple-page__actions">
+        <a class="btn btn-outline-pink btn-sm" href="/ejercicios/">{{ en.home }}</a>
+      </div>
+    </div>
+  </div>
+</section>

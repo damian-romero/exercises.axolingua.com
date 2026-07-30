@@ -1,0 +1,25 @@
+{% comment %} Footer: wordmark, link back to the main site, email, copyright. {% endcomment %}
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <span class="wordmark"><em>axo</em>lingua</span>
+        <div class="footer__tagline">{{ t.footer.tagline }}</div>
+      </div>
+
+      <div class="footer__col">
+        <h4>{{ t.nav.exercises }}</h4>
+        <a href="{{ lang_prefix }}/">{{ t.nav.home }}</a>
+        <a href="{{ lang_prefix }}/ejercicios/">{{ t.nav.exercises }}</a>
+      </div>
+
+      <div class="footer__col">
+        <h4>{{ t.footer.about_label }}</h4>
+        <a href="{{ site.main_site_url }}" target="_blank" rel="noopener">{{ t.footer.main_site_link }}</a>
+        <a href="mailto:{{ site.contact_email }}">{{ t.footer.email_label }}</a>
+      </div>
+    </div>
+
+    <div class="footer__meta">{{ t.footer.location }}</div>
+  </div>
+</footer>

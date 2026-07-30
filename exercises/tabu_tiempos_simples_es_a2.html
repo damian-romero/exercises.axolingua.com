@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tabú de español · A2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700&family=Outfit:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#F7F3EE; --paper:#FFFFFF; --charcoal:#2C2A27;
+    --pink:#D0736C; --pink-deep:#B8524A; --pink-wash:#FBF0EF;
+    --jade:#3D8876; --jade-wash:#EAF4F2;
+    --ochre:#BC8A52; --ochre-deep:#9E6B35; --ochre-wash:#F9F1E6;
+    --rule:#D8CFBF; --mute:#8A847E;
+    --display:'Fraunces',Georgia,serif;
+    --ui:'Outfit',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:'DM Mono','Courier New',monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;min-height:100%;}
+  body{background:var(--ivory); color:var(--charcoal); font-family:var(--ui);
+    display:flex; flex-direction:column; min-height:100vh; padding:14px 16px 18px;}
+  button{font-family:inherit; cursor:pointer;}
+
+  /* ---------- top bar ---------- */
+  .bar{flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:12px;}
+  .brand .eyebrow{font-family:var(--mono); font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--mute); font-weight:500;}
+  .brand h1{margin:1px 0 0; font-family:var(--display); font-size:clamp(18px,2.4vw,26px); font-weight:700; line-height:1;}
+  .stats{display:flex; align-items:stretch; gap:9px;}
+  .stat{background:var(--paper); border:1px solid var(--rule); border-radius:12px; padding:6px 13px; text-align:center; min-width:64px;}
+  .stat .n{font-family:var(--display); font-size:22px; font-weight:700; line-height:1;}
+  .stat .l{font-family:var(--mono); font-size:9.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--mute); font-weight:500; margin-top:3px;}
+  .stat.ok .n{color:var(--jade);}
+  .stat.no .n{color:var(--pink-deep);}
+  .clock{display:none; align-items:center; gap:10px; background:var(--paper); border:1px solid var(--rule); border-radius:12px; padding:6px 15px;}
+  body[data-timed="1"] .clock{display:flex;}
+  .clock .tm{font-family:var(--display); font-size:24px; font-weight:700; font-variant-numeric:tabular-nums; line-height:1;}
+  .clock.low .tm{color:var(--pink-deep);}
+  .clock .l{font-family:var(--mono); font-size:9.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--mute); font-weight:500;}
+
+  /* ---------- stage / card ---------- */
+  .stage{flex:1 1 auto; display:flex; align-items:center; justify-content:center; min-height:0;}
+  .card{width:100%; max-width:540px; background:var(--paper); border:1px solid var(--rule);
+    border-radius:18px; overflow:hidden; box-shadow:0 12px 34px rgba(44,42,39,.10); display:flex; flex-direction:column;}
+  .card .head{padding:14px 22px 12px; display:flex; align-items:center; gap:10px; border-bottom:3px solid var(--accent,var(--jade));}
+  .chip{font-family:var(--mono); font-size:11px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; padding:4px 11px; border-radius:999px; color:#fff; background:var(--accent,var(--jade));}
+  .chip.tense{background:transparent; color:var(--pink-deep); border:1.5px solid var(--pink); letter-spacing:.06em;}
+  .card .word{padding:26px 22px 20px; text-align:center; font-family:var(--display); font-weight:700;
+    font-size:clamp(34px,7vw,60px); line-height:1.02; color:var(--charcoal); word-break:break-word;}
+  .taboo{margin:0 20px 18px; background:var(--pink-wash); border:1px solid #F2CECC; border-radius:12px; padding:12px 16px;}
+  .taboo .th{font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; font-weight:500; color:var(--pink-deep); text-align:center; margin-bottom:8px;}
+  .taboo ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:5px;}
+  .taboo li{display:flex; align-items:center; gap:9px; justify-content:center; font-size:clamp(15px,2.4vw,19px); font-weight:600; color:var(--charcoal);}
+  .taboo li .x{color:var(--pink-deep); font-weight:800; font-size:15px;}
+  .reto{margin:0 20px 20px; background:var(--ochre-wash); border:1px solid #ECDBC4; border-radius:12px; padding:10px 16px; text-align:center;}
+  .reto .rl{font-family:var(--mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; font-weight:500; color:var(--ochre-deep); margin-bottom:3px;}
+  .reto .rt{font-size:14.5px; font-weight:600; color:var(--charcoal);}
+  .reto.hidden{display:none;}
+  .counter{font-family:var(--mono); text-align:center; font-size:11px; color:var(--mute); padding:0 0 14px; letter-spacing:.04em;}
+
+  /* ---------- actions ---------- */
+  .actions{flex:0 0 auto; margin-top:14px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;}
+  .act{border:1px solid var(--rule); background:var(--paper); border-radius:12px; padding:13px 22px; font-size:15px; font-weight:700;
+    display:flex; align-items:center; gap:9px; transition:transform .1s, box-shadow .12s, background .12s, border-color .12s;}
+  .act:hover{transform:translateY(-1px);}
+  .act:active{transform:translateY(0);}
+  .act .ic{font-size:17px; line-height:1;}
+  .act.ok{background:var(--jade); color:#fff; border-color:var(--jade); box-shadow:0 8px 20px rgba(61,136,118,.26);}
+  .act.pass{color:var(--mute);}
+  .act.tabu{color:var(--pink-deep); border-color:#F2CECC;}
+  .act.ok:hover{box-shadow:0 12px 24px rgba(61,136,118,.34);}
+  .act.pass:hover{border-color:var(--charcoal); color:var(--charcoal);}
+  .act.tabu:hover{background:var(--pink-wash);}
+  .act .k{font-family:var(--mono); font-size:10px; font-weight:500; opacity:.6; border:1px solid currentColor; border-radius:4px; padding:0 4px; margin-left:3px;}
+  .act.ok .k{opacity:.8;}
+
+  /* ---------- controls ---------- */
+  .controls{flex:0 0 auto; margin-top:12px; display:flex; gap:9px; justify-content:center; align-items:center; flex-wrap:wrap;}
+  .seg{display:flex; background:var(--paper); border:1px solid var(--rule); border-radius:10px; overflow:hidden;}
+  .seg .lbl{font-family:var(--mono); padding:8px 11px; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--mute); font-weight:500; border-right:1px solid var(--rule); display:flex; align-items:center;}
+  .seg button{border:none; background:transparent; padding:8px 13px; font-size:12.5px; font-weight:600; color:var(--mute); transition:background .14s,color .14s;}
+  .seg button + button{border-left:1px solid var(--rule);}
+  .seg button[aria-pressed="true"]{background:var(--charcoal); color:#fff;}
+  .seg button:hover:not([aria-pressed="true"]){color:var(--charcoal);}
+  .btn{border:1px solid var(--rule); background:var(--paper); color:var(--charcoal); border-radius:10px; padding:8px 15px; font-size:12.5px; font-weight:600; transition:border-color .14s;}
+  .btn:hover{border-color:var(--charcoal);}
+
+  /* ---------- overlays ---------- */
+  .ov{position:fixed; top:0; right:0; bottom:0; left:0; background:rgba(247,243,238,.94); display:none; align-items:center; justify-content:center; z-index:20; padding:20px;}
+  .ov.show{display:flex;}
+  .panel{background:var(--paper); border:1px solid var(--rule); border-radius:18px; padding:26px 30px; max-width:520px; width:100%;}
+  .panel .eyebrow{font-family:var(--mono); font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--mute); font-weight:500;}
+  .panel h2{font-family:var(--display); font-size:27px; margin:5px 0 12px; font-weight:700;}
+  .rules{font-size:13.5px; line-height:1.5; color:var(--charcoal); margin:0 0 16px;}
+  .rules li{margin-bottom:6px;}
+  .rules b{color:var(--charcoal);}
+  .startbtn{width:100%; background:var(--jade); color:#fff; border:none; border-radius:12px; padding:14px; font-size:16px; font-weight:700; box-shadow:0 10px 24px rgba(61,136,118,.3); transition:transform .12s, box-shadow .12s;}
+  .startbtn:hover{transform:translateY(-1px); box-shadow:0 14px 28px rgba(61,136,118,.4);}
+  .setrow{display:flex; gap:9px; flex-wrap:wrap; margin-bottom:14px;}
+  .res{font-size:15px; line-height:1.8; margin-bottom:18px;}
+  .res .big{font-family:var(--display); font-size:34px; font-weight:700; color:var(--jade);}
+
+  .errbox{display:none; background:#fff; border:1px solid var(--rule); border-radius:12px; padding:20px; text-align:center; max-width:460px;}
+  .errbox.show{display:block;}
+  .errbox b{color:var(--pink-deep);}
+
+  @media (max-width:520px){
+    .act{padding:12px 16px; font-size:14px;}
+    .act .k{display:none;}
+  }
+  @media (prefers-reduced-motion:reduce){ .act{transition:none;} }
+</style>
+</head>
+<body data-timed="0">
+
+  <div class="bar">
+    <div class="brand">
+      <div class="eyebrow">Español A2 · repaso</div>
+      <h1>Tabú de español</h1>
+    </div>
+    <div class="stats">
+      <div class="stat ok"><div class="n" id="sAciertos">0</div><div class="l">Aciertos</div></div>
+      <div class="stat no"><div class="n" id="sTabus">0</div><div class="l">Tabús</div></div>
+      <div class="stat"><div class="n" id="sPasadas">0</div><div class="l">Pasadas</div></div>
+    </div>
+    <div class="clock" id="clock">
+      <span class="l">Tiempo</span>
+      <span class="tm" id="tm">0:00</span>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="card" id="card">
+      <div class="head" id="cardHead">
+        <span class="chip" id="cardChip">Sustantivo</span>
+        <span class="chip tense hidden" id="cardTense" style="display:none">presente</span>
+      </div>
+      <div class="word" id="cardWord">—</div>
+      <div class="taboo" id="cardTaboo">
+        <div class="th">Palabras prohibidas</div>
+        <ul id="tabooList"></ul>
+      </div>
+      <div class="reto hidden" id="cardReto">
+        <div class="rl">Reto</div>
+        <div class="rt" id="retoText"></div>
+      </div>
+      <div class="counter" id="counter"></div>
+    </div>
+    <div class="errbox" id="errbox"></div>
+  </div>
+
+  <div class="actions" id="actions">
+    <button class="act ok"   id="btnOk"><span class="ic">✓</span> Correcto <span class="k">C</span></button>
+    <button class="act pass" id="btnPass"><span class="ic">↷</span> Pasar <span class="k">P</span></button>
+    <button class="act tabu" id="btnTabu"><span class="ic">⊘</span> Tabú <span class="k">T</span></button>
+  </div>
+
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Mazo">
+      <span class="lbl">Mazo</span>
+      <button data-deck="todos" aria-pressed="true">Todos</button>
+      <button data-deck="sustantivo" aria-pressed="false">Sustantivos</button>
+      <button data-deck="verbo" aria-pressed="false">Verbos</button>
+    </div>
+    <div class="seg" role="group" aria-label="Tiempo">
+      <span class="lbl">Reloj</span>
+      <button data-time="0" aria-pressed="true">Sin tiempo</button>
+      <button data-time="60" aria-pressed="false">60 s</button>
+      <button data-time="90" aria-pressed="false">90 s</button>
+      <button data-time="120" aria-pressed="false">2 min</button>
+    </div>
+    <button class="btn" id="restart">Nueva ronda</button>
+  </div>
+
+  <!-- start overlay -->
+  <div class="ov show" id="startOv">
+    <div class="panel">
+      <div class="eyebrow">Cómo se juega</div>
+      <h2>Tabú de español</h2>
+      <ul class="rules">
+        <li>Haz que tu compañero/a diga la <b>palabra grande</b> — describiéndola en español.</li>
+        <li>No puedes decir: la palabra, ninguna de las <b>palabras prohibidas</b>, ni usar inglés o mímica.</li>
+        <li><b>Verbos:</b> primero adivinen el verbo; luego quien adivina lo usa en el tiempo del <b>reto</b>.</li>
+        <li>Botones: <b>Correcto</b> (+1), <b>Pasar</b> (sin punto), <b>Tabú</b> (dijiste una prohibida).</li>
+        <li>Con Stefan solo: él da las pistas y tú adivinas (o al revés). Con dos, se turnan.</li>
+      </ul>
+      <button class="startbtn" id="startBtn">▶︎ Empezar ronda</button>
+    </div>
+  </div>
+
+  <!-- summary overlay -->
+  <div class="ov" id="endOv">
+    <div class="panel">
+      <div class="eyebrow">Fin de la ronda</div>
+      <h2 id="endTitle">¡Buen trabajo!</h2>
+      <div class="res" id="endRes"></div>
+      <button class="startbtn" id="endBtn">Jugar otra vez</button>
+    </div>
+  </div>
+
+<script>
+(function(){
+  "use strict";
+
+  // tense metadata
+  var TMETA = {
+    "presente":       { chip:"presente",       reto:"Úsalo en presente" },
+    "pretérito":      { chip:"pretérito",      reto:"Úsalo en pretérito (yo, ayer…)" },
+    "imperfecto":     { chip:"imperfecto",     reto:"Úsalo en imperfecto (antes / de niño…)" },
+    "futuro":         { chip:"futuro",         reto:"Úsalo en futuro" },
+    "ir a":           { chip:"ir a",           reto:"Úsalo con «ir a» (voy a…)" },
+    "mandato-tu":     { chip:"mandato tú",     reto:"Da una orden informal (¡tú!)" },
+    "mandato-usted":  { chip:"mandato usted",  reto:"Da una orden formal (usted)" }
+  };
+
+  // ---------- the deck: 16 nouns + 18 verbs ----------
+  var CARDS = [
+    // nouns
+    { type:"sustantivo", word:"CASA", taboo:["vivir","hogar","puerta","dormir"] },
+    { type:"sustantivo", word:"PERRO", taboo:["animal","gato","mascota","ladrar"] },
+    { type:"sustantivo", word:"MERCADO", taboo:["comprar","fruta","vender","comida"] },
+    { type:"sustantivo", word:"ESCUELA", taboo:["estudiar","maestro","alumno","clase"] },
+    { type:"sustantivo", word:"CARRO", taboo:["manejar","llanta","gasolina","calle"] },
+    { type:"sustantivo", word:"CAFÉ", taboo:["bebida","taza","caliente","mañana"] },
+    { type:"sustantivo", word:"PLAYA", taboo:["mar","arena","sol","nadar"] },
+    { type:"sustantivo", word:"METRO", taboo:["tren","estación","transporte","ciudad"] },
+    { type:"sustantivo", word:"FAMILIA", taboo:["mamá","papá","hermano","hijo"] },
+    { type:"sustantivo", word:"TELÉFONO", taboo:["llamar","celular","mensaje","hablar"] },
+    { type:"sustantivo", word:"HOSPITAL", taboo:["doctor","enfermo","medicina","salud"] },
+    { type:"sustantivo", word:"AMIGO", taboo:["persona","conocer","fiesta","compañero"] },
+    { type:"sustantivo", word:"TRABAJO", taboo:["oficina","jefe","dinero","empleo"] },
+    { type:"sustantivo", word:"LIBRO", taboo:["leer","página","historia","biblioteca"] },
+    { type:"sustantivo", word:"FIESTA", taboo:["bailar","música","cumpleaños","pastel"] },
+    { type:"sustantivo", word:"RESTAURANTE", taboo:["comer","mesero","comida","menú"] },
+    // verbs (potpourri of tenses)
+    { type:"verbo", word:"COMER", taboo:["comida","boca","hambre","plato"], tense:"pretérito" },
+    { type:"verbo", word:"VIAJAR", taboo:["avión","maleta","vacaciones","país"], tense:"futuro" },
+    { type:"verbo", word:"VIVIR", taboo:["casa","ciudad","hogar","existir"], tense:"imperfecto" },
+    { type:"verbo", word:"HABLAR", taboo:["boca","idioma","decir","lengua"], tense:"presente" },
+    { type:"verbo", word:"DORMIR", taboo:["cama","noche","sueño","cansado"], tense:"pretérito" },
+    { type:"verbo", word:"TRABAJAR", taboo:["oficina","jefe","dinero","empleo"], tense:"futuro" },
+    { type:"verbo", word:"ESTUDIAR", taboo:["escuela","examen","libro","aprender"], tense:"imperfecto" },
+    { type:"verbo", word:"COCINAR", taboo:["comida","cocina","chef","olla"], tense:"presente" },
+    { type:"verbo", word:"COMPRAR", taboo:["tienda","dinero","pagar","mercado"], tense:"pretérito" },
+    { type:"verbo", word:"CORRER", taboo:["rápido","piernas","ejercicio","maratón"], tense:"futuro" },
+    { type:"verbo", word:"ESCRIBIR", taboo:["pluma","papel","carta","letra"], tense:"presente" },
+    { type:"verbo", word:"BAILAR", taboo:["música","fiesta","salsa","pies"], tense:"imperfecto" },
+    { type:"verbo", word:"VENIR", taboo:["llegar","aquí","acá","camino"], tense:"mandato-tu" },
+    { type:"verbo", word:"HACER", taboo:["crear","tarea","acción","fabricar"], tense:"mandato-usted" },
+    { type:"verbo", word:"SALIR", taboo:["puerta","afuera","entrar","calle"], tense:"ir a" },
+    { type:"verbo", word:"LLEGAR", taboo:["venir","tarde","destino","puntual"], tense:"pretérito" },
+    { type:"verbo", word:"VER", taboo:["ojos","mirar","película","tele"], tense:"imperfecto" },
+    { type:"verbo", word:"LEER", taboo:["libro","página","ojos","texto"], tense:"presente" }
+  ];
+
+  // ---------- elements ----------
+  var el = function(id){ return document.getElementById(id); };
+  var card = el("card"), errbox = el("errbox");
+  var cardHead = el("cardHead"), cardChip = el("cardChip"), cardTense = el("cardTense");
+  var cardWord = el("cardWord"), cardTaboo = el("cardTaboo"), tabooList = el("tabooList");
+  var cardReto = el("cardReto"), retoText = el("retoText"), counter = el("counter");
+  var sAciertos = el("sAciertos"), sTabus = el("sTabus"), sPasadas = el("sPasadas");
+  var clock = el("clock"), tm = el("tm");
+  var startOv = el("startOv"), endOv = el("endOv"), endTitle = el("endTitle"), endRes = el("endRes");
+
+  // ---------- state ----------
+  var deckKey = "todos", duration = 0;
+  var queue = [], pos = 0, aciertos = 0, tabus = 0, pasadas = 0;
+  var timerId = null, remaining = 0, running = false;
+
+  function shuffle(a){ for (var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function fmt(s){ s=Math.max(0,s); return Math.floor(s/60)+":"+(s%60<10?"0":"")+(s%60); }
+
+  function buildQueue(){
+    var pool = CARDS.filter(function(c){ return deckKey==="todos" || c.type===deckKey; });
+    queue = shuffle(pool.slice());
+    pos = 0; aciertos = 0; tabus = 0; pasadas = 0;
+    sAciertos.textContent = "0"; sTabus.textContent = "0"; sPasadas.textContent = "0";
+  }
+
+  function renderCard(){
+    var c = queue[pos];
+    if (!c){ endRound(); return; }
+    var accent = c.type==="verbo" ? "var(--ochre)" : "var(--jade)";
+    cardHead.style.setProperty("--accent", accent);
+    cardChip.style.background = accent;
+    cardChip.textContent = c.type==="verbo" ? "Verbo" : "Sustantivo";
+    cardWord.textContent = c.word;
+
+    tabooList.innerHTML = "";
+    c.taboo.forEach(function(w){
+      var li = document.createElement("li");
+      var x = document.createElement("span"); x.className="x"; x.textContent="✕";
+      var t = document.createElement("span"); t.textContent = w;
+      li.appendChild(x); li.appendChild(t); tabooList.appendChild(li);
+    });
+
+    if (c.type==="verbo" && c.tense && TMETA[c.tense]){
+      cardTense.style.display = "";
+      cardTense.textContent = "→ " + TMETA[c.tense].chip;
+      cardReto.classList.remove("hidden");
+      retoText.textContent = TMETA[c.tense].reto;
+    } else {
+      cardTense.style.display = "none";
+      cardReto.classList.add("hidden");
+    }
+    counter.textContent = "Carta " + (pos+1) + " de " + queue.length;
+  }
+
+  function advance(kind){
+    if (!running) return;
+    if (kind==="ok") { aciertos++; sAciertos.textContent = String(aciertos); }
+    else if (kind==="tabu") { tabus++; sTabus.textContent = String(tabus); }
+    else { pasadas++; sPasadas.textContent = String(pasadas); }
+    pos++;
+    if (pos >= queue.length) { endRound(); return; }
+    renderCard();
+  }
+
+  function startTimer(){
+    if (!duration){ document.body.setAttribute("data-timed","0"); return; }
+    document.body.setAttribute("data-timed","1");
+    remaining = duration;
+    tm.textContent = fmt(remaining);
+    clock.classList.remove("low");
+    clearInterval(timerId);
+    timerId = setInterval(tick, 1000);
+  }
+  function tick(){
+    remaining--;
+    if (remaining <= 10) clock.classList.add("low");
+    tm.textContent = fmt(remaining);
+    if (remaining <= 0){ clearInterval(timerId); timerId=null; endRound(); }
+  }
+
+  function startRound(){
+    startOv.classList.remove("show");
+    endOv.classList.remove("show");
+    buildQueue();
+    running = true;
+    renderCard();
+    startTimer();
+  }
+
+  function endRound(){
+    running = false;
+    clearInterval(timerId); timerId = null;
+    document.body.setAttribute("data-timed","0");
+    var done = (deckKey==="todos" && pos>=queue.length);
+    endTitle.textContent = (remaining<=0 && duration) ? "¡Se acabó el tiempo!" : "¡Fin del mazo!";
+    endRes.innerHTML = '<div><span class="big">' + aciertos + '</span> aciertos</div>'
+      + '<div style="font-size:14px;color:var(--mute)">' + tabus + ' tabús · ' + pasadas + ' pasadas · '
+      + queue.length + ' cartas</div>';
+    endOv.classList.add("show");
+  }
+
+  // ---------- controls ----------
+  el("btnOk").addEventListener("click", function(){ advance("ok"); });
+  el("btnPass").addEventListener("click", function(){ advance("pass"); });
+  el("btnTabu").addEventListener("click", function(){ advance("tabu"); });
+  el("startBtn").addEventListener("click", startRound);
+  el("endBtn").addEventListener("click", startRound);
+  el("restart").addEventListener("click", startRound);
+
+  function segHandler(attr, apply){
+    var group = document.querySelectorAll("[" + attr + "]");
+    Array.prototype.forEach.call(group, function(b){
+      b.addEventListener("click", function(){
+        Array.prototype.forEach.call(group, function(x){ x.setAttribute("aria-pressed","false"); });
+        b.setAttribute("aria-pressed","true");
+        apply(b.getAttribute(attr));
+      });
+    });
+  }
+  segHandler("data-deck", function(v){ deckKey = v; });
+  segHandler("data-time", function(v){ duration = parseInt(v,10) || 0; });
+
+  document.addEventListener("keydown", function(ev){
+    if (startOv.classList.contains("show") || endOv.classList.contains("show")){
+      if (ev.key==="Enter"){ ev.preventDefault(); startRound(); }
+      return;
+    }
+    var k = ev.key.toLowerCase();
+    if (k==="c"){ advance("ok"); }
+    else if (k==="p"){ advance("pass"); }
+    else if (k==="t"){ advance("tabu"); }
+  });
+
+  // ---------- test hook (harmless in production) ----------
+  window.__taboo = {
+    get state(){ return { deckKey:deckKey, duration:duration, pos:pos, len:queue.length, aciertos:aciertos, tabus:tabus, pasadas:pasadas, running:running, remaining:remaining, word:(queue[pos]||{}).word }; },
+    start:startRound, advance:advance, tick:tick, cards:CARDS, tmeta:TMETA,
+    setDeck:function(v){ deckKey=v; }, setTime:function(v){ duration=v; }
+  };
+
+  // safety: surface any init failure instead of a blank screen
+  try {
+    // nothing to build until "Empezar"; overlay is already shown
+  } catch (e){
+    card.style.display="none";
+    errbox.className="errbox show";
+    errbox.innerHTML="<b>No se pudo iniciar el juego.</b><div style='font-size:12px;color:#8A847E;margin-top:6px'>"+(e&&e.message?e.message:e)+"</div>";
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+# 404 page copy — single page serves both languages (Netlify
+# serves one /404.html), so both blocks render on it.
+
+es:
+  meta:
+    title: "Página no encontrada · Page not found — Axolingua Ejercicios"
+    description: "La página que buscas no existe. The page you're looking for doesn't exist."
+  heading: "Esta página no existe."
+  text: "Puede que el enlace esté roto, la página se haya movido, o el idioma que buscas todavía no tenga ejercicios disponibles. Lo que sí existe: nuestros ejercicios gratuitos de español."
+  home: "← Ver ejercicios de español"
+en:
+  heading: "This page doesn't exist."
+  text: "The link may be broken, the page may have moved, or the language you're looking for doesn't have exercises yet. What does exist: our free Spanish exercises."
+  home: "← See Spanish exercises"

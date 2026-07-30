@@ -1,0 +1,111 @@
+---
+layout: default
+page_id: exercises
+permalink: /ejercicios/
+---
+{% comment %}
+  EXERCISE LIST — filterable grid built from _data/exercise_catalog.yml.
+  Labels for skill/level/theme come from _data/exercise_taxonomy.yml so
+  new exercises only need a catalog entry, never a template change.
+{% endcomment %}
+{% assign t = site.data.strings[site.active_lang] %}
+{% if site.active_lang == site.default_lang %}{% assign lang_prefix = '' %}{% else %}{% assign lang_prefix = '/' | append: site.active_lang %}{% endif %}
+{% assign pg = site.data.pages.exercises[site.active_lang] %}
+{% assign tax = site.data.exercise_taxonomy %}
+{% assign lang = site.active_lang %}
+{% assign exercises = site.data.exercise_catalog | where: "target_lang", "es" %}
+
+<section class="section--tight">
+  <div class="wrap">
+    <p class="section-label">{{ pg.eyebrow }}</p>
+    <h1 class="section-title">{{ pg.heading }}</h1>
+    <p class="lead" style="margin-bottom: var(--s8);">{{ pg.intro }}</p>
+
+    <!-- FILTERS -->
+    <div class="filter-bar" id="filterBar">
+      <div class="filter-group" data-filter-group="skill">
+        <span class="filter-group__label">{{ pg.filters.skill }}</span>
+        <button class="filter-pill is-active" data-value="all" type="button">{{ pg.filters.all }}</button>
+        {% for s in tax.skills %}
+        <button class="filter-pill" data-value="{{ s[0] }}" type="button">{{ s[1][lang] }}</button>
+        {% endfor %}
+      </div>
+      <div class="filter-group" data-filter-group="level">
+        <span class="filter-group__label">{{ pg.filters.level }}</span>
+        <button class="filter-pill is-active" data-value="all" type="button">{{ pg.filters.all }}</button>
+        {% for l in tax.levels %}
+        <button class="filter-pill" data-value="{{ l[0] }}" type="button">{{ l[1][lang] }}</button>
+        {% endfor %}
+      </div>
+      <div class="filter-group" data-filter-group="theme">
+        <span class="filter-group__label">{{ pg.filters.theme }}</span>
+        <button class="filter-pill is-active" data-value="all" type="button">{{ pg.filters.all }}</button>
+        {% for th in tax.themes %}
+        <button class="filter-pill" data-value="{{ th[0] }}" type="button">{{ th[1][lang] }}</button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- GRID -->
+    <div class="exercise-grid" id="exerciseGrid">
+      {% for ex in exercises %}
+      <article class="exercise-card"
+        data-skill="{{ ex.skill }}"
+        data-level="{{ ex.level }}"
+        data-theme="{{ ex.theme }}">
+        <div class="exercise-card__preview">
+          <iframe src="/exercises/{{ ex.file }}" loading="lazy" tabindex="-1" title="{{ ex.title[lang] }}"></iframe>
+          <a class="exercise-card__overlay" href="/exercises/{{ ex.file }}" target="_blank" rel="noopener" aria-label="{{ ex.title[lang] }} — {{ pg.card.open }}"></a>
+        </div>
+        <div class="exercise-card__body">
+          <div class="exercise-card__tags">
+            <span class="level level--{{ ex.level | slice: 0, 1 }}">{{ ex.level | upcase }}</span>
+            <span class="tag tag--neutral">{{ tax.skills[ex.skill][lang] }}</span>
+            {% if ex.theme != "general" %}<span class="tag tag--ochre">{{ tax.themes[ex.theme][lang] }}</span>{% endif %}
+          </div>
+          <h3 class="exercise-card__title">{{ ex.title[lang] }}</h3>
+          <p class="exercise-card__desc">{{ ex.description[lang] }}</p>
+          <a class="btn btn-outline-pink btn-sm" href="/exercises/{{ ex.file }}" target="_blank" rel="noopener">{{ pg.card.open }}</a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    <p class="exercise-grid__empty" id="emptyState" hidden>{{ pg.empty }}</p>
+
+    <p style="margin-top: var(--s10);"><a href="{{ lang_prefix }}/">{{ pg.back }}</a></p>
+  </div>
+</section>
+
+<script>
+(function () {
+  var groups = document.querySelectorAll('[data-filter-group]');
+  var cards = document.querySelectorAll('.exercise-card');
+  var empty = document.getElementById('emptyState');
+  var state = { skill: 'all', level: 'all', theme: 'all' };
+
+  groups.forEach(function (group) {
+    var key = group.getAttribute('data-filter-group');
+    var pills = group.querySelectorAll('.filter-pill');
+    pills.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        pills.forEach(function (b) { b.classList.remove('is-active'); });
+        btn.classList.add('is-active');
+        state[key] = btn.getAttribute('data-value');
+        applyFilters();
+      });
+    });
+  });
+
+  function applyFilters() {
+    var visible = 0;
+    cards.forEach(function (card) {
+      var match = (state.skill === 'all' || card.dataset.skill === state.skill) &&
+                  (state.level === 'all' || card.dataset.level === state.level) &&
+                  (state.theme === 'all' || card.dataset.theme === state.theme);
+      card.hidden = !match;
+      if (match) visible++;
+    });
+    empty.hidden = visible !== 0;
+  }
+})();
+</script>

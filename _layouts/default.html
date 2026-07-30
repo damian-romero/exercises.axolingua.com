@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+{% comment %}
+  Base layout. NO copy lives here — all strings come from _data/.
+  `lang_prefix` is computed once and reused by all includes for
+  deterministic internal links in both languages.
+{% endcomment %}
+{% assign t = site.data.strings[site.active_lang] %}
+{% if site.active_lang == site.default_lang %}
+  {% assign lang_prefix = '' %}
+{% else %}
+  {% assign lang_prefix = '/' | append: site.active_lang %}
+{% endif %}
+<html lang="{{ site.active_lang }}">
+<head>
+  {% include head.html %}
+</head>
+<body>
+  <a class="skip-link" href="#main">{{ t.a11y.skip }}</a>
+
+  {% include nav.html %}
+
+  <main id="main">
+    {{ content }}
+  </main>
+
+  {% include footer.html %}
+
+  <script>
+    (function () {
+      var btn = document.querySelector('.nav__toggle');
+      var links = document.querySelector('.nav__links');
+      if (btn && links) {
+        btn.addEventListener('click', function () {
+          var open = links.classList.toggle('is-open');
+          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

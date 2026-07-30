@@ -1,0 +1,78 @@
+# ─────────────────────────────────────────────────────────────
+# EXERCISE CATALOG — one entry per file in /exercises/.
+# `file` is the filename inside /exercises/ (already follows the
+# skill_grammar_lang_level[_theme] naming convention).
+# `skill`, `grammar`, `level`, `theme` must match keys in
+# _data/exercise_taxonomy.yml so labels render correctly.
+# target_lang is the language being PRACTICED (not the UI language).
+# ─────────────────────────────────────────────────────────────
+
+- slug: memorama-presente-a1
+  file: memorama_presente_es_a1.html
+  skill: memorama
+  grammar: presente
+  target_lang: es
+  level: a1
+  theme: general
+  title:
+    es: "Memorama de verbos — Presente"
+    en: "Verb Memory Match — Present Tense"
+  description:
+    es: "Encuentra las parejas de pronombre + verbo con su forma conjugada en presente. 4 verbos regulares y 4 irregulares."
+    en: "Match pronoun + verb prompts to their present-tense forms. 4 regular verbs and 4 irregular ones."
+
+- slug: memorama-tiempos-simples-a2
+  file: memorama_tiempos_simples_es_a2.html
+  skill: memorama
+  grammar: tiempos_simples
+  target_lang: es
+  level: a2
+  theme: general
+  title:
+    es: "Memorama de verbos — Tiempos simples"
+    en: "Verb Memory Match — Simple Tenses"
+  description:
+    es: "Repasa presente, pretérito, imperfecto, mandatos y futuro. Para 1 o 2 jugadores, por turnos o contrarreloj."
+    en: "Review present, preterite, imperfect, commands, and future tense. For 1–2 players, turn-based or against the clock."
+
+- slug: tabu-tiempos-simples-a2
+  file: tabu_tiempos_simples_es_a2.html
+  skill: tabu
+  grammar: tiempos_simples
+  target_lang: es
+  level: a2
+  theme: general
+  title:
+    es: "Tabú de español — Tiempos simples"
+    en: "Spanish Taboo — Simple Tenses"
+  description:
+    es: "Haz que tu compañero adivine la palabra sin decir las prohibidas — con retos de conjugación en distintos tiempos."
+    en: "Get your partner to guess the word without saying the forbidden ones — with verb-conjugation challenges."
+
+- slug: cloze-tiempos-simples-a2-deportes
+  file: cloze_tiempos_simples_es_a2_deportes.html
+  skill: cloze
+  grammar: tiempos_simples
+  target_lang: es
+  level: a2
+  theme: deportes
+  title:
+    es: "El Gran Partido — Ejercicio de tiempos"
+    en: "El Gran Partido — Verb Tense Story"
+  description:
+    es: "Completa la historia de Marcos rellenando los verbos en el tiempo correcto. Incluye traducción al inglés."
+    en: "Fill in the blanks in Marcos's story with the correct verb tense. English translation included."
+
+- slug: drill-tiempos-simples-a2-deportes
+  file: drill_tiempos_simples_es_a2_deportes.html
+  skill: drill
+  grammar: tiempos_simples
+  target_lang: es
+  level: a2
+  theme: deportes
+  title:
+    es: "Spanish Workout — Tiempos simples"
+    en: "Spanish Workout — Simple Tenses"
+  description:
+    es: "Practica los cuatro tiempos simples con ejercicios de completar, opción múltiple y traducción. Con puntaje y racha."
+    en: "Practice all four simple tenses with fill-in, multiple-choice, and translation exercises. Includes score and streak tracking."

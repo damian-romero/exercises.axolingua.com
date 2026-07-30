@@ -1,0 +1,41 @@
+# ─────────────────────────────────────────────────────────────
+# GLOBAL UI STRINGS — nav, footer, filters, a11y.
+# Everything the layouts/includes render comes from here.
+# Edit copy here, never in HTML files.
+# ─────────────────────────────────────────────────────────────
+
+es:
+  nav:
+    home: "Inicio"
+    exercises: "Ejercicios"
+    main_site: "axolingua.com"
+    menu_label: "Menú"
+  footer:
+    tagline: "El idioma para tu vida real."
+    about_label: "Axolingua"
+    main_site_link: "Conoce Axolingua →"
+    location: "Ciudad de México · exercises.axolingua.com · © 2026 Axolingua. Todos los derechos reservados."
+    email_label: "Correo"
+  lang_toggle:
+    es: "ES"
+    en: "EN"
+  a11y:
+    skip: "Saltar al contenido"
+
+en:
+  nav:
+    home: "Home"
+    exercises: "Exercises"
+    main_site: "axolingua.com"
+    menu_label: "Menu"
+  footer:
+    tagline: "Language for the life you're living."
+    about_label: "Axolingua"
+    main_site_link: "Visit Axolingua →"
+    location: "Mexico City · exercises.axolingua.com · © 2026 Axolingua. All rights reserved."
+    email_label: "Email"
+  lang_toggle:
+    es: "ES"
+    en: "EN"
+  a11y:
+    skip: "Skip to content"

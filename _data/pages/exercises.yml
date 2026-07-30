@@ -1,0 +1,33 @@
+es:
+  meta:
+    title: "Ejercicios de español · Axolingua"
+    description: "Explora todos nuestros ejercicios interactivos de español, filtrables por nivel, tipo y tema."
+  eyebrow: "Español"
+  heading: "Ejercicios de español"
+  intro: "Filtra por nivel, tipo de ejercicio o tema para encontrar la práctica ideal. Haz clic en cualquier tarjeta para abrir el ejercicio."
+  filters:
+    skill: "Tipo"
+    level: "Nivel"
+    theme: "Tema"
+    all: "Todos"
+  card:
+    open: "Abrir ejercicio →"
+  empty: "No hay ejercicios con esa combinación de filtros todavía. Vuelve pronto — seguimos agregando más."
+  back: "← Volver al inicio"
+
+en:
+  meta:
+    title: "Spanish Exercises · Axolingua"
+    description: "Browse all our interactive Spanish exercises, filterable by level, type, and theme."
+  eyebrow: "Spanish"
+  heading: "Spanish exercises"
+  intro: "Filter by level, exercise type, or theme to find the right practice. Click any card to open the exercise."
+  filters:
+    skill: "Type"
+    level: "Level"
+    theme: "Theme"
+    all: "All"
+  card:
+    open: "Open exercise →"
+  empty: "No exercises match that filter combination yet. Check back soon — we keep adding more."
+  back: "← Back to home"

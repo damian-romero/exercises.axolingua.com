@@ -1,0 +1,33 @@
+{% comment %}
+  Nav: wordmark + mark, "Ejercicios" link, ES|EN toggle, link back to the
+  main marketing site. The toggle links to the EQUIVALENT page in the
+  other language using polyglot's {% raw %}{% static_href %}{% endraw %}
+  tag so absolute hrefs aren't rewritten to the active language.
+{% endcomment %}
+<header class="nav">
+  <div class="wrap nav__inner">
+    <a class="nav__brand" href="{{ lang_prefix }}/">
+      <img src="/assets/img/mark-nav.png" alt="Axolingua">
+      <span class="wordmark"><em>axo</em>lingua <span style="font-family: var(--font-mono); font-size: .6rem; letter-spacing: .1em; color: var(--stone); font-style: normal;">EJERCICIOS</span></span>
+    </a>
+
+    {% assign base_slug = page.url | remove_first: '/en' %}
+
+    <nav class="nav__links" id="nav-links">
+      <a class="nav__link {% if page.url == '/ejercicios/' %}is-active{% endif %}" href="{{ lang_prefix }}/ejercicios/">{{ t.nav.exercises }}</a>
+      <a class="nav__link" href="{{ site.main_site_url }}" target="_blank" rel="noopener">{{ t.nav.main_site }} ↗</a>
+      <div class="lang-toggle lang-toggle--mobile">
+        <a {% static_href %}href="{{ base_slug }}"{% endstatic_href %} {% if site.active_lang == 'es' %}class="is-active" aria-current="true"{% endif %} lang="es" hreflang="es">{{ t.lang_toggle.es }}</a>
+        <a {% static_href %}href="/en{{ base_slug }}"{% endstatic_href %} {% if site.active_lang == 'en' %}class="is-active" aria-current="true"{% endif %} lang="en" hreflang="en">{{ t.lang_toggle.en }}</a>
+      </div>
+    </nav>
+
+    <div class="nav__right">
+      <div class="lang-toggle lang-toggle--desktop">
+        <a {% static_href %}href="{{ base_slug }}"{% endstatic_href %} {% if site.active_lang == 'es' %}class="is-active" aria-current="true"{% endif %} lang="es" hreflang="es">{{ t.lang_toggle.es }}</a>
+        <a {% static_href %}href="/en{{ base_slug }}"{% endstatic_href %} {% if site.active_lang == 'en' %}class="is-active" aria-current="true"{% endif %} lang="en" hreflang="en">{{ t.lang_toggle.en }}</a>
+      </div>
+      <button class="nav__toggle" aria-expanded="false" aria-controls="nav-links">{{ t.nav.menu_label }}</button>
+    </div>
+  </div>
+</header>

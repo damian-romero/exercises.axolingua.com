@@ -1,0 +1,41 @@
+# ─────────────────────────────────────────────────────────────
+# Axolingua Exercises — free exercise library (exercises.axolingua.com)
+# Jekyll + jekyll-polyglot, same infrastructure as axolingua.com.
+# Spanish is default (root URLs); English lives under /en/.
+# ALL copy lives in _data/ — never here, never in layouts.
+# ─────────────────────────────────────────────────────────────
+
+title: Axolingua Ejercicios
+url: "https://exercises.axolingua.com"
+
+# ── i18n (jekyll-polyglot) — configured BEFORE any content ──
+languages: ["es", "en"]
+default_lang: "es"
+exclude_from_localization:
+  - assets
+  - exercises
+  - robots.txt
+  - sitemap.xml
+  - 404.html
+parallel_localization: false # safer on Netlify build containers
+
+plugins:
+  - jekyll-polyglot
+
+# ── Site-wide settings (values, not copy) ──
+main_site_url: "https://axolingua.com"
+contact_email: "info@axolingua.com"
+
+# Analytics: single lightweight slot. Set to your domain to enable
+# Plausible (e.g. "exercises.axolingua.com"); leave empty to disable.
+plausible_domain: ""
+
+sass:
+  style: compressed
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - .bundle

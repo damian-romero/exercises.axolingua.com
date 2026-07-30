@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spanish Tenses — Sports Edition</title>
+<link href="drill_tiempos_simples_es_a2_deportes_files/css2_ySXi.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=Outfit:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* AXOLINGUA BRAND TOKENS — see _sass/_tokens.scss in axolingua.com */
+  :root {
+    --ivory: #F7F3EE;
+    --cream: #F0EAE1;
+    --sand: #E6DDCF;
+    --linen: #D8CFBF;
+    --feather: #FAF7F3;
+
+    --pink-deep: #B8524A;
+    --pink-mid: #D0736C;
+    --pink-pale: #F2CECC;
+    --pink-wash: #FBF0EF;
+
+    --jade-deep: #2A6B5F;
+    --jade-mid: #3D8876;
+    --jade-pale: #B5D9D3;
+    --jade-wash: #EAF4F2;
+
+    --ochre-deep: #9E6B35;
+    --ochre-mid: #BC8A52;
+    --ochre-pale: #ECDBC4;
+    --ochre-wash: #F9F1E6;
+
+    --charcoal: #2C2A27;
+    --slate: #5A5652;
+    --stone: #8A847E;
+    --pebble: #BEB8B2;
+
+    --font-display: 'Fraunces', Georgia, serif;    /* lesson section titles */
+    --font-score:   'Bebas Neue', sans-serif;      /* SPORTS FLAVOR — scoreboard chrome only */
+    --font-body:    'Outfit', system-ui, sans-serif;
+    --font-mono:    'DM Mono', 'Courier New', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--ivory);
+    color: var(--charcoal);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* SCOREBOARD HEADER — kept as the sports-mag flavor element */
+  header {
+    background: var(--cream);
+    border-bottom: 3px solid var(--pink-mid);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .scoreboard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 28px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .title-block h1 {
+    font-family: var(--font-score);
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    letter-spacing: 2px;
+    color: var(--pink-deep);
+    line-height: 1;
+  }
+  .title-block p {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-top: 4px;
+  }
+
+  .score-display {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .score-box {
+    background: #fff;
+    border: 1px solid var(--linen);
+    border-radius: 6px;
+    padding: 8px 18px;
+    text-align: center;
+  }
+  .score-box .label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--stone);
+  }
+  .score-box .value {
+    font-family: var(--font-score);
+    font-size: 2rem;
+    color: var(--jade-deep);
+    line-height: 1;
+  }
+
+  .progress-bar-outer {
+    flex: 1;
+    max-width: 220px;
+    min-width: 100px;
+  }
+  .progress-bar-outer .label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-bottom: 4px;
+  }
+  .progress-bar-track {
+    height: 8px;
+    background: var(--sand);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--pink-mid), var(--jade-mid));
+    border-radius: 99px;
+    width: 0%;
+    transition: width 0.5s ease;
+  }
+
+  /* TENSE NAV TABS */
+  .tense-nav {
+    display: flex;
+    gap: 0;
+    padding: 0 28px;
+    border-top: 1px solid var(--linen);
+    overflow-x: auto;
+  }
+  .tense-tab {
+    padding: 10px 22px;
+    font-family: var(--font-score);
+    font-size: 1rem;
+    letter-spacing: 1.5px;
+    color: var(--stone);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+  .tense-tab:hover { color: var(--slate); }
+  .tense-tab.active { color: var(--charcoal); border-bottom-color: var(--pink-mid); }
+  .tense-tab[data-tense="presente"] { --tab-color: var(--jade-mid); }
+  .tense-tab[data-tense="preterito"] { --tab-color: var(--pink-deep); }
+  .tense-tab[data-tense="imperfecto"] { --tab-color: var(--ochre-deep); }
+  .tense-tab[data-tense="futuro"] { --tab-color: var(--slate); }
+  .tense-tab.active { border-bottom-color: var(--tab-color, var(--pink-mid)); color: var(--charcoal); }
+
+  /* MAIN CONTENT */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 32px 20px 80px;
+  }
+
+  /* SECTION */
+  .tense-section { display: none; }
+  .tense-section.active { display: block; animation: fadeIn 0.3s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .section-header h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    color: var(--charcoal);
+  }
+  .tense-tag {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 99px;
+    border: 1.5px solid;
+    font-weight: 400;
+  }
+  .presente .tense-tag   { color: var(--jade-deep);  border-color: var(--jade-pale);  background: var(--jade-wash); }
+  .preterito .tense-tag  { color: var(--pink-deep);  border-color: var(--pink-pale);  background: var(--pink-wash); }
+  .imperfecto .tense-tag { color: var(--ochre-deep); border-color: var(--ochre-pale); background: var(--ochre-wash); }
+  .futuro .tense-tag     { color: var(--slate);      border-color: var(--linen);      background: var(--cream); }
+
+  /* REFERENCE BOX */
+  .ref-box {
+    background: #fff;
+    border: 1px solid var(--linen);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .ref-box::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+  }
+  .presente .ref-box::before { background: var(--jade-mid); }
+  .preterito .ref-box::before { background: var(--pink-deep); }
+  .imperfecto .ref-box::before { background: var(--ochre-deep); }
+  .futuro .ref-box::before { background: var(--pebble); }
+
+  .ref-box h3 {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-bottom: 10px;
+  }
+  .ref-box p {
+    font-size: 0.9rem;
+    color: var(--slate);
+    line-height: 1.6;
+    font-style: italic;
+  }
+  .conj-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .conj-item {
+    font-size: 0.82rem;
+    color: var(--charcoal);
+  }
+  .conj-item span {
+    color: var(--stone);
+    margin-right: 6px;
+  }
+
+  /* EXERCISE CARD */
+  .exercise-set { margin-bottom: 40px; }
+  .exercise-set-title {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: .16em;
+    color: var(--stone);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .exercise-set-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--linen);
+  }
+
+  .exercise-card {
+    background: #fff;
+    border: 1px solid var(--linen);
+    border-radius: 10px;
+    padding: 20px 22px;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+  }
+  .exercise-card:hover { border-color: var(--pebble); }
+  .exercise-card.correct { border-color: var(--jade-pale) !important; background: var(--jade-wash); }
+  .exercise-card.incorrect { border-color: var(--pink-pale) !important; background: var(--pink-wash); }
+
+  .exercise-num {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-bottom: 8px;
+  }
+  .exercise-prompt {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--charcoal);
+    margin-bottom: 12px;
+  }
+  .exercise-prompt strong {
+    color: var(--ochre-deep);
+    font-style: italic;
+  }
+
+  /* Fill-in input */
+  .fill-input {
+    background: var(--feather);
+    border: 1.5px solid var(--sand);
+    border-radius: 6px;
+    color: var(--charcoal);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    padding: 8px 14px;
+    width: 180px;
+    max-width: 100%;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+  .fill-input:focus { border-color: var(--jade-mid); box-shadow: 0 0 0 3px var(--jade-pale); }
+  .fill-input.correct { border-color: var(--jade-mid); color: var(--jade-deep); }
+  .fill-input.incorrect { border-color: var(--pink-deep); color: var(--pink-deep); }
+
+  /* Multiple choice */
+  .mc-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .mc-btn {
+    background: var(--feather);
+    border: 1.5px solid var(--sand);
+    border-radius: 6px;
+    color: var(--charcoal);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    padding: 8px 18px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .mc-btn:hover:not(:disabled) { border-color: var(--jade-mid); background: #fff; }
+  .mc-btn.correct { border-color: var(--jade-mid); color: var(--jade-deep); background: var(--jade-wash); }
+  .mc-btn.incorrect { border-color: var(--pink-deep); color: var(--pink-deep); background: var(--pink-wash); }
+  .mc-btn:disabled { cursor: default; opacity: 0.7; }
+
+  /* Reorder */
+  .reorder-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+    min-height: 44px;
+    padding: 8px;
+    background: var(--feather);
+    border: 1px dashed var(--sand);
+    border-radius: 6px;
+  }
+  .word-chip {
+    background: var(--cream);
+    border: 1px solid var(--linen);
+    border-radius: 5px;
+    padding: 6px 14px;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .word-chip:hover { border-color: var(--pebble); background: var(--sand); }
+  .word-chip.selected { opacity: 0.4; }
+  .word-chip.placed { background: var(--pink-wash); border-color: var(--pink-mid); }
+
+  /* Feedback */
+  .feedback {
+    font-size: 0.82rem;
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct { background: var(--jade-wash); color: var(--jade-deep); border: 1px solid var(--jade-pale); }
+  .feedback.incorrect { background: var(--pink-wash); color: var(--pink-deep); border: 1px solid var(--pink-pale); }
+
+  /* CHECK BUTTON */
+  .check-btn {
+    background: var(--pink-mid);
+    border: 1.5px solid var(--pink-mid);
+    border-radius: 6px;
+    color: #fff;
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 0.875rem;
+    padding: 9px 22px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    margin-top: 10px;
+  }
+  .check-btn:hover { background: var(--pink-deep); border-color: var(--pink-deep); }
+  .check-btn:disabled { opacity: 0.4; cursor: default; }
+
+  /* TRANSLATION EXERCISE */
+  .translate-input {
+    background: var(--feather);
+    border: 1.5px solid var(--sand);
+    border-radius: 6px;
+    color: var(--charcoal);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    padding: 10px 14px;
+    width: 100%;
+    max-width: 500px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    resize: none;
+  }
+  .translate-input:focus { border-color: var(--jade-mid); box-shadow: 0 0 0 3px var(--jade-pale); }
+
+  /* SECTION RESULT BANNER */
+  .section-result {
+    display: none;
+    background: linear-gradient(130deg, var(--jade-wash) 0%, var(--ivory) 50%, var(--pink-wash) 100%);
+    border: 1px solid var(--jade-pale);
+    border-radius: 12px;
+    padding: 28px 24px;
+    text-align: center;
+    margin-top: 32px;
+  }
+  .section-result.show { display: block; animation: fadeIn 0.4s ease; }
+  .section-result .big-score {
+    font-family: var(--font-score);
+    font-size: 4rem;
+    color: var(--pink-deep);
+    line-height: 1;
+  }
+  .section-result p { color: var(--slate); margin-top: 8px; font-size: 0.9rem; }
+  .next-btn {
+    background: transparent;
+    border: 1.5px solid var(--jade-mid);
+    color: var(--jade-mid);
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 0.875rem;
+    letter-spacing: .02em;
+    padding: 10px 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 18px;
+    transition: all 0.2s;
+  }
+  .next-btn:hover { background: var(--jade-wash); }
+
+  /* EMOJI SPORT ICONS */
+  .sport-icon { font-size: 1.3rem; vertical-align: middle; margin-right: 6px; }
+
+  /* FINAL RESULT */
+  #final-screen {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+  }
+  #final-screen.show { display: block; animation: fadeIn 0.5s ease; }
+  #final-screen h2 {
+    font-family: var(--font-score);
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    color: var(--pink-deep);
+    letter-spacing: 3px;
+  }
+  #final-screen .final-score {
+    font-family: var(--font-score);
+    font-size: clamp(3rem, 10vw, 7rem);
+    color: var(--charcoal);
+    line-height: 1;
+  }
+  #final-screen p { color: var(--slate); font-size: 1rem; max-width: 400px; margin: 12px auto; }
+  .restart-btn {
+    background: var(--pink-mid);
+    border: 1.5px solid var(--pink-mid);
+    border-radius: 8px;
+    color: #fff;
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 14px 36px;
+    cursor: pointer;
+    margin-top: 28px;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .restart-btn:hover { background: var(--pink-deep); border-color: var(--pink-deep); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--cream); }
+  ::-webkit-scrollbar-thumb { background: var(--linen); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="scoreboard">
+    <div class="title-block">
+      <h1>⚽ Spanish Workout</h1>
+      <p>Verb Tenses · A2 Level · Sports Edition</p>
+    </div>
+    <div class="progress-bar-outer">
+      <div class="label">Progress</div>
+      <div class="progress-bar-track"><div class="progress-bar-fill" id="progressBar"></div></div>
+    </div>
+    <div class="score-display">
+      <div class="score-box">
+        <div class="label">Score</div>
+        <div class="value" id="scoreDisplay">0</div>
+      </div>
+      <div class="score-box">
+        <div class="label">Streak 🔥</div>
+        <div class="value" id="streakDisplay">0</div>
+      </div>
+    </div>
+  </div>
+  <nav class="tense-nav">
+    <button class="tense-tab active" data-tense="presente" onclick="switchTab('presente')">1. Presente</button>
+    <button class="tense-tab" data-tense="preterito" onclick="switchTab('preterito')">2. Pretérito</button>
+    <button class="tense-tab" data-tense="imperfecto" onclick="switchTab('imperfecto')">3. Imperfecto</button>
+    <button class="tense-tab" data-tense="futuro" onclick="switchTab('futuro')">4. Futuro Simple</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============== PRESENTE ============== -->
+<section id="presente" class="tense-section presente active">
+  <div class="section-header">
+    <h2>Presente Simple</h2>
+    <span class="tense-tag">Present Tense</span>
+  </div>
+
+  <div class="ref-box">
+    <h3>📋 Quick Reference</h3>
+    <p>Use the <strong>presente</strong> for habitual actions, facts, and what's happening right now.</p>
+    <div class="conj-grid" style="margin-top:14px">
+      <div><strong style="color:var(--stone);font-size:.8rem;">JUGAR (to play)</strong></div><div></div>
+      <div class="conj-item"><span>yo</span>juego</div>
+      <div class="conj-item"><span>tú</span>juegas</div>
+      <div class="conj-item"><span>él/ella</span>juega</div>
+      <div class="conj-item"><span>nosotros</span>jugamos</div>
+      <div class="conj-item"><span>ellos</span>juegan</div>
+    </div>
+  </div>
+
+  <!-- Exercise Set A: Fill in the blank -->
+  <div class="exercise-set">
+    <div class="exercise-set-title"><span class="sport-icon">🏀</span> A — Fill in the Blank</div>
+
+    <div class="exercise-card" id="p-a1">
+      <div class="exercise-num">Exercise 1</div>
+      <div class="exercise-prompt">Yo siempre <strong>______</strong> (jugar) al baloncesto los sábados.<br><em style="font-size:.8rem;color:var(--slate)">I always play basketball on Saturdays.</em></div>
+      <input class="fill-input" id="p-a1-in" placeholder="conjugate..." autocomplete="off" onkeydown="if(event.key==='Enter')checkFill('p-a1','juego')">
+      <button class="check-btn" onclick="checkFill('p-a1','juego')">Check ✓</button>
+      <div class="feedback" id="p-a1-fb"></div>
+    </div>
+
+    <div class="exercise-card" id="p-a2">
+      <div class="exercise-num">Exercise 2</div>
+      <div class="exercise-prompt">El equipo <strong>______</strong> (correr) cinco kilómetros cada mañana.<br><em style="font-size:.8rem;color:var(--slate)">The team runs 5 km every morning.</em></div>
+      <input class="fill-input" id="p-a2-in" placeholder="conjugate..." autocomplete="off" onkeydown="if(event.key==='Enter')checkFill('p-a2','corre')">
+      <button class="check-btn" onclick="checkFill('p-a2','corre')">Check ✓</button>
+      <div class="feedback" id="p-a2-fb"></div>
+    </div>
+
+    <div class="exercise-card" id="p-a3">
+      <div class="exercise-num">Exercise 3</div>
+      <div class="exercise-prompt">¿Tú <strong>______</strong> (ver) los partidos de fútbol americano los domingos?<br><em style="font-size:.8rem;color:var(--slate)">Do you watch football games on Sundays?</em></div>
+      <input class="fill-input" id="p-a3-in" placeholder="conjugate..." autocomplete="off" onkeydown="if(event.key==='Enter')checkFill('p-a3','ves')">
+      <button class="check-btn" onclick="checkFill('p-a3','ves')">Check ✓</button>
+      <div class="feedback" id="p-a3-fb"></div>
+    </div>
+
+    <div class="exercise-card" id="p-a4">
+      <div class="exercise-num">Exercise 4</div>
+      <div class="exercise-prompt">Nosotros <strong>______</strong> (tener) un partido importante mañana.<br><em style="font-size:.8rem;color:var(--slate)">We have an important game tomorrow.</em></div>
+      <input class="fill-input" id="p-a4-in" placeholder="conjugate..." autocomplete="off" onkeydown="if(event.key==='Enter')checkFill('p-a4','tenemos')">
+      <button class="check-btn" onclick="checkFill('p-a4','tenemos')">Check ✓</button>
+      <div class="feedback" id="p-a4-fb"></div>
+    </div>
+  </div>
+
+  <!-- Exercise Set B: Multiple Choice -->
+  <div class="exercise-set">
+    <div class="exercise-set-title"><span class="sport-icon">🎾</span> B — Multiple Choice</div>
+
+    <div class="exercise-card" id="p-b1">
+      <div class="exercise-num">Exercise 5</div>
+      <div class="exercise-prompt">Mi entrenador siempre <strong>______</strong> estrategias nuevas antes del partido.<br><em style="font-size:.8rem;color:var(--slate)">My coach always uses new strategies before the game.</em></div>
+      <div class="mc-options">
+        <button class="mc-btn" onclick="checkMC('p-b1',this,'usa')">usa</button>
+        <button class="mc-btn" onclick="checkMC('p-b1',this,'usas')">usas</button>
+        <button class="mc-btn" onclick="checkMC('p-b1',this,'usan')">usan</button>
+        <button class="mc-btn" onclick="checkMC('p-b1',this,'usamos')">usamos</button>
+      </div>
+      <div class="feedback" id="p-b1-fb"></div>
+    </div>
+
+    <div class="exercise-card" id="p-b2">
+      <div class="exercise-num">Exercise 6</div>
+      <div class="exercise-prompt">Los fans <strong>______</strong> mucho al estadio los fines de semana.<br><em style="font-size:.8rem;color:var(--slate)">The fans go to the stadium a lot on weekends.</em></div>
+      <div class="mc-options">
+        <button class="mc-btn" onclick="checkMC('p-b2',this,'va')">va</button>
+        <button class="mc-btn" onclick="checkMC('p-b2',this,'voy')">voy</button>
+        <button class="mc-btn" onclick="checkMC('p-b2',this,'van')">van</button>
+        <button class="mc-btn" onclick="checkMC('p-b2',this,'vamos')">vamos</button>
+      </div>
+      <div class="feedback" id="p-b2-fb"></div>
+    </div>
+  </div>
+
+  <!-- Exercise Set C: Translation -->
+  <div class="exercise-set">
+    <div class="exercise-set-title"><span class="sport-icon">⚾</span> C — Translate to Spanish</div>
+    <div class="exercise-card" id="p-c1">
+      <div class="exercise-num">Exercise 7</div>
+      <div class="exercise-prompt">Translate: <strong>"I practice baseball every Tuesday."</strong></div>
+      <textarea class="translate-input" id="p-c1-in" rows="2" placeholder="Write your translation here..."></textarea>
+      <button class="check-btn" onclick="checkTranslation('p-c1',['practico béisbol todos los martes','yo practico béisbol todos los martes','practico el béisbol todos los martes'])">Check ✓</button>
+      <div class="feedback" id="p-c1-fb"></div>
+    </div>
+  </div>
+
+  <div class="section-result" id="presente-result">
+    <div class="big-score" id="presente-score">—</div>
+    <p>Good work on the <strong>Presente</strong>! Ready for the past?</p>
+    <button class="next-btn" onclick="switchTab('preterito')">Next: Pretérito →</button>
+  </div>
+</section>
+
+<!-- ============== PRETÉRITO ============== -->
+<section id="preterito" class="tense-section preterito">
+  <div class="section-header">
+    <h2>Pretérito Indefinido</h2>
+    <span class="tense-tag">Simple Past</span>
+  </div>
+
+  <div class="ref-box">
+    <h3>📋 Quick Reference</h3>
+    <p>Use the <strong>pretérito</strong> for completed actions at a specific time in the past.</p>
+    <div class="conj-grid" style="margin-top:14px">
+      <div><strong style="color:var(--stone);font-size:.8rem;">GANAR (to win)</strong></div><div></div>
+      <div class="conj-item"><span>yo</span>gané</div>
+      <div class="conj-item"><span>tú</span>ganaste</div>
+      <div class="conj-item"><span>él/ella</span>ganó</div>
+      <div class="conj-item"><span>nosotros</span>ganamos</div>
+      <div class="conj-item"><span>ellos</span>ganaron</div>
+    </div>
+  </div>
+
+  <div class="exercise-set">
+    <div class="exercise-set-title"><span class="sport-icon">🏆</span> A — Fill in the Blank</div>
+
+    <div class="exercise-card" id="pt-a1">
+      <div class="exercise-num">Exercise 1</div>
+      <div class="exercise-prompt">El equipo <strong>______</strong> (ganar) el campeonato el año pasado.<br><em style="font-size:.8rem;color:var(--slate)">The team won the championship last year.</em></div>
+      <input class="fill-input" id="pt-a1-in" placeholder="conjugate..." autocomplete="off" onkeydown="if(event.key==='Enter')checkFill('pt-a1','ganó')">
+      <button class="check-btn" onclick="checkFill('pt-a1','ganó')">Check ✓</button>
+      <div class="feedback" id="pt-a1-fb"></div>
+    </div>
+
+    <div class="exercise-card" id="pt-a2">
+      <div class="exercise-num">Exercise 2</div>
+      <div class="exercise-prompt">Ayer yo <strong>______</strong> (correr) diez kilómetros en el parque.<br><em style="font-size:.8rem;color:var(--slate)">Yesterday I ran ten kilometers in the park.</em></div>
+      <input class="fill-input" id="pt-a2-in" placeholder="conjugate..." autocomplete="off" onkeydown="if(event.key==='Enter')checkFill('pt-a2','corrí')">
+      <button class="check-btn" onclick="checkFill('pt-a2','corrí')">Check ✓</button>
+      <div class="feedback" id="pt-a2-fb"></div>
+    </div>
+
+    <div class="exercise-card" id="pt-a3">
+      <div class="exercise-num">Exercise 3</div>
+      <div class="exercise-prompt">¿Ustedes <strong>______</strong> (ver) el partido anoche?<br><em style="font-size:.8rem;color:var(--slate)">Did you all watch the game last night?</em></div>
+      <input class="fill-input" id="pt-a3-in" placeholder="conjugate..." autocomplete="off" onkeydown="if(event.key==='Enter')checkFill('pt-a3','vieron')">
+      <button class="check-btn" onclick="checkFill('pt-a3','vieron')">Check ✓</button>
+      <div class="feedback" id="pt-a3-fb"></div>
+    </div>
+
+    <div class="exercise-card" id="pt-a4">
+      <div class="exercise-num">Exercise 4</div>
+      <div class="exercise-prompt">El entrenador <strong>______</strong> (hablar) con el árbitro después del juego.<br><em style="font-size:.8rem;color:var(--slate)">The coach spoke with the referee after the game.</em></div>
+      <input class="fill-input" id="pt-a4-in" placeholder="conjugate..." autocomplete="off" onkeydown="if(event.key==='Enter')checkFill('pt-a4','habló')">
+      <button class="check-btn" onclick="checkFill('pt-a4','habló')">Check ✓</button>
+      <div class="feedback" id="pt-a4-fb"></div>
+    </div>
+  </div>
+
+  <div class="exercise-set">
+    <div class="exercise-set-title"><span class="sport-icon">🥊</span> B — Multiple Choice</div>
+
+    <div class="exercise-card" id="pt-b1">
+      <div class="exercise-num">Exercise 5</div>
+      <div class="exercise-prompt">El luchador <strong>______</strong> (perder) el combate por decisión de los jueces.<br><em style="font-size:.8rem;color:var(--slate)">The fighter lost the match by the judges' decision.</em></div>
+      <div class="mc-options">
+        <button class="mc-btn" onclick="checkMC('pt-b1',this,'pierde')">pierde</button>
+        <button class="mc-btn" onclick="checkMC('pt-b1',this,'perdió')">perdió</button>
+        <button class="mc-btn" onclick="checkMC('pt-b1',this,'perdiste')">perdiste</button>
+        <button class="mc-btn" onclick="checkMC('pt-b1',this,'pierden')">pierden</button>
+      </div>
+      <div class="feedback" id="pt-b1-fb"></div>
+    </div>
+
+    <div class="exercise-card" id="pt-b2">
+      <div class="exercise-num">Exercise 6</div>
+      <div class="exercise-prompt">Nosotros <strong>______</strong> (hacer) ejercicio en el gimnasio ayer por la tarde.<br><em style="font-size:.8rem;color:var(--slate)">We worked out at the gym yesterday afternoon.</em></div>
+      <div class="mc-options">
+        <button class="mc-btn" onclick="checkMC('pt-b2',this,'hacemos')">hacemos</button>
+        <button class="mc-btn" onclick="checkMC('pt-b2',this,'hicimos')">hicimos</button>
+        <button class="mc-btn" onclick="checkMC('pt-b2',this,'hicieron')">hicieron</button>
+        <button class="mc-btn" onclick="checkMC('pt-b2',this,'hacían')">hacían</button>
+      </div>
+      <div class="feedback" id="pt-b2-fb"></div>
+    </div>
+  </div>
+
+  <!-- Sentence reorder -->
+  <div class="exercise-set">
+    <div class="exercise-set-title"><span class="sport-icon">🏈</span> C — Reorder the Sentence</div>
+    <div class="exercise-card" id="pt-c1">
+      <div class="exercise-num">Exercise 7</div>
+      <div class="exercise-prompt">Put the words in the correct order:<br><em style="font-size:.8rem;color:var(--slate)">"The quarterback threw a perfect pass in the final quarter."</em></div>
+      <div style="margin:10px 0 6px;font-size:.8rem;color:var(--slate)">Word bank — tap to build the sentence:</div>
+      <div class="reorder-area" id="pt-c1-bank">
+        <span class="word-chip" onclick="addWord('pt-c1','pasó','el')">el</span>
+        <span class="word-chip" onclick="addWord('pt-c1','pasó','cuarto')">cuarto</span>
+        <span class="word-chip" onclick="addWord('pt-c1','pasó','lanzó')">lanzó</span>
+        <span class="word-chip" onclick="addWord('pt-c1','pasó','final')">final</span>
+        <span class="word-chip" onclick="addWord('pt-c1','pasó','un')">un</span>
+        <span class="word-chip" onclick="addWord('pt-c1','pasó','perfecto')">perfecto</span>
+        <span class="word-chip" onclick="addWord('pt-c1','pasó','pase')">pase</span>
+        <span class="word-chip" onclick="addWord('pt-c1','pasó','en')">en</span>
+        <span class="word-chip" onclick="addWord('pt-c1','pasó','el quarterback')">el quarterback</span>
+      </div>
+      <div style="font-size:.8rem;color:var(--slate);margin-top:10px">Your sentence:</div>
+      <div class="reorder-area" id="pt-c1-answer" style="border-color:var(--stone);min-height:50px;cursor:pointer" onclick="removeLastWord('pt-c1')"></div>
+      <button class="check-btn" onclick="checkReorder('pt-c1','el quarterback lanzó un pase perfecto en el cuarto final')">Check ✓</button>
+      <div class="feedback" id="pt-c1-fb"></div>
+    </div>
+  </div>
+
+  <div class="section-result" id="preterito-result">
+    <div class="big-score" id="preterito-score">—</div>
+    <p>¡Excelente! Now let's go back in time with the <strong>Imperfecto</strong>.</p>
+    <button class="next-btn" onclick="switchTab('imperfecto')">Next: Imperfecto →</button>
+  </div>
+</section>
+
+<!-- ============== IMPERFECTO ============== -->
+<section id="imperfecto" class="tense-section imperfecto">
+  <div class="section-header">
+    <h2>Pretérito Imperfecto</h2>
+    <span class="tense-tag">Past — Ongoing / Habitual</span>
+  </div>
+
+  <div class="ref-box">
+    <h3>📋 Quick Reference</h3>
+    <p>Use the <strong>imperfecto</strong> for habitual past actions ("used to"), background descriptions, or ongoing past states. Key words: <em>siempre, todos los días, cuando era joven, antes...</em></p>
+    <div class="conj-grid" style="margin-top:14px">
+      <div><strong style="color:var(--stone);font-size:.8rem;">JUGAR (to play)</strong></div>
+      <div><strong style="color:var(--stone);font-size:.8rem;">CORRER (to run)</strong></div>
+      <div class="conj-item"><span>yo</span>jugaba</div>
+      <div class="conj-item"><span>yo</span>corría</div>
+      <div class="conj-item"><span>tú</span>jugabas</div>
+      <div class="conj-item"><span>tú</span>corrías</div>
+      <div class="conj-item"><span>él</span>jugaba</div>
+      <div class="conj-item"><span>él</span>corría</div>
+    </div>
+  </div>
+
+  <div class="exercise-set">
+    <div class="exercise-set-title"><span class="sport-icon">⚽</span> A — Fill in the Blank</div>
+
+    <div class="exercise-card" id="im-a1">
+      <div class="exercise-num">Exercise 1</div>
+      <div class="exercise-prompt">Cuando era niño, yo siempre <strong>______</strong> (jugar) al fútbol en la calle.<br><em style="font-size:.8rem;color:var(--slate)">When I was a kid, I always used to play soccer in the street.</em></div>
+      <input class="fill-input" id="im-a1-in" placeholder="conjugate..." autocomplete="off" onkeydown="if(event.key==='Enter')checkFill('im-a1','jugaba')">
+      <button class="check-btn" onclick="checkFill('im-a1','jugaba')">Check ✓</button>
+      <div class="feedback" id="im-a1-fb"></div>
+    </div>
+
+    <div class="exercise-card" id="im-a2">
+      <div class="exercise-num">Exercise 2</div>
+      <div class="exercise-prompt">El estadio <strong>______</strong> (estar) lleno de aficionados emocionados.<br><em style="font-size:.8rem;color:var(--slate)">The stadium was full of excited fans.</em></div>
+      <input class="fill-input" id="im-a2-in" placeholder="conjugate..." autocomplete="off" onkeydown="if(event.key==='Enter')checkFill('im-a2','estaba')">
+      <button class="check-btn" onclick="checkFill('im-a2','estaba')">Check ✓</button>
+      <div class="feedback" id="im-a2-fb"></div>
+    </div>
+
+    <div class="exercise-card" id="im-a3">
+      <div class="exercise-num">Exercise 3</div>
+      <div class="exercise-prompt">Nosotros <strong>______</strong> (entrenar) todos los días antes de las grandes ligas.<br><em style="font-size:.8rem;color:var(--slate)">We used to train every day before the big leagues.</em></div>
+      <input class="fill-input" id="im-a3-in" placeholder="conjugate..." autocomplete="off" onkeydown="if(event.key==='Enter')checkFill('im-a3','entrenábamos')">
+      <button class="check-btn" onclick="checkFill('im-a3','entrenábamos')">Check ✓</button>
+      <div class="feedback" id="im-a3-fb"></div>
+    </div>
+
+    <div class="exercise-card" id="im-a4">
+      <div class="exercise-num">Exercise 4</div>
+      <div class="exercise-prompt">El jugador <strong>______</strong> (tener) solo diecisiete años cuando firmó su primer contrato.<br><em style="font-size:.8rem;color:var(--slate)">The player was only seventeen when he signed his first contract.</em></div>
+      <input class="fill-input" id="im-a4-in" placeholder="conjugate..." autocomplete="off" onkeydown="if(event.key==='Enter')checkFill('im-a4','tenía')">
+      <button class="check-btn" onclick="checkFill('im-a4','tenía')">Check ✓</button>
+      <div class="feedback" id="im-a4-fb"></div>
+    </div>
+  </div>
+
+  <div class="exercise-set">
+    <div class="exercise-set-title"><span class="sport-icon">🏊</span> B — Multiple Choice</div>
+
+    <div class="exercise-card" id="im-b1">
+      <div class="exercise-num">Exercise 5</div>
+      <div class="exercise-prompt">Antes, el nadador <strong>______</strong> seis horas al día en la piscina olímpica.<br><em style="font-size:.8rem;color:var(--slate)">Before, the swimmer used to train six hours a day in the Olympic pool.</em></div>
+      <div class="mc-options">
+        <button class="mc-btn" onclick="checkMC('im-b1',this,'entrenaba')">entrenaba</button>
+        <button class="mc-btn" onclick="checkMC('im-b1',this,'entrenó')">entrenó</button>
+        <button class="mc-btn" onclick="checkMC('im-b1',this,'entrena')">entrena</button>
+        <button class="mc-btn" onclick="checkMC('im-b1',this,'entrenará')">entrenará</button>
+      </div>
+      <div class="feedback" id="im-b1-fb"></div>
+    </div>
+
+    <div class="exercise-card" id="im-b2">
+      <div class="exercise-num">Exercise 6</div>
+      <div class="exercise-prompt">De niño, él <strong>______</strong> ver todos los partidos de la NFL con su padre.<br><em style="font-size:.8rem;color:var(--slate)">As a child, he used to love watching all the NFL games with his father.</em></div>
+      <div class="mc-options">
+        <button class="mc-btn" onclick="checkMC('im-b2',this,'amaba')">amaba</button>
+        <button class="mc-btn" onclick="checkMC('im-b2',this,'amó')">amó</button>
+        <button class="mc-btn" onclick="checkMC('im-b2',this,'ama')">ama</button>
+        <button class="mc-btn" onclick="checkMC('im-b2',this,'amará')">amará</button>
+      </div>
+      <div class="feedback" id="im-b2-fb"></div>
+    </div>
+  </div>
+
+  <div class="exercise-set">
+    <div class="exercise-set-title"><span class="sport-icon">🎿</span> C — Pretérito vs. Imperfecto (Choose the right one!)</div>
+    <div class="exercise-card" id="im-c1">
+      <div class="exercise-num">Exercise 7 — Context Challenge</div>
+      <div class="exercise-prompt">
+        Cuando yo <strong>______</strong> (ser) joven, <strong>______</strong> (practicar) hockey todos los inviernos.<br>
+        Un día, <strong>______</strong> (romper/yo) el palo durante un partido importante.<br>
+        <em style="font-size:.8rem;color:var(--slate)">When I was young, I used to play hockey every winter. One day, I broke my stick during an important game.</em>
+      </div>
+      <div style="font-size:.82rem;color:var(--stone);margin-bottom:8px">Select the correct forms in order:</div>
+      <div class="mc-options" style="flex-direction:column;gap:6px">
+        <button class="mc-btn" onclick="checkMC('im-c1',this,'era/practicaba/rompí')" style="text-align:left">era · practicaba · rompí ✓?</button>
+        <button class="mc-btn" onclick="checkMC('im-c1',this,'fui/practiqué/rompí')" style="text-align:left">fui · practiqué · rompí ✓?</button>
+        <button class="mc-btn" onclick="checkMC('im-c1',this,'era/practiqué/rompía')" style="text-align:left">era · practiqué · rompía ✓?</button>
+      </div>
+      <div class="feedback" id="im-c1-fb"></div>
+    </div>
+  </div>
+
+  <div class="section-result" id="imperfecto-result">
+    <div class="big-score" id="imperfecto-score">—</div>
+    <p>Almost there! One tense left — let's talk about the <strong>Futuro</strong>!</p>
+    <button class="next-btn" onclick="switchTab('futuro')">Next: Futuro Simple →</button>
+  </div>
+</section>
+
+<!-- ============== FUTURO ============== -->
+<section id="futuro" class="tense-section futuro">
+  <div class="section-header">
+    <h2>Futuro Simple</h2>
+    <span class="tense-tag">Simple Future</span>
+  </div>
+
+  <div class="ref-box">
+    <h3>📋 Quick Reference</h3>
+    <p>Use the <strong>futuro simple</strong> for predictions, promises, and future plans. Add endings directly to the infinitive!</p>
+    <div class="conj-grid" style="margin-top:14px">
+      <div><strong style="color:var(--stone);font-size:.8rem;">GANAR (to win) — any verb!</strong></div><div></div>
+      <div class="conj-item"><span>yo</span>ganaré</div>
+      <div class="conj-item"><span>tú</span>ganarás</div>
+      <div class="conj-item"><span>él/ella</span>ganará</div>
+      <div class="conj-item"><span>nosotros</span>ganaremos</div>
+      <div class="conj-item"><span>ellos</span>ganarán</div>
+    </div>
+  </div>
+
+  <div class="exercise-set">
+    <div class="exercise-set-title"><span class="sport-icon">🏆</span> A — Fill in the Blank</div>
+
+    <div class="exercise-card" id="fu-a1">
+      <div class="exercise-num">Exercise 1</div>
+      <div class="exercise-prompt">El año que viene, nosotros <strong>______</strong> (ganar) el campeonato.<br><em style="font-size:.8rem;color:var(--slate)">Next year, we will win the championship.</em></div>
+      <input class="fill-input" id="fu-a1-in" placeholder="conjugate..." autocomplete="off" onkeydown="if(event.key==='Enter')checkFill('fu-a1','ganaremos')">
+      <button class="check-btn" onclick="checkFill('fu-a1','ganaremos')">Check ✓</button>
+      <div class="feedback" id="fu-a1-fb"></div>
+    </div>
+
+    <div class="exercise-card" id="fu-a2">
+      <div class="exercise-num">Exercise 2</div>
+      <div class="exercise-prompt">¿Tú <strong>______</strong> (ver) el Super Bowl este año?<br><em style="font-size:.8rem;color:var(--slate)">Will you watch the Super Bowl this year?</em></div>
+      <input class="fill-input" id="fu-a2-in" placeholder="conjugate..." autocomplete="off" onkeydown="if(event.key==='Enter')checkFill('fu-a2','verás')">
+      <button class="check-btn" onclick="checkFill('fu-a2','verás')">Check ✓</button>
+      <div class="feedback" id="fu-a2-fb"></div>
+    </div>
+
+    <div class="exercise-card" id="fu-a3">
+      <div class="exercise-num">Exercise 3</div>
+      <div class="exercise-prompt">Los atletas <strong>______</strong> (competir) en los Juegos Olímpicos el próximo verano.<br><em style="font-size:.8rem;color:var(--slate)">The athletes will compete in the Olympic Games next summer.</em></div>
+      <input class="fill-input" id="fu-a3-in" placeholder="conjugate..." autocomplete="off" onkeydown="if(event.key==='Enter')checkFill('fu-a3','competirán')">
+      <button class="check-btn" onclick="checkFill('fu-a3','competirán')">Check ✓</button>
+      <div class="feedback" id="fu-a3-fb"></div>
+    </div>
+
+    <div class="exercise-card" id="fu-a4">
+      <div class="exercise-num">Exercise 4</div>
+      <div class="exercise-prompt">Yo <strong>______</strong> (entrenar) más duro la próxima temporada.<br><em style="font-size:.8rem;color:var(--slate)">I will train harder next season.</em></div>
+      <input class="fill-input" id="fu-a4-in" placeholder="conjugate..." autocomplete="off" onkeydown="if(event.key==='Enter')checkFill('fu-a4','entrenaré')">
+      <button class="check-btn" onclick="checkFill('fu-a4','entrenaré')">Check ✓</button>
+      <div class="feedback" id="fu-a4-fb"></div>
+    </div>
+  </div>
+
+  <div class="exercise-set">
+    <div class="exercise-set-title"><span class="sport-icon">🏎️</span> B — Multiple Choice</div>
+
+    <div class="exercise-card" id="fu-b1">
+      <div class="exercise-num">Exercise 5</div>
+      <div class="exercise-prompt">El corredor <strong>______</strong> el récord mundial en la próxima maratón.<br><em style="font-size:.8rem;color:var(--slate)">The runner will break the world record in the next marathon.</em></div>
+      <div class="mc-options">
+        <button class="mc-btn" onclick="checkMC('fu-b1',this,'romperá')">romperá</button>
+        <button class="mc-btn" onclick="checkMC('fu-b1',this,'rompió')">rompió</button>
+        <button class="mc-btn" onclick="checkMC('fu-b1',this,'rompe')">rompe</button>
+        <button class="mc-btn" onclick="checkMC('fu-b1',this,'rompería')">rompería</button>
+      </div>
+      <div class="feedback" id="fu-b1-fb"></div>
+    </div>
+
+    <div class="exercise-card" id="fu-b2">
+      <div class="exercise-num">Exercise 6</div>
+      <div class="exercise-prompt">¿Cuándo <strong>______</strong> (poder/tú) ir al gimnasio conmigo?<br><em style="font-size:.8rem;color:var(--slate)">When will you be able to go to the gym with me?</em></div>
+      <div class="mc-options">
+        <button class="mc-btn" onclick="checkMC('fu-b2',this,'podrás')">podrás</button>
+        <button class="mc-btn" onclick="checkMC('fu-b2',this,'puedes')">puedes</button>
+        <button class="mc-btn" onclick="checkMC('fu-b2',this,'pudiste')">pudiste</button>
+        <button class="mc-btn" onclick="checkMC('fu-b2',this,'podías')">podías</button>
+      </div>
+      <div class="feedback" id="fu-b2-fb"></div>
+    </div>
+  </div>
+
+  <!-- Open-ended writing -->
+  <div class="exercise-set">
+    <div class="exercise-set-title"><span class="sport-icon">✍️</span> C — Free Writing (Your Sports Future!)</div>
+    <div class="exercise-card">
+      <div class="exercise-num">Exercise 7 — Open Writing</div>
+      <div class="exercise-prompt">Write 2–3 sentences in <strong>futuro simple</strong> about your sports plans for next year.<br><em style="font-size:.8rem;color:var(--slate)">Example: "El próximo año, jugaré en un torneo de béisbol. También entrenaremos más en equipo..."</em></div>
+      <textarea class="translate-input" id="fu-c1-in" rows="4" placeholder="Write your answer here..."></textarea>
+      <button class="check-btn" onclick="revealFreeWrite()">See Model Answer ✓</button>
+      <div class="feedback" id="fu-c1-fb"></div>
+    </div>
+  </div>
+
+  <div class="section-result" id="futuro-result">
+    <div class="big-score" id="futuro-score">—</div>
+    <p>¡Lo lograste! You've completed all four tenses! 🎉</p>
+    <button class="next-btn" onclick="showFinal()">See Final Score →</button>
+  </div>
+</section>
+
+<!-- FINAL SCREEN -->
+<div id="final-screen">
+  <p style="font-size:.7rem;letter-spacing:4px;text-transform:uppercase;color:var(--slate);margin-bottom:8px">Final Score</p>
+  <h2>¡Campeón! 🏆</h2>
+  <div class="final-score" id="finalScoreNum">—</div>
+  <p id="finalMessage">Great effort today! Keep practicing to level up your Spanish game.</p>
+  <button class="restart-btn" onclick="restartAll()">↩ Play Again</button>
+</div>
+
+</main>
+
+<script>
+// ============ STATE ============
+let totalScore = 0;
+let streak = 0;
+let totalQuestions = 0;
+let answeredQuestions = new Set();
+
+const sectionQuestions = {
+  presente:   ['p-a1','p-a2','p-a3','p-a4','p-b1','p-b2','p-c1'],
+  preterito:  ['pt-a1','pt-a2','pt-a3','pt-a4','pt-b1','pt-b2','pt-c1'],
+  imperfecto: ['im-a1','im-a2','im-a3','im-a4','im-b1','im-b2','im-c1'],
+  futuro:     ['fu-a1','fu-a2','fu-a3','fu-a4','fu-b1','fu-b2']
+};
+const allQs = Object.values(sectionQuestions).flat();
+totalQuestions = allQs.length;
+
+// Reorder state
+const reorderState = {};
+
+// ============ TABS ============
+function switchTab(tense) {
+  document.querySelectorAll('.tense-tab').forEach(t => t.classList.toggle('active', t.dataset.tense === tense));
+  document.querySelectorAll('.tense-section').forEach(s => s.classList.toggle('active', s.id === tense));
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ============ SCORING ============
+function registerAnswer(id, correct) {
+  if (answeredQuestions.has(id)) return;
+  answeredQuestions.add(id);
+  if (correct) {
+    totalScore += 10;
+    streak++;
+  } else {
+    streak = 0;
+  }
+  updateUI();
+  checkSectionComplete(id);
+}
+
+function updateUI() {
+  document.getElementById('scoreDisplay').textContent = totalScore;
+  document.getElementById('streakDisplay').textContent = streak;
+  const pct = (answeredQuestions.size / totalQuestions) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+function checkSectionComplete(id) {
+  for (const [section, qs] of Object.entries(sectionQuestions)) {
+    if (qs.includes(id)) {
+      const done = qs.filter(q => answeredQuestions.has(q)).length;
+      if (done === qs.length) {
+        setTimeout(() => showSectionResult(section, qs), 600);
+      }
+      break;
+    }
+  }
+}
+
+function showSectionResult(section, qs) {
+  const correct = qs.filter(q => {
+    const card = document.getElementById(q);
+    return card && card.classList.contains('correct');
+  }).length;
+  const el = document.getElementById(section + '-result');
+  document.getElementById(section + '-score').textContent = correct + '/' + qs.length + ' correct';
+  el.classList.add('show');
+  el.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+// ============ FILL-IN ============
+function checkFill(id, answer) {
+  if (answeredQuestions.has(id)) return;
+  const input = document.getElementById(id + '-in');
+  const fb = document.getElementById(id + '-fb');
+  const card = document.getElementById(id);
+  const val = input.value.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  const ans = answer.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  const correct = val === ans;
+  input.classList.add(correct ? 'correct' : 'incorrect');
+  card.classList.add(correct ? 'correct' : 'incorrect');
+  fb.className = 'feedback show ' + (correct ? 'correct' : 'incorrect');
+  fb.textContent = correct ? '✅ ¡Correcto! Great job!' : `❌ Not quite. The correct answer is: "${answer}"`;
+  input.disabled = true;
+  card.querySelector('.check-btn').disabled = true;
+  registerAnswer(id, correct);
+}
+
+// ============ MULTIPLE CHOICE ============
+function checkMC(id, btn, correctAnswer) {
+  if (answeredQuestions.has(id)) return;
+  const card = document.getElementById(id);
+  const fb = document.getElementById(id + '-fb');
+  const allBtns = card.querySelectorAll('.mc-btn');
+  allBtns.forEach(b => b.disabled = true);
+  const selected = btn.textContent.trim().split(' ')[0];
+  const isCorrect = (id === 'im-c1')
+    ? btn.textContent.includes('era · practicaba · rompí')
+    : selected === correctAnswer;
+  btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+  card.classList.add(isCorrect ? 'correct' : 'incorrect');
+  fb.className = 'feedback show ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.textContent = isCorrect ? '✅ ¡Correcto! Excellent choice!' : `❌ Not quite. The correct answer is: "${correctAnswer}"`;
+  registerAnswer(id, isCorrect);
+}
+
+// ============ TRANSLATION ============
+function checkTranslation(id, acceptedAnswers) {
+  if (answeredQuestions.has(id)) return;
+  const input = document.getElementById(id + '-in');
+  const fb = document.getElementById(id + '-fb');
+  const card = document.getElementById(id);
+  const val = input.value.trim().toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/[.,!?]/g,'');
+  const correct = acceptedAnswers.some(a => {
+    const norm = a.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[.,!?]/g,'');
+    return val === norm;
+  });
+  card.classList.add(correct ? 'correct' : 'incorrect');
+  fb.className = 'feedback show ' + (correct ? 'correct' : 'incorrect');
+  fb.textContent = correct
+    ? '✅ ¡Perfecto! Great translation!'
+    : `❌ Check your answer. Accepted: "${acceptedAnswers[0]}"`;
+  input.disabled = true;
+  card.querySelector('.check-btn').disabled = true;
+  registerAnswer(id, correct);
+}
+
+// ============ REORDER ============
+function addWord(id, state, word) {
+  if (!reorderState[id]) reorderState[id] = [];
+  reorderState[id].push(word);
+  renderReorder(id);
+}
+function removeLastWord(id) {
+  if (!reorderState[id] || !reorderState[id].length) return;
+  if (answeredQuestions.has(id)) return;
+  const word = reorderState[id].pop();
+  renderReorder(id);
+  // Re-enable chip in bank
+  const bank = document.getElementById(id + '-bank');
+  bank.querySelectorAll('.word-chip').forEach(chip => {
+    if (chip.textContent.trim() === word && chip.classList.contains('selected')) {
+      chip.classList.remove('selected');
+      return false;
+    }
+  });
+}
+function renderReorder(id) {
+  const answerDiv = document.getElementById(id + '-answer');
+  answerDiv.innerHTML = reorderState[id].map((w,i) =>
+    `<span class="word-chip placed" onclick="removeAt('${id}',${i})">${w}</span>`
+  ).join('');
+  // Mark used chips
+  const bank = document.getElementById(id + '-bank');
+  const used = [...reorderState[id]];
+  bank.querySelectorAll('.word-chip').forEach(chip => {
+    const idx = used.indexOf(chip.textContent.trim());
+    if (idx > -1) {
+      chip.classList.add('selected');
+      used.splice(idx, 1);
+    } else {
+      chip.classList.remove('selected');
+    }
+  });
+}
+function removeAt(id, index) {
+  if (answeredQuestions.has(id)) return;
+  const word = reorderState[id].splice(index, 1)[0];
+  renderReorder(id);
+}
+function checkReorder(id, correctSentence) {
+  if (answeredQuestions.has(id)) return;
+  const fb = document.getElementById(id + '-fb');
+  const card = document.getElementById(id);
+  const current = (reorderState[id] || []).join(' ').toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  const correct = correctSentence.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  const isCorrect = current === correct;
+  card.classList.add(isCorrect ? 'correct' : 'incorrect');
+  fb.className = 'feedback show ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.textContent = isCorrect ? '✅ ¡Correcto! Perfect sentence!' : `❌ Not quite. Correct: "${correctSentence}"`;
+  card.querySelector('.check-btn').disabled = true;
+  registerAnswer(id, isCorrect);
+}
+
+// ============ FREE WRITE ============
+function revealFreeWrite() {
+  const fb = document.getElementById('fu-c1-fb');
+  fb.className = 'feedback show correct';
+  fb.innerHTML = '📝 <strong>Model answer:</strong> "El próximo año, jugaré en un torneo de béisbol. Nuestro equipo practicará más y ganaremos más partidos. También correré una media maratón en primavera."';
+  // Manually complete futuro section
+  if (!answeredQuestions.has('fu-free')) {
+    answeredQuestions.add('fu-free');
+    // check if remaining futuro Qs are done
+    const fuQs = sectionQuestions.futuro;
+    const done = fuQs.filter(q => answeredQuestions.has(q)).length;
+    if (done === fuQs.length) {
+      setTimeout(() => showSectionResult('futuro', fuQs), 600);
+    }
+    updateUI();
+  }
+}
+
+// ============ FINAL ============
+function showFinal() {
+  document.querySelectorAll('.tense-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tense-tab').forEach(t => t.classList.remove('active'));
+  const finalScreen = document.getElementById('final-screen');
+  finalScreen.classList.add('show');
+  document.getElementById('finalScoreNum').textContent = totalScore + ' pts';
+  const pct = totalScore / (allQs.length * 10) * 100;
+  let msg = pct >= 80 ? '🏆 ¡Campeón! You played an incredible game. Outstanding Spanish skills!'
+    : pct >= 60 ? '🥈 ¡Muy bien! Solid performance — keep training and you\'ll reach the top!'
+    : '🥉 Good effort! Review the sections that tripped you up and try again. ¡Tú puedes!';
+  document.getElementById('finalMessage').textContent = msg;
+  finalScreen.scrollIntoView({behavior:'smooth'});
+}
+
+function restartAll() {
+  totalScore = 0; streak = 0; answeredQuestions.clear(); reorderState['pt-c1'] = [];
+  updateUI();
+  document.querySelectorAll('.fill-input').forEach(el => { el.value=''; el.disabled=false; el.className='fill-input'; });
+  document.querySelectorAll('.translate-input').forEach(el => { el.value=''; el.disabled=false; });
+  document.querySelectorAll('.mc-btn').forEach(el => { el.disabled=false; el.className='mc-btn'; });
+  document.querySelectorAll('.exercise-card').forEach(el => el.className='exercise-card');
+  document.querySelectorAll('.check-btn').forEach(el => el.disabled=false);
+  document.querySelectorAll('.feedback').forEach(el => { el.className='feedback'; el.textContent=''; });
+  document.querySelectorAll('.section-result').forEach(el => el.classList.remove('show'));
+  document.getElementById('final-screen').classList.remove('show');
+  document.getElementById('pt-c1-answer').innerHTML='';
+  document.getElementById('pt-c1-bank').querySelectorAll('.word-chip').forEach(c=>c.classList.remove('selected'));
+  switchTab('presente');
+}
+</script>
+
+
+</body></html>

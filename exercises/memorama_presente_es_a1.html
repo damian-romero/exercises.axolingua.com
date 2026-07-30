@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memorama · Presente A1 · Greta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300&family=Outfit:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ivory: #F7F3EE;
+    --cream: #F0EAE1;
+    --charcoal: #2C2A27;
+    --slate: #5A5652;
+    --pink: #D0736C;
+    --pink-deep: #B8524A;
+    --pink-wash: #FBF0EF;
+    --jade: #3D8876;
+    --jade-wash: #EAF4F2;
+    --ochre: #BC8A52;
+    --font-display: 'Fraunces', Georgia, serif;
+    --font-body: 'Outfit', system-ui, sans-serif;
+    --font-mono: 'DM Mono', 'Courier New', monospace;
+    --shadow: 0 6px 18px rgba(44, 42, 39, 0.10);
+    --shadow-lift: 0 10px 26px rgba(44, 42, 39, 0.18);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--ivory);
+    color: var(--charcoal);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1.5rem 3rem;
+  }
+
+  header {
+    width: 100%;
+    max-width: 820px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 1.75rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .title-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    color: var(--pink);
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: var(--charcoal);
+    letter-spacing: -0.01em;
+  }
+
+  h1 em {
+    color: var(--pink-deep);
+    font-style: italic;
+    font-weight: bold;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--slate);
+    margin-top: 0.35rem;
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .score {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    color: var(--charcoal);
+    background: var(--pink-wash);
+    padding: 0.5rem 0.9rem;
+    border-radius: 0.4rem;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+  }
+
+  .score .count {
+    color: var(--pink-deep);
+    font-size: 1.05rem;
+  }
+
+  button.reset {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: var(--charcoal);
+    color: var(--ivory);
+    border: none;
+    padding: 0.65rem 1.1rem;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.15s ease;
+  }
+
+  button.reset:hover {
+    background: var(--pink-deep);
+  }
+
+  .board {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.85rem;
+    width: 100%;
+    max-width: 820px;
+    aspect-ratio: 1 / 1;
+  }
+
+  .card {
+    position: relative;
+    perspective: 1000px;
+    cursor: pointer;
+    aspect-ratio: 1 / 1;
+  }
+
+  .card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .card.flipped .card-inner,
+  .card.matched .card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .card-face {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.6rem;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    box-shadow: var(--shadow);
+    text-align: center;
+    padding: 0.5rem;
+  }
+
+  /* FACE-DOWN — numbered card */
+  .card-back {
+    background: var(--pink-deep);
+    color: var(--ivory);
+    font-family: var(--font-mono);
+    font-size: 3rem;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+  }
+
+  .card:hover:not(.matched):not(.disabled) .card-back {
+    background: var(--pink);
+    box-shadow: var(--shadow-lift);
+    transform: translateY(-2px);
+  }
+
+  /* FACE-UP — content card */
+  .card-front {
+    background: var(--cream);
+    color: var(--charcoal);
+    transform: rotateY(180deg);
+    font-family: var(--font-body);
+    font-size: 1.3rem;
+    line-height: 1.25;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.7rem;
+  }
+
+  .card-front .num-tag {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.65rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--slate);
+    font-weight: bold;
+    letter-spacing: 0.08em;
+  }
+
+  .card-front .content {
+    font-weight: bold;
+    color: var(--charcoal);
+  }
+
+  .card-front .content em {
+    font-style: italic;
+    color: var(--pink-deep);
+    font-weight: bold;
+  }
+
+  /* MATCHED state — jade success */
+  .card.matched .card-front {
+    background: var(--jade-wash);
+    color: var(--charcoal);
+    border: 2px solid var(--jade);
+  }
+
+  .card.matched .card-front .content {
+    color: var(--charcoal);
+  }
+
+  .card.matched .card-front::after {
+    content: "✓";
+    position: absolute;
+    top: 0.5rem;
+    right: 0.65rem;
+    font-family: sans-serif;
+    font-size: 1rem;
+    color: var(--jade);
+    font-weight: bold;
+  }
+
+  /* WIN message */
+  .win-banner {
+    margin-top: 1.5rem;
+    padding: 1.2rem 1.8rem;
+    background: var(--jade);
+    color: var(--ivory);
+    border-radius: 0.5rem;
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-style: italic;
+    text-align: center;
+    box-shadow: var(--shadow);
+    animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes pop {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .win-banner strong {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 0.4rem;
+    opacity: 0.85;
+    font-style: normal;
+  }
+
+  footer {
+    margin-top: 2rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--slate);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  footer em {
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--pink);
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 0.85rem;
+  }
+
+  /* Legend under header */
+  .legend {
+    width: 100%;
+    max-width: 820px;
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--slate);
+    text-transform: uppercase;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .legend-dot {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+  }
+
+  .legend-dot.regular { background: var(--ochre); }
+  .legend-dot.irregular { background: var(--pink-deep); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title-block">
+    <span class="kicker">Repaso A1 · Presente</span>
+    <h1>Memorama de <em>verbos</em></h1>
+    <p class="subtitle">Match each prompt with its conjugated form.</p>
+  </div>
+  <div class="controls">
+    <div class="score">Aciertos: <span class="count" id="matches">0</span>/8</div>
+    <button class="reset" id="reset">Nueva partida</button>
+  </div>
+</header>
+
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot regular"></span>4 regulares</div>
+  <div class="legend-item"><span class="legend-dot irregular"></span>4 irregulares</div>
+  <div class="legend-item">→ 16 cartas · 8 parejas</div>
+</div>
+
+<div class="board" id="board"></div>
+
+<div id="win" hidden></div>
+
+<footer>axolingua · Spanish for Expats · <em>¡A jugar!</em></footer>
+
+<script>
+  // ─── PAIRS ─────────────────────────────────────────────
+  // Mixed persons (yo, tú, él/ella, nosotros) × 8 verbs
+  const pairs = [
+    // REGULARS
+    { id: 0, prompt: "yo + hablar",       answer: "hablo",       type: "reg" },
+    { id: 1, prompt: "nosotros + comer",  answer: "comemos",     type: "reg" },
+    { id: 2, prompt: "tú + vivir",        answer: "vives",       type: "reg" },
+    { id: 3, prompt: "ella + trabajar",   answer: "trabaja",     type: "reg" },
+    // IRREGULARS
+    { id: 4, prompt: "yo + tener",        answer: "tengo",       type: "irr" },
+    { id: 5, prompt: "tú + ir",           answer: "vas",         type: "irr" },
+    { id: 6, prompt: "él + ser",          answer: "es",          type: "irr" },
+    { id: 7, prompt: "yo + hacer",        answer: "hago",        type: "irr" },
+  ];
+
+  const board = document.getElementById("board");
+  const matchesEl = document.getElementById("matches");
+  const winEl = document.getElementById("win");
+  const resetBtn = document.getElementById("reset");
+
+  let firstCard = null;
+  let secondCard = null;
+  let locked = false;
+  let matchCount = 0;
+
+  function shuffle(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function buildDeck() {
+    // Create 16 cards: for each pair, one "prompt" and one "answer"
+    const deck = [];
+    pairs.forEach(p => {
+      deck.push({ pairId: p.id, text: p.prompt, role: "prompt", type: p.type });
+      deck.push({ pairId: p.id, text: p.answer, role: "answer", type: p.type });
+    });
+    return shuffle(deck);
+  }
+
+  function render() {
+    board.innerHTML = "";
+    winEl.hidden = true;
+    winEl.className = "";
+    matchCount = 0;
+    matchesEl.textContent = "0";
+    firstCard = null;
+    secondCard = null;
+    locked = false;
+
+    const deck = buildDeck();
+    deck.forEach((cardData, index) => {
+      const position = index + 1; // 1-16 for screen-share reference
+      const card = document.createElement("div");
+      card.className = "card";
+      card.dataset.pairId = cardData.pairId;
+      card.dataset.position = position;
+
+      card.innerHTML = `
+        <div class="card-inner">
+          <div class="card-face card-back">${position}</div>
+          <div class="card-face card-front">
+            <span class="num-tag">${String(position).padStart(2, "0")}</span>
+            <span class="content">${cardData.text}</span>
+          </div>
+        </div>
+      `;
+
+      card.addEventListener("click", () => handleCardClick(card));
+      board.appendChild(card);
+    });
+  }
+
+  function handleCardClick(card) {
+    if (locked) return;
+    if (card === firstCard) return;
+    if (card.classList.contains("matched")) return;
+    if (card.classList.contains("flipped")) return;
+
+    card.classList.add("flipped");
+
+    if (!firstCard) {
+      firstCard = card;
+      return;
+    }
+
+    secondCard = card;
+    checkMatch();
+  }
+
+  function checkMatch() {
+    const match = firstCard.dataset.pairId === secondCard.dataset.pairId;
+
+    if (match) {
+      firstCard.classList.add("matched");
+      secondCard.classList.add("matched");
+      firstCard = null;
+      secondCard = null;
+      matchCount += 1;
+      matchesEl.textContent = String(matchCount);
+
+      if (matchCount === pairs.length) {
+        setTimeout(showWin, 500);
+      }
+    } else {
+      locked = true;
+      setTimeout(() => {
+        firstCard.classList.remove("flipped");
+        secondCard.classList.remove("flipped");
+        firstCard = null;
+        secondCard = null;
+        locked = false;
+      }, 1400);
+    }
+  }
+
+  function showWin() {
+    winEl.hidden = false;
+    winEl.className = "win-banner";
+    winEl.innerHTML = "<strong>¡Excelente!</strong>Completaste el memorama. Ocho verbos, ocho aciertos.";
+  }
+
+  resetBtn.addEventListener("click", render);
+
+  // Initial render
+  render();
+</script>
+
+</body>
+</html>

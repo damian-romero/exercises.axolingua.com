@@ -1,0 +1,25 @@
+# ─────────────────────────────────────────────────────────────
+# Human-readable labels for exercise metadata (see NAMING_CONVENTION.md
+# in the source Excercises folder for the underlying skill/grammar/level
+# vocabulary). Used to render filter pills and card tags in both languages.
+# Add a new key here whenever a new skill/grammar/theme value is used in
+# _data/exercise_catalog.yml.
+# ─────────────────────────────────────────────────────────────
+
+skills:
+  memorama: { es: "Memorama", en: "Memory match" }
+  tabu: { es: "Tabú", en: "Taboo" }
+  cloze: { es: "Historia para completar", en: "Story fill-in" }
+  drill: { es: "Repaso guiado", en: "Guided drill" }
+
+grammar:
+  presente: { es: "Presente", en: "Present tense" }
+  tiempos_simples: { es: "Tiempos simples", en: "Simple tenses" }
+
+levels:
+  a1: { es: "A1 · Principiante", en: "A1 · Beginner" }
+  a2: { es: "A2 · Elemental", en: "A2 · Elementary" }
+
+themes:
+  general: { es: "General", en: "General" }
+  deportes: { es: "Deportes", en: "Sports" }

@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Memorama de verbos · A2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700&family=Outfit:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============ Axolingua tokens — see _sass/_tokens.scss ============ */
+  :root{
+    --ivory:#F7F3EE;
+    --paper:#FFFFFF;
+    --charcoal:#2C2A27;
+    --pink:#D0736C;
+    --pink-deep:#B8524A;
+    --jade:#3D8876;
+    --ochre:#BC8A52;
+    --ochre-deep:#9E6B35;
+    --rule:#D8CFBF;
+    --mute:#8A847E;
+
+    /* tense families: past = ochre, commands = pink, present = jade, future = charcoal */
+    --t-presente:var(--jade);
+    --t-preterito:var(--ochre);
+    --t-imperfecto:var(--ochre-deep);
+    --t-mandato-tu:var(--pink);
+    --t-mandato-usted:var(--pink-deep);
+    --t-futuro:var(--charcoal);
+
+    --display:'Fraunces',Georgia,serif;
+    --ui:'Outfit',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:'DM Mono','Courier New',monospace;
+
+    --cols:6;
+    --gap:10px;
+  }
+  body[data-size="24"]{--cols:6;}
+  body[data-size="48"]{--cols:8;}
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    background:var(--ivory); color:var(--charcoal); font-family:var(--ui);
+    display:flex; flex-direction:column; min-height:100vh; padding:14px 16px 20px;
+  }
+  button{font-family:inherit;}
+
+  /* ============ top bar ============ */
+  .bar{
+    flex:0 0 auto; display:flex; align-items:center; justify-content:space-between;
+    gap:14px; flex-wrap:wrap; margin-bottom:10px;
+  }
+  .brand .eyebrow{
+    font-family:var(--mono); font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--mute); font-weight:500;
+  }
+  .brand h1{
+    margin:1px 0 0; font-family:var(--display); font-size:clamp(18px,2.4vw,26px); font-weight:700; line-height:1;
+  }
+
+  .scores{display:flex; align-items:stretch; gap:10px;}
+  .pl{
+    display:flex; align-items:center; gap:10px; background:var(--paper);
+    border:1px solid var(--rule); border-radius:12px; padding:7px 12px; min-width:132px;
+    transition:border-color .18s, box-shadow .18s, transform .18s;
+  }
+  .pl .dot{width:10px; height:10px; border-radius:50%; flex:0 0 auto;}
+  .pl.p0 .dot{background:var(--pink-deep);}
+  .pl.p1 .dot{background:var(--jade);}
+  .pl .nm{
+    font-size:13px; font-weight:600; border:none; background:transparent; color:var(--charcoal);
+    width:78px; padding:2px 0; border-bottom:1px dashed transparent; outline:none;
+  }
+  .pl .nm:hover{border-bottom-color:var(--rule);}
+  .pl .nm:focus{border-bottom-color:var(--charcoal);}
+  .pl .sc{margin-left:auto; font-family:var(--display); font-size:20px; font-weight:700; line-height:1;}
+  .pl.active{transform:translateY(-1px);}
+  .pl.p0.active{border-color:var(--pink-deep); box-shadow:0 0 0 2px rgba(184,82,74,.16);}
+  .pl.p1.active{border-color:var(--jade); box-shadow:0 0 0 2px rgba(61,136,118,.16);}
+
+  .clock{
+    display:none; align-items:center; gap:9px; background:var(--paper); border:1px solid var(--rule);
+    border-radius:12px; padding:7px 14px;
+  }
+  body[data-mode="reloj"] .clock{display:flex;}
+  body[data-mode="reloj"] .scores{display:none;}
+  .clock .lb{font-family:var(--mono); font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--mute); font-weight:500;}
+  .clock .tm{font-family:var(--display); font-size:22px; font-weight:700; font-variant-numeric:tabular-nums; line-height:1;}
+
+  /* ============ equation banner (the signature moment) ============ */
+  .eq{
+    flex:0 0 auto; height:44px; margin-bottom:8px; display:flex; align-items:center; justify-content:center;
+  }
+  .eq-inner{
+    display:flex; align-items:baseline; gap:9px; flex-wrap:wrap; justify-content:center;
+    background:var(--paper); border:1px solid var(--rule); border-left:4px solid var(--eqc,var(--rule));
+    border-radius:10px; padding:7px 18px; opacity:0; transform:translateY(-6px);
+    transition:opacity .22s ease, transform .22s ease; max-width:100%;
+  }
+  .eq-inner.show{opacity:1; transform:none;}
+  .eq-inner .pieces{font-size:clamp(11px,1.5vw,14px); font-weight:600; color:var(--mute); letter-spacing:.03em;}
+  .eq-inner .eqs{font-size:15px; color:var(--rule); font-weight:700;}
+  .eq-inner .form{font-family:var(--display); font-size:clamp(17px,2.2vw,23px); font-weight:700; color:var(--eqc,var(--charcoal));}
+  .eq-inner .ask{
+    width:100%; text-align:center; font-size:11.5px; color:var(--mute); font-style:italic; margin-top:2px;
+  }
+
+  /* ============ board ============ */
+  .board-wrap{flex:1 1 0%; min-height:0; overflow:hidden; display:flex; align-items:center; justify-content:center;}
+  .board{
+    display:grid; grid-template-columns:repeat(var(--cols),minmax(0,1fr)); gap:var(--gap);
+    width:100%; max-width:1180px;
+  }
+
+  .card{
+    position:relative; border:none; background:transparent; padding:0; cursor:pointer;
+    display:block; width:100%; -webkit-tap-highlight-color:transparent;
+  }
+  /* ratio box: gives the card its height in every browser (no aspect-ratio needed) */
+  .card::before{content:""; display:block; padding-top:118%;}
+  .card[aria-disabled="true"]{cursor:default;}
+  .card:focus-visible{outline:3px solid var(--charcoal); outline-offset:3px; border-radius:12px;}
+
+  .inner{
+    position:absolute; top:0; right:0; bottom:0; left:0;
+  }
+
+  .face{
+    position:absolute; top:0; right:0; bottom:0; left:0;
+    border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:6px 5px; overflow:hidden; pointer-events:none;
+    transition:opacity .2s ease, transform .2s ease;
+  }
+
+  /* back */
+  .back{
+    background:var(--paper); border:1px solid var(--rule);
+    box-shadow:0 1px 0 rgba(44,42,39,.05);
+  }
+  .back::after{
+    content:""; width:34%; height:34%; border-radius:50%;
+    border:2px solid var(--rule);
+  }
+  .card:not([aria-disabled="true"]):hover .back{border-color:var(--mute);}
+
+  /* front */
+  .front{
+    background:var(--paper); border:1px solid var(--rule);
+    border-top:3px solid var(--c,var(--rule));
+    opacity:0; transform:scale(.90);
+  }
+  /* the reveal — no 3D, works in every browser */
+  .card.up .back, .card.done .back{opacity:0; transform:scale(.90);}
+  .card.up .front, .card.done .front{opacity:1; transform:scale(1);}
+  .front .tense{
+    font-family:var(--mono); font-size:clamp(7px,.86vw,10px); letter-spacing:.1em; text-transform:uppercase; font-weight:500;
+    color:var(--c,var(--mute)); text-align:center; line-height:1.15; margin-bottom:5px;
+  }
+  .front .pron{
+    font-size:clamp(11px,1.7vw,19px); font-weight:700; letter-spacing:.01em; text-align:center; line-height:1.05;
+  }
+  .front .inf{
+    font-size:clamp(9px,1.25vw,14px); font-style:italic; color:var(--mute); text-align:center;
+    line-height:1.1; margin-top:3px;
+  }
+  .front .form{
+    font-family:var(--display); font-weight:700; text-align:center; line-height:1.05;
+    font-size:clamp(11px,1.85vw,22px); word-break:break-word; hyphens:none;
+  }
+  /* 48-card board needs smaller type */
+  body[data-size="48"] .front .pron{font-size:clamp(9px,1.25vw,15px);}
+  body[data-size="48"] .front .form{font-size:clamp(9px,1.35vw,17px);}
+  body[data-size="48"] .front .inf{font-size:clamp(8px,.95vw,11px);}
+  body[data-size="48"] .front .tense{font-size:clamp(6px,.68vw,8.5px); margin-bottom:3px;}
+
+  .card.done{cursor:default;}
+  .card.done .front{opacity:.62;}
+  .card.done .front::after{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:4px; background:var(--won,transparent);
+  }
+  .card.miss .front{animation:shake .34s ease;}
+  @keyframes shake{
+    0%,100%{transform:scale(1) translateX(0);}
+    25%{transform:scale(1) translateX(-4px);}
+    75%{transform:scale(1) translateX(4px);}
+  }
+
+  /* ============ controls ============ */
+  .controls{
+    flex:0 0 auto; margin-top:12px; display:flex; align-items:center; justify-content:center;
+    gap:9px; flex-wrap:wrap;
+  }
+  .seg{display:flex; background:var(--paper); border:1px solid var(--rule); border-radius:10px; overflow:hidden;}
+  .seg button{
+    border:none; background:transparent; padding:8px 13px; font-size:12.5px; font-weight:600; color:var(--mute);
+    cursor:pointer; transition:background .15s,color .15s;
+  }
+  .seg button + button{border-left:1px solid var(--rule);}
+  .seg button[aria-pressed="true"]{background:var(--charcoal); color:#fff;}
+  .seg button:hover:not([aria-pressed="true"]){color:var(--charcoal);}
+  .seg .lbl{
+    font-family:var(--mono); padding:8px 11px; font-size:10px; letter-spacing:.13em; text-transform:uppercase; color:var(--mute);
+    font-weight:500; border-right:1px solid var(--rule); display:flex; align-items:center;
+  }
+  .btn{
+    border:1px solid var(--rule); background:var(--paper); color:var(--charcoal); border-radius:10px;
+    padding:8px 15px; font-size:12.5px; font-weight:600; cursor:pointer; transition:border-color .15s,background .15s;
+  }
+  .btn:hover{border-color:var(--charcoal);}
+  .chk{
+    display:flex; align-items:center; gap:7px; background:var(--paper); border:1px solid var(--rule);
+    border-radius:10px; padding:8px 13px; font-size:12.5px; font-weight:600; color:var(--mute); cursor:pointer;
+  }
+  .chk input{accent-color:var(--jade); width:14px; height:14px; cursor:pointer;}
+  .chk:has(input:checked){color:var(--charcoal); border-color:var(--jade);}
+
+  /* legend */
+  .legend{
+    flex:0 0 auto; margin-top:9px; display:flex; gap:13px; justify-content:center; flex-wrap:wrap;
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.04em; color:var(--mute);
+  }
+  .legend span{display:flex; align-items:center; gap:5px;}
+  .legend i{width:9px; height:9px; border-radius:2px; display:block;}
+
+  /* ============ win panel ============ */
+  .win{
+    position:fixed; top:0; right:0; bottom:0; left:0; background:rgba(247,243,238,.93); display:none;
+    align-items:center; justify-content:center; z-index:20; padding:20px;
+  }
+  .win.show{display:flex;}
+  .win-card{
+    background:var(--paper); border:1px solid var(--rule); border-radius:16px; padding:32px 40px;
+    text-align:center; max-width:440px; width:100%;
+  }
+  .win-card .eyebrow{font-family:var(--mono); font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--mute); font-weight:500;}
+  .win-card h2{font-family:var(--display); font-size:30px; margin:6px 0 14px; font-weight:700;}
+  .win-card .res{font-size:15px; color:var(--charcoal); line-height:1.6; margin-bottom:20px;}
+  .win-card .res b{font-family:var(--display); font-size:19px;}
+
+  @media (max-width:900px){
+    :root{--gap:8px;}
+    body[data-size="24"]{--cols:4;}
+    body[data-size="48"]{--cols:6;}
+  }
+  @media (max-width:600px){
+    body[data-size="24"]{--cols:3;}
+    body[data-size="48"]{--cols:4;}
+    .bar{gap:8px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .face{transition:none;}
+    .eq-inner{transition:none;}
+    .card.miss .front{animation:none;}
+  }
+</style>
+</head>
+<body data-mode="turnos" data-size="24">
+
+  <div class="bar">
+    <div class="brand">
+      <div class="eyebrow">Español A2 · repaso de verbos</div>
+      <h1>Memorama de verbos</h1>
+    </div>
+
+    <div class="scores" id="scores">
+      <div class="pl p0 active" id="pl0">
+        <span class="dot"></span>
+        <input class="nm" id="nm0" value="Jugador 1" aria-label="Nombre del jugador 1" maxlength="12" /> <span class="sc" id="sc0">0</span>
+      </div>
+      <div class="pl p1" id="pl1">
+        <span class="dot"></span>
+        <input class="nm" id="nm1" value="Jugador 2" aria-label="Nombre del jugador 2" maxlength="12" />
+        <span class="sc" id="sc1">0</span>
+      </div>
+    </div>
+
+    <div class="clock">
+      <span class="lb">Tiempo</span>
+      <span class="tm" id="tm">0:00</span>
+      <span class="lb" style="border:none;padding-left:6px">Parejas</span>
+      <span class="tm" id="pairsLeft">0</span>
+    </div>
+  </div>
+
+  <div class="eq">
+    <div class="eq-inner" id="eq" aria-live="polite">
+      <span class="pieces" id="eqPieces"></span>
+      <span class="eqs">=</span>
+      <span class="form" id="eqForm"></span>
+      <span class="ask" id="eqAsk"></span>
+    </div>
+  </div>
+
+  <div class="board-wrap">
+    <div class="board" id="board"></div>
+  </div>
+
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Mazo">
+      <span class="lbl">Mazo</span>
+      <button data-deck="A" aria-pressed="true">Juego A</button>
+      <button data-deck="B" aria-pressed="false">Juego B</button>
+      <button data-deck="AB" aria-pressed="false">Los dos</button>
+    </div>
+    <div class="seg" role="group" aria-label="Modo">
+      <span class="lbl">Modo</span>
+      <button data-mode="turnos" aria-pressed="true">Por turnos</button>
+      <button data-mode="reloj" aria-pressed="false">Contrarreloj</button>
+    </div>
+    <label class="chk"><input type="checkbox" id="askSentence" /> Pedir una frase</label>
+    <button class="btn" id="restart">Barajar de nuevo</button>
+  </div>
+
+  <div class="legend" id="legend"></div>
+
+  <div class="win" id="win">
+    <div class="win-card">
+      <div class="eyebrow">Fin del juego</div>
+      <h2 id="winTitle">¡Muy bien!</h2>
+      <div class="res" id="winRes"></div>
+      <button class="btn" id="winAgain">Jugar otra vez</button>
+    </div>
+  </div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------- the 24 pairs (identical to the printed deck) ----------
+  var SET_A = [
+    ["YO","HACER","FUTURO","HARÉ"],
+    ["TÚ","SER","PRESENTE","ERES"],
+    ["YO","IR","PRETÉRITO","FUI"],
+    ["NOSOTROS","VIVIR","IMPERFECTO","VIVÍAMOS"],
+    ["TÚ","VENIR","MANDATO TÚ","VEN"],
+    ["USTED","HABLAR","MANDATO USTED","HABLE"],
+    ["ELLA","PODER","PRESENTE","PUEDE"],
+    ["ELLOS","COMER","PRETÉRITO","COMIERON"],
+    ["YO","SER","IMPERFECTO","ERA"],
+    ["TÚ","PONER","MANDATO TÚ","PON"],
+    ["USTED","HACER","MANDATO USTED","HAGA"],
+    ["NOSOTROS","SALIR","FUTURO","SALDREMOS"]
+  ];
+  var SET_B = [
+    ["YO","TENER","PRESENTE","TENGO"],
+    ["NOSOTROS","COMER","PRESENTE","COMEMOS"],
+    ["TÚ","HABLAR","PRETÉRITO","HABLASTE"],
+    ["ÉL","HACER","PRETÉRITO","HIZO"],
+    ["ELLA","IR","IMPERFECTO","IBA"],
+    ["TÚ","TENER","IMPERFECTO","TENÍAS"],
+    ["TÚ","ESCRIBIR","MANDATO TÚ","ESCRIBE"],
+    ["TÚ","SALIR","MANDATO TÚ","SAL"],
+    ["USTED","COMER","MANDATO USTED","COMA"],
+    ["USTED","VENIR","MANDATO USTED","VENGA"],
+    ["TÚ","VIAJAR","FUTURO","VIAJARÁS"],
+    ["ELLOS","TENER","FUTURO","TENDRÁN"]
+  ];
+
+  var TENSE_VAR = {
+    "PRESENTE":"--t-presente",
+    "PRETÉRITO":"--t-preterito",
+    "IMPERFECTO":"--t-imperfecto",
+    "MANDATO TÚ":"--t-mandato-tu",
+    "MANDATO USTED":"--t-mandato-usted",
+    "FUTURO":"--t-futuro"
+  };
+  var TENSE_ORDER = ["PRESENTE","PRETÉRITO","IMPERFECTO","MANDATO TÚ","MANDATO USTED","FUTURO"];
+
+  // ---------- elements ----------
+  var board = document.getElementById('board');
+  var eqBox = document.getElementById('eq');
+  var eqPieces = document.getElementById('eqPieces');
+  var eqForm = document.getElementById('eqForm');
+  var eqAsk = document.getElementById('eqAsk');
+  var scEls = [document.getElementById('sc0'), document.getElementById('sc1')];
+  var plEls = [document.getElementById('pl0'), document.getElementById('pl1')];
+  var nmEls = [document.getElementById('nm0'), document.getElementById('nm1')];
+  var tmEl = document.getElementById('tm');
+  var pairsLeftEl = document.getElementById('pairsLeft');
+  var winBox = document.getElementById('win');
+  var winTitle = document.getElementById('winTitle');
+  var winRes = document.getElementById('winRes');
+  var askChk = document.getElementById('askSentence');
+
+  // ---------- state ----------
+  var deckKey = 'A', mode = 'turnos';
+  var cards = [], flipped = [], lock = false;
+  var scores = [0,0], turn = 0, matched = 0, totalPairs = 0;
+  var t0 = null, tick = null, eqTimer = null;
+
+  function pairsFor(key){
+    if (key === 'A') return SET_A.slice();
+    if (key === 'B') return SET_B.slice();
+    return SET_A.concat(SET_B);
+  }
+  function shuffle(a){
+    for (var i = a.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+  function cssVar(name){
+    // read from body: colours inherit from :root, --cols is set on body[data-size]
+    return getComputedStyle(document.body).getPropertyValue(name).trim();
+  }
+
+  // Size the board so every card fits the viewport (both axes) — matters most
+  // on the 48-card deck, where width-driven sizing would overflow vertically.
+  var CARD_RATIO = 1.18;
+  function fit(){
+    var wrap = document.querySelector('.board-wrap');
+    if (!wrap || !cards.length) return;
+    var cols = parseInt(cssVar('--cols'), 10) || 6;
+    var gap = parseFloat(cssVar('--gap')) || 10;
+    var rows = Math.ceil(cards.length / cols);
+    var availW = wrap.clientWidth;
+    var availH = wrap.clientHeight;
+    if (!availW || !availH) return;
+    var byW = (availW - (cols - 1) * gap) / cols;
+    var byH = ((availH - (rows - 1) * gap) / rows) / CARD_RATIO;
+    var cardW = Math.max(44, Math.min(byW, byH));
+    var boardW = Math.floor(cols * cardW + (cols - 1) * gap);
+    // never let a bad measurement collapse the board
+    if (isFinite(boardW) && boardW > 140) board.style.width = boardW + 'px';
+    scaleText(cardW);
+  }
+
+  // Size each card's text from the real card width AND the string length, so the
+  // longest forms (SALDREMOS, VIVÍAMOS, MANDATO USTED) always fit on one line.
+  function scaleText(cardW){
+    var inner = cardW - 12; // horizontal padding allowance
+    function px(text, factor, max, min){
+      var n = Math.max(1, (text || '').length);
+      return Math.max(min, Math.min(max, inner / (n * factor))).toFixed(1) + 'px';
+    }
+    cards.forEach(function(c){
+      if (!c.el) return;
+      if (c.kind === 'prompt'){
+        var tn = c.el.querySelector('.tense');
+        var pr = c.el.querySelector('.pron');
+        var inf = c.el.querySelector('.inf');
+        if (tn) tn.style.fontSize = px(c.tense, 0.74, 10, 6);
+        if (pr) pr.style.fontSize = px(c.pron, 0.72, 20, 8);
+        if (inf) inf.style.fontSize = px(c.inf, 0.60, 14, 7);
+      } else {
+        var fm = c.el.querySelector('.form');
+        if (fm) fm.style.fontSize = px(c.form, 0.72, 24, 8);
+      }
+    });
+  }
+  var fitTimer = null;
+  window.addEventListener('resize', function(){
+    clearTimeout(fitTimer);
+    fitTimer = setTimeout(fit, 120);
+  });
+
+  // ---------- build ----------
+  function build(){
+    clearInterval(tick); tick = null; t0 = null;
+    tmEl.textContent = '0:00';
+    var pairs = pairsFor(deckKey);
+    totalPairs = pairs.length;
+    matched = 0; scores = [0,0]; turn = 0; flipped = []; lock = false;
+    scEls[0].textContent = '0'; scEls[1].textContent = '0';
+    pairsLeftEl.textContent = String(totalPairs);
+    setTurnUI();
+    hideEq();
+    winBox.classList.remove('show');
+
+    document.body.setAttribute('data-size', totalPairs * 2 >= 40 ? '48' : '24');
+
+    cards = [];
+    pairs.forEach(function(p, i){
+      cards.push({ pair:i, kind:'prompt', pron:p[0], inf:p[1], tense:p[2], form:p[3] });
+      cards.push({ pair:i, kind:'answer', pron:p[0], inf:p[1], tense:p[2], form:p[3] });
+    });
+    shuffle(cards);
+
+    board.innerHTML = '';
+    cards.forEach(function(c, idx){
+      var col = cssVar(TENSE_VAR[c.tense]) || '#2C2A27';
+      var btn = document.createElement('div');
+      btn.className = 'card';
+      btn.setAttribute('role', 'button');
+      btn.setAttribute('tabindex', '0');
+      btn.dataset.idx = String(idx);
+      btn.setAttribute('aria-label', 'Carta boca abajo');
+
+      var inner = document.createElement('div');
+      inner.className = 'inner';
+
+      var back = document.createElement('div');
+      back.className = 'face back';
+
+      var front = document.createElement('div');
+      front.className = 'face front';
+      front.style.setProperty('--c', col);
+
+      if (c.kind === 'prompt'){
+        var tn = document.createElement('div'); tn.className = 'tense'; tn.textContent = c.tense;
+        var pr = document.createElement('div'); pr.className = 'pron'; pr.textContent = c.pron;
+        var inf = document.createElement('div'); inf.className = 'inf'; inf.textContent = c.inf;
+        front.appendChild(tn); front.appendChild(pr); front.appendChild(inf);
+      } else {
+        var fm = document.createElement('div'); fm.className = 'form'; fm.textContent = c.form;
+        front.appendChild(fm);
+      }
+
+      inner.appendChild(back); inner.appendChild(front);
+      btn.appendChild(inner);
+      btn.addEventListener('click', function(){ onFlip(idx); });
+      btn.addEventListener('keydown', function(ev){
+        if (ev.key === 'Enter' || ev.key === ' ' || ev.key === 'Spacebar'){
+          ev.preventDefault();
+          onFlip(idx);
+        }
+      });
+      board.appendChild(btn);
+      c.el = btn;
+    });
+
+    fit();
+    if (window.requestAnimationFrame) requestAnimationFrame(fit);
+  }
+
+  function labelFor(c){
+    return c.kind === 'prompt'
+      ? (c.pron + ' más ' + c.inf + ', ' + c.tense)
+      : c.form;
+  }
+
+  // ---------- interaction ----------
+  function onFlip(idx){
+    if (lock) return;
+    var c = cards[idx];
+    if (c.done || c.el.classList.contains('up')) return;
+
+    if (mode === 'reloj' && t0 === null) startClock();
+
+    c.el.classList.add('up');
+    c.el.setAttribute('aria-label', labelFor(c));
+    flipped.push(idx);
+
+    if (flipped.length === 2) evaluate();
+  }
+
+  function evaluate(){
+    lock = true;
+    var a = cards[flipped[0]], b = cards[flipped[1]];
+    var isPair = (a.pair === b.pair) && (a.kind !== b.kind);
+
+    if (isPair){
+      var prompt = a.kind === 'prompt' ? a : b;
+      showEq(prompt);
+      var col = cssVar(TENSE_VAR[prompt.tense]) || '#2C2A27';
+      var winner = mode === 'turnos'
+        ? (turn === 0 ? cssVar('--pink-deep') : cssVar('--jade'))
+        : col;
+
+      [a,b].forEach(function(c){
+        c.done = true;
+        c.el.classList.remove('up');
+        c.el.classList.add('done');
+        c.el.setAttribute('aria-disabled','true');
+        c.el.setAttribute('tabindex','-1');
+        c.el.querySelector('.front').style.setProperty('--won', winner);
+      });
+
+      matched++;
+      pairsLeftEl.textContent = String(totalPairs - matched);
+      if (mode === 'turnos'){
+        scores[turn]++;
+        scEls[turn].textContent = String(scores[turn]);
+      }
+      flipped = [];
+      lock = false;
+      if (matched === totalPairs) finish();
+      return;
+    }
+
+    // no match
+    a.el.classList.add('miss'); b.el.classList.add('miss');
+    setTimeout(function(){
+      [a,b].forEach(function(c){
+        c.el.classList.remove('up','miss');
+        c.el.setAttribute('aria-label','Carta boca abajo');
+      });
+      flipped = [];
+      lock = false;
+      if (mode === 'turnos'){ turn = turn === 0 ? 1 : 0; setTurnUI(); }
+    }, 1150);
+  }
+
+  function setTurnUI(){
+    plEls[0].classList.toggle('active', turn === 0);
+    plEls[1].classList.toggle('active', turn === 1);
+  }
+
+  // ---------- equation banner ----------
+  function showEq(p){
+    clearTimeout(eqTimer);
+    var col = cssVar(TENSE_VAR[p.tense]) || '#2C2A27';
+    eqBox.style.setProperty('--eqc', col);
+    eqPieces.textContent = p.pron + '  +  ' + p.inf + '  +  ' + p.tense;
+    eqForm.textContent = p.form;
+    eqAsk.textContent = askChk.checked ? ('Ahora haz una frase con «' + p.form + '».') : '';
+    eqBox.classList.add('show');
+    eqTimer = setTimeout(hideEq, askChk.checked ? 4200 : 2600);
+  }
+  function hideEq(){ eqBox.classList.remove('show'); }
+
+  // ---------- clock ----------
+  function startClock(){
+    t0 = Date.now();
+    tick = setInterval(function(){
+      var s = Math.floor((Date.now() - t0)/1000);
+      tmEl.textContent = Math.floor(s/60) + ':' + (s%60 < 10 ? '0' : '') + (s%60);
+    }, 250);
+  }
+
+  function finish(){
+    clearInterval(tick); tick = null;
+    setTimeout(function(){
+      if (mode === 'reloj'){
+        winTitle.textContent = '¡Todas las parejas!';
+        winRes.innerHTML = 'Tiempo final: <b>' + tmEl.textContent + '</b><br>' + totalPairs + ' parejas. ¿Pueden bajar su récord?';
+      } else {
+        var n0 = nmEls[0].value || 'Jugador 1', n1 = nmEls[1].value || 'Jugador 2';
+        if (scores[0] === scores[1]){
+          winTitle.textContent = '¡Empate!';
+          winRes.innerHTML = n0 + ' ' + scores[0] + ' — ' + scores[1] + ' ' + n1;
+        } else {
+          var w = scores[0] > scores[1] ? n0 : n1;
+          winTitle.textContent = '¡Ganó ' + w + '!';
+          winRes.innerHTML = '<b>' + n0 + ' ' + scores[0] + ' — ' + scores[1] + ' ' + n1 + '</b>';
+        }
+      }
+      winBox.classList.add('show');
+    }, 420);
+  }
+
+  // ---------- legend ----------
+  (function legend(){
+    var el = document.getElementById('legend');
+    TENSE_ORDER.forEach(function(t){
+      var s = document.createElement('span');
+      var i = document.createElement('i');
+      i.style.background = cssVar(TENSE_VAR[t]);
+      s.appendChild(i);
+      s.appendChild(document.createTextNode(t.toLowerCase()));
+      el.appendChild(s);
+    });
+  })();
+
+  // ---------- controls ----------
+  Array.prototype.forEach.call(document.querySelectorAll('button[data-deck]'), function(b){
+    b.addEventListener('click', function(){
+      Array.prototype.forEach.call(document.querySelectorAll('button[data-deck]'), function(x){ x.setAttribute('aria-pressed','false'); });
+      b.setAttribute('aria-pressed','true');
+      deckKey = b.dataset.deck;
+      build();
+    });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('button[data-mode]'), function(b){
+    b.addEventListener('click', function(){
+      Array.prototype.forEach.call(document.querySelectorAll('button[data-mode]'), function(x){ x.setAttribute('aria-pressed','false'); });
+      b.setAttribute('aria-pressed','true');
+      mode = b.dataset.mode;
+      document.body.setAttribute('data-mode', mode);
+      build();
+    });
+  });
+  document.getElementById('restart').addEventListener('click', function(){ safeBuild(); });
+  document.getElementById('winAgain').addEventListener('click', function(){ safeBuild(); });
+
+  function safeBuild(){
+    try {
+      build();
+    } catch (err){
+      board.style.width = '';
+      board.innerHTML = '<div style="grid-column:1/-1;padding:22px;text-align:center;background:#fff;'
+        + 'border:1px solid #D8CFBF;border-radius:12px;font-family:Outfit,system-ui,sans-serif">'
+        + '<b style="color:#B8524A">No se pudo iniciar el juego.</b>'
+        + '<div style="font-size:12px;color:#8A847E;margin-top:6px">'
+        + String((err && err.message) ? err.message : err) + '</div></div>';
+    }
+  }
+
+  safeBuild();
+})();
+</script>
+</body>
+</html>

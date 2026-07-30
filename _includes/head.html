@@ -1,0 +1,42 @@
+{% comment %}
+  <head> contents: bilingual meta, hreflang alternates, canonical,
+  Open Graph, fonts, favicon, analytics slot.
+  Page meta comes from _data/pages/<page_id>.yml via page.page_id.
+{% endcomment %}
+{% assign page_data = site.data.pages[page.page_id][site.active_lang] %}
+{% assign meta_title = page_data.meta.title | default: site.title %}
+{% assign meta_description = page_data.meta.description | default: site.data.pages.home[site.active_lang].meta.description %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ meta_title }}</title>
+<meta name="description" content="{{ meta_description }}">
+{% if page.noindex %}<meta name="robots" content="noindex">{% endif %}
+
+{% comment %} Canonical + hreflang alternates (ES at root, EN under /en/) {% endcomment %}
+<link rel="canonical" href="{{ site.url }}{{ lang_prefix }}{{ page.url }}">
+<link rel="alternate" hreflang="es-MX" href="{{ site.url }}{{ page.url }}">
+<link rel="alternate" hreflang="en" href="{{ site.url }}/en{{ page.url }}">
+<link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ page.url }}">
+
+{% comment %} Open Graph {% endcomment %}
+<meta property="og:site_name" content="{{ site.title }}">
+<meta property="og:title" content="{{ meta_title }}">
+<meta property="og:description" content="{{ meta_description }}">
+<meta property="og:url" content="{{ site.url }}{{ lang_prefix }}{{ page.url }}">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="{% if site.active_lang == 'es' %}es_MX{% else %}en_US{% endif %}">
+
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+
+{% comment %} Fonts — exact import from the brand style guide {% endcomment %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+
+{% comment %} Analytics — single lightweight slot, wired via _config.yml {% endcomment %}
+{% if site.plausible_domain and site.plausible_domain != "" %}
+<script defer data-domain="{{ site.plausible_domain }}" src="https://plausible.io/js/script.js"></script>
+{% endif %}

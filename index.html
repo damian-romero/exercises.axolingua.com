@@ -1,0 +1,39 @@
+---
+layout: default
+page_id: home
+permalink: /
+---
+{% comment %} HOME — all copy from _data/pages/home.yml + shared data files. {% endcomment %}
+{% assign t = site.data.strings[site.active_lang] %}
+{% if site.active_lang == site.default_lang %}{% assign lang_prefix = '' %}{% else %}{% assign lang_prefix = '/' | append: site.active_lang %}{% endif %}
+{% assign pg = site.data.pages.home[site.active_lang] %}
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <p class="hero__eyebrow">{{ pg.hero.eyebrow }}</p>
+    <h1 class="hero__headline">{{ pg.hero.headline }}</h1>
+    <p class="hero__sub">{{ pg.hero.sub }}</p>
+  </div>
+</section>
+
+<!-- TARGET LANGUAGE PICKER -->
+<section class="section--tight">
+  <div class="wrap">
+    <p class="section-label" style="text-align:center;">{{ pg.picker.label }}</p>
+    <div class="grid-2">
+      <a class="path-card path-card--pink" href="{{ lang_prefix }}/ejercicios/">
+        <span class="tag tag--pink">{{ pg.picker.spanish.tag }}</span>
+        <h2 class="path-card__title">{{ pg.picker.spanish.title }}</h2>
+        <p class="path-card__text">{{ pg.picker.spanish.text }}</p>
+        <span class="path-card__link">{{ pg.picker.spanish.link }}</span>
+      </a>
+      <a class="path-card path-card--jade" href="/404.html">
+        <span class="tag tag--jade">{{ pg.picker.english.tag }}</span>
+        <h2 class="path-card__title">{{ pg.picker.english.title }}</h2>
+        <p class="path-card__text">{{ pg.picker.english.text }}</p>
+        <span class="path-card__link">{{ pg.picker.english.link }}</span>
+      </a>
+    </div>
+  </div>
+</section>

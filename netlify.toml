@@ -1,0 +1,22 @@
+# Netlify build configuration — Axolingua exercise library
+# Deploys from `main`. Netlify runs `bundle install` automatically (Gemfile present).
+
+[build]
+  command = "bundle exec jekyll build"
+  publish = "_site"
+
+[build.environment]
+  JEKYLL_ENV = "production"
+  RUBY_VERSION = "3.3.4"
+
+# Long-cache static assets (fingerprint-free; bump filenames if assets change)
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+# Exercise files are static and immutable per version — cache them too
+[[headers]]
+  for = "/exercises/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
