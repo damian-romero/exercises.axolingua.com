@@ -1,11 +1,12 @@
 es:
   meta:
-    title: "Ejercicios de español · Axolingua"
-    description: "Explora todos nuestros ejercicios interactivos de español, filtrables por nivel, tipo y tema."
-  eyebrow: "Español"
-  heading: "Ejercicios de español"
-  intro: "Filtra por nivel, tipo de ejercicio o tema para encontrar la práctica ideal. Haz clic en cualquier tarjeta para abrir el ejercicio."
+    title: "Ejercicios de idiomas · Axolingua"
+    description: "Explora todos nuestros ejercicios interactivos de español e italiano, filtrables por idioma, nivel, tipo y tema."
+  eyebrow: "Ejercicios"
+  heading: "Ejercicios de idiomas"
+  intro: "Filtra por idioma, nivel, tipo de ejercicio o tema para encontrar la práctica ideal. Haz clic en cualquier tarjeta para abrir el ejercicio."
   filters:
+    lang: "Idioma"
     skill: "Tipo"
     level: "Nivel"
     theme: "Tema"
@@ -17,12 +18,13 @@ es:
 
 en:
   meta:
-    title: "Spanish Exercises · Axolingua"
-    description: "Browse all our interactive Spanish exercises, filterable by level, type, and theme."
-  eyebrow: "Spanish"
-  heading: "Spanish exercises"
-  intro: "Filter by level, exercise type, or theme to find the right practice. Click any card to open the exercise."
+    title: "Language Exercises · Axolingua"
+    description: "Browse all our interactive Spanish and Italian exercises, filterable by language, level, type, and theme."
+  eyebrow: "Exercises"
+  heading: "Language exercises"
+  intro: "Filter by language, level, exercise type, or theme to find the right practice. Click any card to open the exercise."
   filters:
+    lang: "Language"
     skill: "Type"
     level: "Level"
     theme: "Theme"

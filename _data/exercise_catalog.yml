@@ -76,3 +76,45 @@
   description:
     es: "Practica los cuatro tiempos simples con ejercicios de completar, opción múltiple y traducción. Con puntaje y racha."
     en: "Practice all four simple tenses with fill-in, multiple-choice, and translation exercises. Includes score and streak tracking."
+
+- slug: flashcards-vocab-it-a2-viajes
+  file: flashcards_vocab_it_a2_viajes.html
+  skill: flashcards
+  grammar: vocab
+  target_lang: it
+  level: a2
+  theme: viajes
+  title:
+    es: "Flashcards de italiano — Frases para viajar"
+    en: "Italian Flashcards — Travel Phrases"
+  description:
+    es: "Repasa 46 frases útiles en italiano para el aeropuerto, el hotel y el restaurante. Marca cada tarjeta como \"la sé\" o \"a repasar\"."
+    en: "Review 46 useful Italian phrases for the airport, hotel, and restaurant. Mark each card as \"know it\" or \"review it\"."
+
+- slug: memorama-vocab-it-a2-viajes
+  file: memorama_vocab_it_a2_viajes.html
+  skill: memorama
+  grammar: vocab
+  target_lang: it
+  level: a2
+  theme: viajes
+  title:
+    es: "Memorama de italiano — Vocabulario para viajar"
+    en: "Italian Memory Match — Travel Vocabulary"
+  description:
+    es: "Encuentra las 24 parejas de palabras en italiano con su traducción al inglés. Para 1 o 2 jugadores."
+    en: "Match 24 Italian words to their English translations. For 1–2 players."
+
+- slug: tabu-vocab-it-a2-viajes
+  file: tabu_vocab_it_a2_viajes.html
+  skill: tabu
+  grammar: vocab
+  target_lang: it
+  level: a2
+  theme: viajes
+  title:
+    es: "Tabú de italiano — Vocabulario para viajar"
+    en: "Italian Taboo — Travel Vocabulary"
+  description:
+    es: "Haz que tu compañero adivine la palabra en italiano sin decir las 4 prohibidas. 34 tarjetas de vocabulario de viaje."
+    en: "Get your partner to guess the Italian word without saying the 4 forbidden ones. 34 travel-vocabulary cards."

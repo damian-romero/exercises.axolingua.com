@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tabù di italiano · Viaggi · A2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700&family=Outfit:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============ Axolingua tokens — see _sass/_tokens.scss ============ */
+  :root{
+    --ivory:#F7F3EE;
+    --cream:#F0EAE1;
+    --sand:#E6DDCF;
+    --paper:#FFFFFF;
+    --charcoal:#2C2A27;
+    --mute:#8A847E;
+    --rule:#D8CFBF;
+    --pink:#D0736C;
+    --pink-deep:#B8524A;
+    --pink-soft:#E49E99;
+    --pink-wash:#FBF0EF;
+    --jade:#3D8876;
+    --jade-wash:#EAF4F2;
+    --ochre:#BC8A52;
+    --ochre-deep:#9E6B35;
+    --ochre-wash:#F9F1E6;
+    --display:'Fraunces',Georgia,serif;
+    --ui:'Outfit',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:'DM Mono','Courier New',monospace;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ivory);
+    color:var(--charcoal);
+    font-family: var(--ui);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:24px 16px 40px;
+  }
+  h1{
+    font-family: var(--display);
+    font-size:28px;
+    margin:0 0 4px;
+    color:var(--charcoal);
+    text-align:center;
+  }
+  .subtitle{
+    color:var(--jade);
+    font-size:15px;
+    margin:0 0 20px;
+    text-align:center;
+  }
+  .scoreboard{
+    display:flex;
+    gap:24px;
+    align-items:center;
+    background:var(--cream);
+    border-radius:14px;
+    padding:10px 22px;
+    margin-bottom:22px;
+    font-size:15px;
+  }
+  .scoreboard .score-item{display:flex; flex-direction:column; align-items:center;}
+  .scoreboard .score-num{font-size:24px; font-weight:bold; color:var(--jade);}
+  .scoreboard .score-num.taboo{color:var(--pink-deep);}
+  .scoreboard .divider{width:1px; height:32px; background:var(--rule);}
+
+  .card-wrap{
+    width:100%;
+    max-width:440px;
+    background:var(--paper);
+    border-radius:20px;
+    box-shadow:0 6px 24px rgba(44,42,39,0.12);
+    overflow:hidden;
+    border:1px solid var(--rule);
+  }
+  .card-top{
+    background:var(--jade);
+    color:#fff;
+    padding:10px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:13px;
+    letter-spacing:0.03em;
+    text-transform:uppercase;
+  }
+  .card-top.tipo-verbo{ background:var(--ochre); }
+  .card-top.tipo-frase{ background:var(--pink); }
+  .card-counter{opacity:0.9;}
+
+  .target-word{
+    text-align:center;
+    font-family: var(--display);
+    font-size:38px;
+    font-weight:bold;
+    padding:34px 20px 10px;
+    color:var(--charcoal);
+    min-height:56px;
+  }
+  .target-hint{
+    text-align:center;
+    font-size:13px;
+    color:var(--mute);
+    padding:0 20px 20px;
+    font-style:italic;
+  }
+
+  .taboo-box{
+    background:var(--pink-wash);
+    margin:0 20px 26px;
+    border-radius:14px;
+    padding:16px 18px;
+    border:1.5px solid var(--pink);
+  }
+  .taboo-box .label{
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--pink-deep);
+    font-weight:bold;
+    margin-bottom:8px;
+  }
+  .taboo-list{list-style:none; margin:0; padding:0;}
+  .taboo-list li{
+    font-size:19px;
+    padding:5px 0;
+    color:var(--charcoal);
+    border-bottom:1px dashed var(--pink-soft);
+  }
+  .taboo-list li:last-child{border-bottom:none;}
+
+  .btn-row{
+    display:flex;
+    gap:10px;
+    padding:0 20px 22px;
+  }
+  button{
+    flex:1;
+    border:none;
+    border-radius:12px;
+    padding:16px 8px;
+    font-size:15px;
+    font-weight:bold;
+    cursor:pointer;
+    color:#fff;
+    transition:opacity 0.15s, transform 0.1s;
+  }
+  button:active{transform:scale(0.96);}
+  .btn-correct{ background:var(--jade); }
+  .btn-pass{ background:var(--ochre); }
+  .btn-tabu{ background:var(--pink-deep); }
+  .kbd-hint{ display:block; font-size:10px; font-weight:normal; opacity:0.85; margin-top:2px;}
+
+  .controls-row{
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    margin-top:18px;
+  }
+  .ctrl-btn{
+    background:var(--cream);
+    color:var(--charcoal);
+    border:1px solid var(--rule);
+    border-radius:10px;
+    padding:9px 16px;
+    font-size:13px;
+    cursor:pointer;
+  }
+  .ctrl-btn:hover{ background:var(--sand); }
+
+  .end-screen{
+    text-align:center;
+    max-width:440px;
+  }
+  .end-screen h2{ font-family: var(--display); color:var(--jade); }
+  .end-score{ font-size:52px; font-weight:bold; color:var(--charcoal); margin:10px 0;}
+
+  .instructions{
+    max-width:440px;
+    background:var(--jade-wash);
+    border-radius:14px;
+    padding:18px 22px;
+    margin-bottom:20px;
+    font-size:14px;
+    line-height:1.5;
+  }
+  .instructions h3{ margin-top:0; font-family: var(--display); color:var(--jade);}
+  .instructions ul{ padding-left:20px; margin-bottom:0; }
+  .start-btn{
+    background:var(--jade);
+    color:#fff;
+    border:none;
+    padding:14px 34px;
+    border-radius:12px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:6px;
+  }
+  .hidden{ display:none !important; }
+  footer{ margin-top:26px; font-size:12px; color:var(--mute); text-align:center; }
+</style>
+</head>
+<body>
+
+<h1>Tabù Italiano</h1>
+<p class="subtitle">Vocabolario per viaggiare in Italia</p>
+
+<div id="screen-intro">
+  <div class="instructions">
+    <h3>Come si gioca</h3>
+    <ul>
+      <li>Chi descrive vede la parola grande in italiano e la spiega ai compagni <strong>senza usare</strong> le 4 parole proibite nel riquadro rosa.</li>
+      <li><strong>Correcto</strong> (+1 punto) — hanno indovinato.</li>
+      <li><strong>Pasar</strong> (0 punti) — si salta la carta.</li>
+      <li><strong>Tabù</strong> (-1 punto) — chi descrive ha usato una parola proibita.</li>
+      <li>Tasti rapidi: <strong>C</strong> = Correcto, <strong>P</strong> = Pasar, <strong>T</strong> = Tabù</li>
+    </ul>
+  </div>
+  <div style="text-align:center;">
+    <button class="start-btn" id="btn-start">Inizia il gioco →</button>
+  </div>
+</div>
+
+<div id="screen-game" class="hidden">
+  <div class="scoreboard">
+    <div class="score-item">
+      <span class="score-num" id="score-correct">0</span>
+      <span>Correcto</span>
+    </div>
+    <div class="divider"></div>
+    <div class="score-item">
+      <span class="score-num" id="score-pass">0</span>
+      <span>Pasar</span>
+    </div>
+    <div class="divider"></div>
+    <div class="score-item">
+      <span class="score-num taboo" id="score-tabu">0</span>
+      <span>Tabù</span>
+    </div>
+  </div>
+
+  <div class="card-wrap">
+    <div class="card-top" id="card-top">
+      <span id="card-type-label">Sostantivo</span>
+      <span class="card-counter" id="card-counter">1 / 34</span>
+    </div>
+    <div class="target-word" id="target-word">—</div>
+    <div class="target-hint" id="target-hint"></div>
+    <div class="taboo-box">
+      <div class="label">Parole proibite</div>
+      <ul class="taboo-list" id="taboo-list"></ul>
+    </div>
+    <div class="btn-row">
+      <button class="btn-correct" id="btn-correct">Correcto<span class="kbd-hint">tasto C</span></button>
+      <button class="btn-pass" id="btn-pass">Pasar<span class="kbd-hint">tasto P</span></button>
+      <button class="btn-tabu" id="btn-tabu">Tabù<span class="kbd-hint">tasto T</span></button>
+    </div>
+  </div>
+
+  <div class="controls-row">
+    <button class="ctrl-btn" id="btn-shuffle">🔀 Rimescola</button>
+    <button class="ctrl-btn" id="btn-restart">↺ Ricomincia</button>
+  </div>
+</div>
+
+<div id="screen-end" class="hidden end-screen">
+  <h2>Partita finita!</h2>
+  <div class="end-score" id="final-score">0</div>
+  <p>punti totali</p>
+  <button class="start-btn" id="btn-play-again">Gioca ancora</button>
+</div>
+
+<footer>Axolingua · Tabù Italiano · gioco offline, nessuna connessione richiesta</footer>
+
+<script>
+(function(){
+
+  var TMETA = {
+    "saluti":     { chip: "Saluti" },
+    "trasporti":  { chip: "Trasporti" },
+    "alloggio":   { chip: "Alloggio" },
+    "cibo":       { chip: "Cibo e bevande" },
+    "numeri":     { chip: "Numeri e soldi" },
+    "emergenza":  { chip: "Emergenza" }
+  };
+
+  var CARDS = [
+    // ---- SALUTI (6) ----
+    { word:"Ciao",        type:"sostantivo", cat:"saluti",    taboo:["Buongiorno","Buonasera","Arrivederci","Salve"] },
+    { word:"Buongiorno",  type:"sostantivo", cat:"saluti",    taboo:["Mattina","Ciao","Salve","Giorno"] },
+    { word:"Grazie",      type:"sostantivo", cat:"saluti",    taboo:["Prego","Gentile","Ringraziare","Favore"] },
+    { word:"Prego",       type:"sostantivo", cat:"saluti",    taboo:["Grazie","Favore","Avanti","Niente"] },
+    { word:"Scusi",       type:"sostantivo", cat:"saluti",    taboo:["Permesso","Perdono","Chiedere","Educato"] },
+    { word:"Arrivederci", type:"sostantivo", cat:"saluti",    taboo:["Ciao","Addio","Saluto","Fine"] },
+
+    // ---- TRASPORTI (8) ----
+    { word:"Stazione",    type:"sostantivo", cat:"trasporti", taboo:["Treno","Binario","Partenza","Biglietto"] },
+    { word:"Aeroporto",   type:"sostantivo", cat:"trasporti", taboo:["Volo","Aereo","Bagaglio","Decollo"] },
+    { word:"Treno",       type:"sostantivo", cat:"trasporti", taboo:["Binario","Stazione","Vagone","Rotaie"] },
+    { word:"Autobus",     type:"sostantivo", cat:"trasporti", taboo:["Fermata","Pullman","Città","Biglietto"] },
+    { word:"Biglietto",   type:"sostantivo", cat:"trasporti", taboo:["Comprare","Treno","Prezzo","Corsa"] },
+    { word:"Uscita",      type:"sostantivo", cat:"trasporti", taboo:["Entrata","Porta","Fuori","Segnale"] },
+    { word:"Sinistra",    type:"sostantivo", cat:"trasporti", taboo:["Destra","Direzione","Girare","Mano"] },
+    { word:"Destra",      type:"sostantivo", cat:"trasporti", taboo:["Sinistra","Direzione","Girare","Mano"] },
+
+    // ---- ALLOGGIO (5) ----
+    { word:"Albergo",     type:"sostantivo", cat:"alloggio",  taboo:["Hotel","Camera","Dormire","Prenotazione"] },
+    { word:"Camera",      type:"sostantivo", cat:"alloggio",  taboo:["Letto","Albergo","Stanza","Dormire"] },
+    { word:"Prenotazione",type:"sostantivo", cat:"alloggio",  taboo:["Camera","Riservare","Data","Nome"] },
+    { word:"Chiave",      type:"sostantivo", cat:"alloggio",  taboo:["Porta","Aprire","Camera","Serratura"] },
+    { word:"Bagno",       type:"sostantivo", cat:"alloggio",  taboo:["Doccia","Toilette","Acqua","Lavarsi"] },
+
+    // ---- CIBO E BEVANDE (9) ----
+    { word:"Ristorante",  type:"sostantivo", cat:"cibo",      taboo:["Mangiare","Cameriere","Menù","Tavolo"] },
+    { word:"Acqua",       type:"sostantivo", cat:"cibo",      taboo:["Bere","Bottiglia","Bicchiere","Frizzante"] },
+    { word:"Vino",        type:"sostantivo", cat:"cibo",      taboo:["Bere","Bottiglia","Rosso","Bicchiere"] },
+    { word:"Caffè",       type:"sostantivo", cat:"cibo",      taboo:["Espresso","Bar","Tazzina","Bere"] },
+    { word:"Conto",       type:"sostantivo", cat:"cibo",      taboo:["Pagare","Cameriere","Prezzo","Ristorante"] },
+    { word:"Menù",        type:"sostantivo", cat:"cibo",      taboo:["Piatti","Ristorante","Scegliere","Lista"] },
+    { word:"Colazione",   type:"sostantivo", cat:"cibo",      taboo:["Mattina","Cornetto","Caffè","Mangiare"] },
+    { word:"Pranzo",      type:"sostantivo", cat:"cibo",      taboo:["Mezzogiorno","Mangiare","Piatto","Cena"] },
+    { word:"Cena",        type:"sostantivo", cat:"cibo",      taboo:["Sera","Mangiare","Pranzo","Ristorante"] },
+
+    // ---- NUMERI E SOLDI (4) ----
+    { word:"Quanto costa?", type:"frase",    cat:"numeri",    taboo:["Prezzo","Pagare","Euro","Caro"] },
+    { word:"Euro",          type:"sostantivo", cat:"numeri",  taboo:["Soldi","Moneta","Pagare","Prezzo"] },
+    { word:"Contanti",      type:"sostantivo", cat:"numeri",  taboo:["Soldi","Carta","Pagare","Banconota"] },
+    { word:"Sconto",        type:"sostantivo", cat:"numeri",  taboo:["Prezzo","Meno","Offerta","Ridurre"] },
+
+    // ---- EMERGENZA (8) ----
+    { word:"Aiuto!",         type:"frase",    cat:"emergenza", taboo:["Emergenza","Pericolo","Soccorso","Gridare"] },
+    { word:"Emergenza",      type:"sostantivo", cat:"emergenza", taboo:["Pericolo","Urgente","Aiuto","Ambulanza"] },
+    { word:"Ospedale",       type:"sostantivo", cat:"emergenza", taboo:["Medico","Malato","Ambulanza","Curare"] },
+    { word:"Farmacia",       type:"sostantivo", cat:"emergenza", taboo:["Medicina","Farmacista","Pillole","Ricetta"] },
+    { word:"Polizia",        type:"sostantivo", cat:"emergenza", taboo:["Agente","Legge","Chiamare","Sicurezza"] },
+    { word:"Ambulanza",      type:"sostantivo", cat:"emergenza", taboo:["Ospedale","Emergenza","Medico","Sirena"] },
+    { word:"Ho bisogno di un medico", type:"frase", cat:"emergenza", taboo:["Malato","Ospedale","Aiuto","Dottore"] },
+    { word:"Sto male",       type:"frase",    cat:"emergenza", taboo:["Malato","Dolore","Medico","Aiuto"] }
+  ];
+
+  var TYPE_LABELS = { "sostantivo":"Sostantivo", "frase":"Frase utile" };
+
+  var state = {
+    order: [],
+    idx: 0,
+    correct: 0,
+    pass: 0,
+    tabu: 0,
+    started: false
+  };
+
+  function shuffle(arr){
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  function el(id){ return document.getElementById(id); }
+
+  function newDeck(){
+    state.order = shuffle(CARDS.map(function(_, i){ return i; }));
+    state.idx = 0;
+    state.correct = 0;
+    state.pass = 0;
+    state.tabu = 0;
+    updateScoreboard();
+  }
+
+  function updateScoreboard(){
+    el('score-correct').textContent = state.correct;
+    el('score-pass').textContent = state.pass;
+    el('score-tabu').textContent = state.tabu;
+  }
+
+  function renderCard(){
+    if (state.idx >= state.order.length) {
+      showEnd();
+      return;
+    }
+    var card = CARDS[state.order[state.idx]];
+    var top = el('card-top');
+    top.classList.remove('tipo-verbo','tipo-frase');
+    if (card.type === 'frase') top.classList.add('tipo-frase');
+
+    el('card-type-label').textContent = TYPE_LABELS[card.type] + ' · ' + TMETA[card.cat].chip;
+    el('card-counter').textContent = (state.idx + 1) + ' / ' + state.order.length;
+    el('target-word').textContent = card.word;
+    el('target-hint').textContent = '';
+
+    var list = el('taboo-list');
+    list.innerHTML = '';
+    card.taboo.forEach(function(w){
+      var li = document.createElement('li');
+      li.textContent = w;
+      list.appendChild(li);
+    });
+  }
+
+  function showEnd(){
+    el('screen-game').classList.add('hidden');
+    el('screen-end').classList.remove('hidden');
+    el('final-score').textContent = state.correct - state.tabu;
+  }
+
+  function next(){
+    state.idx += 1;
+    renderCard();
+  }
+
+  function markCorrect(){ if (state.idx >= state.order.length) return; state.correct++; updateScoreboard(); next(); }
+  function markPass(){ if (state.idx >= state.order.length) return; state.pass++; updateScoreboard(); next(); }
+  function markTabu(){ if (state.idx >= state.order.length) return; state.tabu++; updateScoreboard(); next(); }
+
+  function startGame(){
+    state.started = true;
+    el('screen-intro').classList.add('hidden');
+    el('screen-end').classList.add('hidden');
+    el('screen-game').classList.remove('hidden');
+    newDeck();
+    renderCard();
+  }
+
+  el('btn-start').addEventListener('click', startGame);
+  el('btn-play-again').addEventListener('click', startGame);
+  el('btn-correct').addEventListener('click', markCorrect);
+  el('btn-pass').addEventListener('click', markPass);
+  el('btn-tabu').addEventListener('click', markTabu);
+  el('btn-shuffle').addEventListener('click', function(){ newDeck(); renderCard(); });
+  el('btn-restart').addEventListener('click', function(){ newDeck(); renderCard(); });
+
+  document.addEventListener('keydown', function(e){
+    if (!state.started || el('screen-game').classList.contains('hidden')) return;
+    var k = e.key.toLowerCase();
+    if (k === 'c') markCorrect();
+    else if (k === 'p') markPass();
+    else if (k === 't') markTabu();
+  });
+
+  window.__taboo = { cards: CARDS, tmeta: TMETA, state: state };
+
+})();
+</script>
+
+</body>
+</html>

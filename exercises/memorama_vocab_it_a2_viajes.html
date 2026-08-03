@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memorama di italiano · Viaggi · A2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700&family=Outfit:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============ Axolingua tokens — see _sass/_tokens.scss ============ */
+  :root{
+    --ivory:#F7F3EE;
+    --cream:#F0EAE1;
+    --sand:#E6DDCF;
+    --paper:#FFFFFF;
+    --charcoal:#2C2A27;
+    --mute:#8A847E;
+    --rule:#D8CFBF;
+    --pink:#D0736C;
+    --pink-deep:#B8524A;
+    --pink-soft:#E49E99;
+    --pink-wash:#FBF0EF;
+    --jade:#3D8876;
+    --jade-wash:#EAF4F2;
+    --ochre:#BC8A52;
+    --ochre-deep:#9E6B35;
+    --ochre-wash:#F9F1E6;
+    --display:'Fraunces',Georgia,serif;
+    --ui:'Outfit',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:'DM Mono','Courier New',monospace;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ivory);
+    color:var(--charcoal);
+    font-family: var(--ui);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:24px 16px 40px;
+  }
+  h1{
+    font-family: var(--display);
+    font-size:26px;
+    margin:0 0 4px;
+    text-align:center;
+  }
+  .subtitle{
+    color:var(--jade);
+    font-size:14px;
+    margin:0 0 18px;
+    text-align:center;
+  }
+  .scoreboard{
+    display:flex;
+    gap:22px;
+    align-items:center;
+    background:var(--cream);
+    border-radius:14px;
+    padding:9px 20px;
+    margin-bottom:18px;
+    font-size:14px;
+  }
+  .scoreboard .score-item{display:flex; flex-direction:column; align-items:center;}
+  .scoreboard .score-num{font-size:22px; font-weight:bold; color:var(--jade);}
+  .scoreboard .divider{width:1px; height:28px; background:var(--rule);}
+
+  #board{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));
+    gap:10px;
+    width:100%;
+    max-width:900px;
+  }
+  .cell{
+    position:relative;
+    width:100%;
+  }
+  /* padding-ratio box instead of aspect-ratio (unsupported in some browsers) */
+  .cell::before{
+    content:"";
+    display:block;
+    padding-top:100%;
+  }
+  .card{
+    position:absolute;
+    top:0; left:0; right:0; bottom:0;
+    border-radius:10px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    font-weight:bold;
+    user-select:none;
+  }
+  /* two stacked faces, crossfaded with opacity+scale (no 3D transforms/backface-visibility) */
+  .face{
+    position:absolute;
+    top:0; left:0; right:0; bottom:0;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:6px 5px;
+    overflow:hidden;
+    word-break:break-word;
+    overflow-wrap:break-word;
+    hyphens:auto;
+    transition:opacity 0.22s ease, transform 0.22s ease;
+  }
+  .face-back{
+    background:var(--jade);
+    color:#fff;
+    font-size:26px;
+    opacity:1;
+    transform:scale(1);
+  }
+  .face-front{
+    background:var(--paper);
+    border:1.5px solid var(--rule);
+    color:var(--charcoal);
+    line-height:1.15;
+    font-weight:bold;
+    opacity:0;
+    transform:scale(0.9);
+  }
+  .card.flipped .face-back{ opacity:0; transform:scale(0.9); }
+  .card.flipped .face-front{ opacity:1; transform:scale(1); }
+
+  .card.matched .face-front{
+    background:var(--jade-wash);
+    border-color:var(--jade);
+    color:var(--jade);
+  }
+  .card.matched{ cursor:default; }
+
+  .card.wrong .face-front{
+    background:var(--pink-wash);
+    border-color:var(--pink-deep);
+    color:var(--pink-deep);
+  }
+
+  .card.lang-it .face-front{ background:var(--ochre-wash); border-color:var(--ochre); }
+  .card.lang-it.matched .face-front{ background:var(--jade-wash); border-color:var(--jade); color:var(--jade); }
+
+  .controls-row{
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    margin-top:20px;
+  }
+  .ctrl-btn{
+    background:var(--cream);
+    color:var(--charcoal);
+    border:1px solid var(--rule);
+    border-radius:10px;
+    padding:9px 16px;
+    font-size:13px;
+    cursor:pointer;
+  }
+  .ctrl-btn:hover{ background:var(--sand); }
+
+  .end-screen{
+    text-align:center;
+    max-width:440px;
+    display:none;
+  }
+  .end-screen.show{ display:block; }
+  .end-screen h2{ font-family: var(--display); color:var(--jade); }
+  .end-score{ font-size:44px; font-weight:bold; margin:8px 0; }
+
+  .instructions{
+    max-width:520px;
+    background:var(--jade-wash);
+    border-radius:14px;
+    padding:16px 20px;
+    margin-bottom:18px;
+    font-size:13.5px;
+    line-height:1.5;
+  }
+  .instructions h3{ margin-top:0; font-family: var(--display); color:var(--jade); font-size:16px;}
+
+  .start-btn{
+    background:var(--jade);
+    color:#fff;
+    border:none;
+    padding:13px 30px;
+    border-radius:12px;
+    font-size:15px;
+    font-weight:bold;
+    cursor:pointer;
+  }
+  .hidden{ display:none !important; }
+  footer{ margin-top:24px; font-size:12px; color:var(--mute); text-align:center; }
+
+  @media (max-width:480px){
+    #board{ grid-template-columns:repeat(auto-fill, minmax(100px, 1fr)); gap:7px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Memorama Italiano</h1>
+<p class="subtitle">Ripasso del vocabolario per viaggiare</p>
+
+<div id="screen-intro">
+  <div class="instructions">
+    <h3>Come si gioca</h3>
+    <ul style="padding-left:20px; margin-bottom:0;">
+      <li>Gira due carte per turno cercando la coppia <strong>parola italiana ↔ traduzione inglese</strong>.</li>
+      <li>Se combaciano, restano scoperte. Se no, si girano di nuovo.</li>
+      <li>Vince chi trova più coppie — o, da soli, prova a finire con meno tentativi possibile.</li>
+    </ul>
+  </div>
+  <div style="text-align:center;">
+    <button class="start-btn" id="btn-start">Inizia il gioco →</button>
+  </div>
+</div>
+
+<div id="screen-game" class="hidden">
+  <div class="scoreboard">
+    <div class="score-item">
+      <span class="score-num" id="score-pairs">0</span>
+      <span>Coppie / 24</span>
+    </div>
+    <div class="divider"></div>
+    <div class="score-item">
+      <span class="score-num" id="score-moves">0</span>
+      <span>Tentativi</span>
+    </div>
+  </div>
+
+  <div id="board"></div>
+
+  <div class="controls-row">
+    <button class="ctrl-btn" id="btn-shuffle">🔀 Rimescola</button>
+    <button class="ctrl-btn" id="btn-restart">↺ Ricomincia</button>
+  </div>
+</div>
+
+<div id="screen-end" class="end-screen">
+  <h2>Complimenti!</h2>
+  <p>Hai trovato tutte le coppie in</p>
+  <div class="end-score" id="final-moves">0</div>
+  <p>tentativi</p>
+  <button class="start-btn" id="btn-play-again">Gioca ancora</button>
+</div>
+
+<footer>Axolingua · Memorama Italiano · gioco offline, nessuna connessione richiesta</footer>
+
+<script>
+(function(){
+
+  // 24 pairs drawn from the Tabù deck categories: saluti, trasporti, alloggio, cibo, numeri, emergenza
+  var PAIRS = [
+    { it:"Ciao",        en:"Hi / Bye" },
+    { it:"Grazie",      en:"Thank you" },
+    { it:"Prego",       en:"You're welcome" },
+    { it:"Scusi",       en:"Excuse me" },
+
+    { it:"Stazione",    en:"Station" },
+    { it:"Treno",       en:"Train" },
+    { it:"Biglietto",   en:"Ticket" },
+    { it:"Sinistra",    en:"Left" },
+
+    { it:"Camera",      en:"Room" },
+    { it:"Chiave",      en:"Key" },
+    { it:"Bagno",       en:"Bathroom" },
+
+    { it:"Acqua",       en:"Water" },
+    { it:"Vino",        en:"Wine" },
+    { it:"Caffè",       en:"Coffee" },
+    { it:"Conto",       en:"Bill / Check" },
+    { it:"Colazione",   en:"Breakfast" },
+    { it:"Cena",        en:"Dinner" },
+
+    { it:"Euro",        en:"Euro" },
+    { it:"Contanti",    en:"Cash" },
+    { it:"Sconto",      en:"Discount" },
+
+    { it:"Aiuto!",      en:"Help!" },
+    { it:"Ospedale",    en:"Hospital" },
+    { it:"Farmacia",    en:"Pharmacy" },
+    { it:"Ambulanza",   en:"Ambulance" }
+  ];
+
+  var state = {
+    cards: [],
+    flipped: [],
+    matchedCount: 0,
+    moves: 0,
+    lockBoard: false
+  };
+
+  function shuffle(arr){
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  function fontSizeFor(text){
+    var len = text.length;
+    if (len <= 5)  return 21;
+    if (len <= 8)  return 18;
+    if (len <= 11) return 16;
+    if (len <= 14) return 14;
+    return 12;
+  }
+
+  function el(id){ return document.getElementById(id); }
+
+  function buildDeck(){
+    var deck = [];
+    PAIRS.forEach(function(p, i){
+      deck.push({ pairId:i, lang:"it", text:p.it });
+      deck.push({ pairId:i, lang:"en", text:p.en });
+    });
+    return shuffle(deck);
+  }
+
+  function renderBoard(){
+    var board = el('board');
+    board.innerHTML = '';
+    state.cards.forEach(function(cardData, idx){
+      var cell = document.createElement('div');
+      cell.className = 'cell';
+
+      var card = document.createElement('div');
+      card.className = 'card' + (cardData.lang === 'it' ? ' lang-it' : '');
+      card.setAttribute('data-idx', idx);
+
+      var faceBack = document.createElement('div');
+      faceBack.className = 'face face-back';
+      faceBack.textContent = '?';
+
+      var faceFront = document.createElement('div');
+      faceFront.className = 'face face-front';
+      faceFront.textContent = cardData.text;
+      faceFront.style.fontSize = fontSizeFor(cardData.text) + 'px';
+
+      card.appendChild(faceBack);
+      card.appendChild(faceFront);
+      card.addEventListener('click', function(){ onCardClick(idx); });
+
+      cell.appendChild(card);
+      board.appendChild(cell);
+    });
+  }
+
+  function getCardEl(idx){
+    return document.querySelector('.card[data-idx="' + idx + '"]');
+  }
+
+  function onCardClick(idx){
+    if (state.lockBoard) return;
+    var cardData = state.cards[idx];
+    if (cardData.matched) return;
+    var cardEl = getCardEl(idx);
+    if (cardEl.classList.contains('flipped')) return;
+    if (state.flipped.indexOf(idx) !== -1) return;
+
+    cardEl.classList.add('flipped');
+    state.flipped.push(idx);
+
+    if (state.flipped.length === 2) {
+      state.moves++;
+      updateScoreboard();
+      checkMatch();
+    }
+  }
+
+  function checkMatch(){
+    var i1 = state.flipped[0], i2 = state.flipped[1];
+    var c1 = state.cards[i1], c2 = state.cards[i2];
+
+    if (c1.pairId === c2.pairId && c1.lang !== c2.lang) {
+      c1.matched = true; c2.matched = true;
+      getCardEl(i1).classList.add('matched');
+      getCardEl(i2).classList.add('matched');
+      state.flipped = [];
+      state.matchedCount++;
+      updateScoreboard();
+      if (state.matchedCount === PAIRS.length) {
+        setTimeout(showEnd, 350);
+      }
+    } else {
+      state.lockBoard = true;
+      var e1 = getCardEl(i1), e2 = getCardEl(i2);
+      e1.classList.add('wrong');
+      e2.classList.add('wrong');
+      setTimeout(function(){
+        e1.classList.remove('flipped', 'wrong');
+        e2.classList.remove('flipped', 'wrong');
+        state.flipped = [];
+        state.lockBoard = false;
+      }, 900);
+    }
+  }
+
+  function updateScoreboard(){
+    el('score-pairs').textContent = state.matchedCount;
+    el('score-moves').textContent = state.moves;
+  }
+
+  function showEnd(){
+    el('screen-end').classList.add('show');
+    el('final-moves').textContent = state.moves;
+  }
+
+  function newGame(){
+    state.cards = buildDeck();
+    state.flipped = [];
+    state.matchedCount = 0;
+    state.moves = 0;
+    state.lockBoard = false;
+    el('screen-end').classList.remove('show');
+    updateScoreboard();
+    renderBoard();
+  }
+
+  function startGame(){
+    el('screen-intro').classList.add('hidden');
+    el('screen-end').classList.remove('show');
+    el('screen-game').classList.remove('hidden');
+    newGame();
+  }
+
+  el('btn-start').addEventListener('click', startGame);
+  el('btn-play-again').addEventListener('click', startGame);
+  el('btn-shuffle').addEventListener('click', newGame);
+  el('btn-restart').addEventListener('click', newGame);
+
+  window.__memorama = { pairs: PAIRS, state: state, buildDeck: buildDeck };
+
+})();
+</script>
+
+</body>
+</html>

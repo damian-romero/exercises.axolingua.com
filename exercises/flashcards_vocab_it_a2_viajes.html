@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcards di italiano · Viaggi · A2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700&family=Outfit:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============ Axolingua tokens — see _sass/_tokens.scss ============ */
+  :root{
+    --ivory:#F7F3EE;
+    --cream:#F0EAE1;
+    --sand:#E6DDCF;
+    --paper:#FFFFFF;
+    --charcoal:#2C2A27;
+    --mute:#8A847E;
+    --rule:#D8CFBF;
+    --pink:#D0736C;
+    --pink-deep:#B8524A;
+    --pink-soft:#E49E99;
+    --pink-wash:#FBF0EF;
+    --jade:#3D8876;
+    --jade-wash:#EAF4F2;
+    --ochre:#BC8A52;
+    --ochre-deep:#9E6B35;
+    --ochre-wash:#F9F1E6;
+    --display:'Fraunces',Georgia,serif;
+    --ui:'Outfit',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:'DM Mono','Courier New',monospace;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ivory);
+    color:var(--charcoal);
+    font-family: var(--ui);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:22px 16px 40px;
+  }
+  h1{
+    font-family: var(--display);
+    font-size:24px;
+    margin:0 0 4px;
+    text-align:center;
+  }
+  .subtitle{
+    color:var(--jade);
+    font-size:13.5px;
+    margin:0 0 16px;
+    text-align:center;
+  }
+
+  .instructions{
+    max-width:440px;
+    background:var(--jade-wash);
+    border-radius:14px;
+    padding:16px 20px;
+    margin-bottom:18px;
+    font-size:13.5px;
+    line-height:1.5;
+  }
+  .instructions h3{ margin-top:0; font-family: var(--display); color:var(--jade); font-size:16px;}
+  .start-btn{
+    background:var(--jade);
+    color:#fff;
+    border:none;
+    padding:13px 30px;
+    border-radius:12px;
+    font-size:15px;
+    font-weight:bold;
+    cursor:pointer;
+  }
+  .hidden{ display:none !important; }
+
+  .progress-wrap{
+    width:100%;
+    max-width:440px;
+    margin-bottom:6px;
+  }
+  .progress-labels{
+    display:flex;
+    justify-content:space-between;
+    font-size:12.5px;
+    color:var(--mute);
+    margin-bottom:4px;
+  }
+  .progress-bar-bg{
+    width:100%;
+    height:8px;
+    background:var(--cream);
+    border-radius:6px;
+    overflow:hidden;
+  }
+  .progress-bar-fill{
+    height:100%;
+    background:var(--jade);
+    width:0%;
+    transition:width 0.25s ease;
+  }
+
+  .stats-row{
+    display:flex;
+    gap:20px;
+    margin:12px 0 16px;
+    font-size:13.5px;
+  }
+  .stat{ display:flex; align-items:center; gap:6px; }
+  .dot{ width:10px; height:10px; border-radius:50%; display:inline-block; }
+  .dot-know{ background:var(--jade); }
+  .dot-review{ background:var(--pink-deep); }
+  .dot-left{ background:var(--ochre); }
+
+  .card-stage{
+    width:100%;
+    max-width:440px;
+    perspective:none;
+  }
+  .card{
+    position:relative;
+    width:100%;
+    min-height:220px;
+    border-radius:20px;
+    box-shadow:0 6px 24px rgba(44,42,39,0.12);
+    border:1px solid var(--rule);
+    cursor:pointer;
+    background:var(--paper);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .face{
+    position:absolute;
+    top:0; left:0; right:0; bottom:0;
+    border-radius:20px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:28px 26px;
+    transition:opacity 0.2s ease, transform 0.2s ease;
+  }
+  .face-front{
+    background:var(--paper);
+    opacity:1;
+    transform:scale(1);
+  }
+  .face-back{
+    background:var(--jade-wash);
+    opacity:0;
+    transform:scale(0.92);
+  }
+  .card.flipped .face-front{ opacity:0; transform:scale(0.92); }
+  .card.flipped .face-back{ opacity:1; transform:scale(1); }
+
+  .cat-chip{
+    font-size:11px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--ochre);
+    font-weight:bold;
+    margin-bottom:14px;
+  }
+  .card-text{
+    font-family: var(--display);
+    font-size:23px;
+    font-weight:bold;
+    line-height:1.35;
+    color:var(--charcoal);
+  }
+  .face-back .card-text{
+    font-family: var(--ui);
+    font-size:19px;
+    font-weight:normal;
+    color:var(--jade);
+  }
+  .tap-hint{
+    font-size:12px;
+    color:var(--mute);
+    margin-top:16px;
+  }
+
+  .btn-row{
+    display:flex;
+    gap:10px;
+    width:100%;
+    max-width:440px;
+    margin-top:18px;
+  }
+  button.action-btn{
+    flex:1;
+    border:none;
+    border-radius:12px;
+    padding:15px 8px;
+    font-size:14.5px;
+    font-weight:bold;
+    cursor:pointer;
+    color:#fff;
+  }
+  button.action-btn:active{ transform:scale(0.97); }
+  .btn-review{ background:var(--pink-deep); }
+  .btn-know{ background:var(--jade); }
+
+  .nav-row{
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    margin-top:16px;
+  }
+  .ctrl-btn{
+    background:var(--cream);
+    color:var(--charcoal);
+    border:1px solid var(--rule);
+    border-radius:10px;
+    padding:9px 16px;
+    font-size:13px;
+    cursor:pointer;
+  }
+  .ctrl-btn:hover{ background:var(--sand); }
+
+  .end-screen{
+    text-align:center;
+    max-width:440px;
+  }
+  .end-screen h2{ font-family: var(--display); color:var(--jade); }
+  .end-score{ font-size:44px; font-weight:bold; margin:8px 0; }
+
+  footer{ margin-top:26px; font-size:12px; color:var(--mute); text-align:center; }
+</style>
+</head>
+<body>
+
+<h1>Flashcards Italiano</h1>
+<p class="subtitle">Frasi per viaggiare — pratica in volo</p>
+
+<div id="screen-intro">
+  <div class="instructions">
+    <h3>Come funziona</h3>
+    <ul style="padding-left:20px; margin-bottom:0;">
+      <li>Leggi la frase in italiano e prova a ricordarne il significato.</li>
+      <li>Tocca la carta per vedere la traduzione.</li>
+      <li>Segna <strong>Da ripassare</strong> o <strong>La so</strong> — le frasi "da ripassare" torneranno più avanti nel mazzo.</li>
+      <li>Funziona offline, nessuna connessione richiesta.</li>
+    </ul>
+  </div>
+  <div style="text-align:center;">
+    <button class="start-btn" id="btn-start">Inizia →</button>
+  </div>
+</div>
+
+<div id="screen-game" class="hidden">
+  <div class="progress-wrap">
+    <div class="progress-labels">
+      <span id="progress-text">Carta 1 / 46</span>
+      <span id="progress-pct">0%</span>
+    </div>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+  </div>
+
+  <div class="stats-row">
+    <span class="stat"><span class="dot dot-know"></span><span id="stat-know">0</span> la so</span>
+    <span class="stat"><span class="dot dot-review"></span><span id="stat-review">0</span> da ripassare</span>
+    <span class="stat"><span class="dot dot-left"></span><span id="stat-left">46</span> rimanenti</span>
+  </div>
+
+  <div class="card-stage">
+    <div class="card" id="card">
+      <div class="face face-front">
+        <div class="cat-chip" id="cat-chip"></div>
+        <div class="card-text" id="text-front"></div>
+        <div class="tap-hint">tocca per vedere la traduzione</div>
+      </div>
+      <div class="face face-back">
+        <div class="cat-chip">Traduzione</div>
+        <div class="card-text" id="text-back"></div>
+        <div class="tap-hint">tocca per tornare indietro</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="action-btn btn-review" id="btn-review">Da ripassare</button>
+    <button class="action-btn btn-know" id="btn-know">La so ✓</button>
+  </div>
+
+  <div class="nav-row">
+    <button class="ctrl-btn" id="btn-shuffle">🔀 Rimescola</button>
+    <button class="ctrl-btn" id="btn-restart">↺ Ricomincia</button>
+  </div>
+</div>
+
+<div id="screen-end" class="hidden end-screen">
+  <h2>Mazzo completato!</h2>
+  <div class="end-score" id="final-know">0</div>
+  <p>frasi che sai bene, su <span id="final-total">46</span> totali</p>
+  <button class="start-btn" id="btn-play-again">Ripeti il mazzo</button>
+</div>
+
+<footer>Axolingua · Flashcards Italiano · gioco offline, nessuna connessione richiesta</footer>
+
+<script>
+(function(){
+
+  var CARDS = [
+    // Saluti e cortesia
+    { it:"Buongiorno",                              en:"Good morning", cat:"Saluti" },
+    { it:"Buonasera",                                en:"Good evening", cat:"Saluti" },
+    { it:"Buonanotte",                               en:"Good night", cat:"Saluti" },
+    { it:"Come sta?",                                en:"How are you? (formal)", cat:"Saluti" },
+    { it:"Piacere di conoscerla",                    en:"Pleased to meet you (formal)", cat:"Saluti" },
+    { it:"Mi scusi, posso farle una domanda?",       en:"Excuse me, may I ask you a question?", cat:"Saluti" },
+    { it:"Grazie mille, molto gentile",              en:"Thank you very much, very kind of you", cat:"Saluti" },
+    { it:"Prego, si figuri",                         en:"You're welcome, don't mention it", cat:"Saluti" },
+
+    // Chiedere informazioni
+    { it:"Scusi, dov'è la stazione?",                en:"Excuse me, where's the station?", cat:"Informazioni" },
+    { it:"Come si arriva a...?",                     en:"How do you get to...?", cat:"Informazioni" },
+    { it:"È lontano da qui?",                        en:"Is it far from here?", cat:"Informazioni" },
+    { it:"Si può andare a piedi?",                   en:"Can you walk there?", cat:"Informazioni" },
+    { it:"A che ora parte il prossimo treno?",       en:"What time does the next train leave?", cat:"Informazioni" },
+    { it:"Da che binario parte?",                    en:"Which platform does it leave from?", cat:"Informazioni" },
+    { it:"Quanto tempo ci vuole?",                   en:"How long does it take?", cat:"Informazioni" },
+
+    // Aeroporto e stazione
+    { it:"Dov'è il ritiro bagagli?",                 en:"Where's baggage claim?", cat:"Aeroporto" },
+    { it:"Ho perso la coincidenza",                  en:"I missed my connection", cat:"Aeroporto" },
+    { it:"Il volo è in ritardo?",                    en:"Is the flight delayed?", cat:"Aeroporto" },
+    { it:"Un biglietto di sola andata, per favore",  en:"A one-way ticket, please", cat:"Aeroporto" },
+    { it:"Devo cambiare treno?",                     en:"Do I need to change trains?", cat:"Aeroporto" },
+    { it:"Questo posto è libero?",                   en:"Is this seat free?", cat:"Aeroporto" },
+
+    // Albergo
+    { it:"Ho una prenotazione a nome di...",         en:"I have a reservation under the name of...", cat:"Albergo" },
+    { it:"A che ora è il check-in?",                 en:"What time is check-in?", cat:"Albergo" },
+    { it:"C'è il Wi-Fi in camera?",                  en:"Is there Wi-Fi in the room?", cat:"Albergo" },
+    { it:"Potrei avere un'altra coperta?",           en:"Could I have another blanket?", cat:"Albergo" },
+    { it:"Il condizionatore non funziona",           en:"The air conditioning isn't working", cat:"Albergo" },
+    { it:"Potete chiamarmi un taxi?",                en:"Could you call me a taxi?", cat:"Albergo" },
+
+    // Ristorante
+    { it:"Un tavolo per due, per favore",            en:"A table for two, please", cat:"Ristorante" },
+    { it:"Cosa ci consiglia?",                       en:"What do you recommend?", cat:"Ristorante" },
+    { it:"Sono allergico ai latticini",              en:"I'm allergic to dairy", cat:"Ristorante" },
+    { it:"Vorrei il conto, per favore",              en:"I'd like the bill, please", cat:"Ristorante" },
+    { it:"Si può pagare con la carta?",              en:"Can I pay by card?", cat:"Ristorante" },
+    { it:"Era tutto squisito, grazie",               en:"Everything was delicious, thank you", cat:"Ristorante" },
+
+    // Per strada e nei negozi
+    { it:"Quanto costa questo?",                     en:"How much does this cost?", cat:"Negozi" },
+    { it:"È in saldo?",                              en:"Is it on sale?", cat:"Negozi" },
+    { it:"Posso provarlo?",                          en:"Can I try it on?", cat:"Negozi" },
+    { it:"Avete una taglia più grande?",             en:"Do you have a bigger size?", cat:"Negozi" },
+    { it:"Accettate carte di credito?",              en:"Do you accept credit cards?", cat:"Negozi" },
+    { it:"Mi scusi, dov'è il bagno?",                en:"Excuse me, where's the bathroom?", cat:"Negozi" },
+
+    // Emergenze e salute
+    { it:"Aiuto!",                                    en:"Help!", cat:"Emergenze" },
+    { it:"Mi sono perso",                             en:"I'm lost", cat:"Emergenze" },
+    { it:"Ho bisogno di un medico",                   en:"I need a doctor", cat:"Emergenze" },
+    { it:"Mi sento male",                             en:"I feel sick", cat:"Emergenze" },
+    { it:"Dov'è la farmacia più vicina?",             en:"Where's the nearest pharmacy?", cat:"Emergenze" },
+    { it:"Qualcuno mi ha rubato il portafoglio",      en:"Someone stole my wallet", cat:"Emergenze" },
+    { it:"Chiamate la polizia, per favore",           en:"Call the police, please", cat:"Emergenze" }
+  ];
+
+  var state = {
+    deck: [],      // array of card indices, current session order
+    pos: 0,
+    knowCount: 0,
+    reviewSet: {}, // indices marked for review, to requeue
+    knownSet: {},
+    flipped: false
+  };
+
+  function shuffle(arr){
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  function el(id){ return document.getElementById(id); }
+
+  function newSession(){
+    state.deck = shuffle(CARDS.map(function(_, i){ return i; }));
+    state.pos = 0;
+    state.knowCount = 0;
+    state.reviewSet = {};
+    state.knownSet = {};
+    state.flipped = false;
+    el('card').classList.remove('flipped');
+    renderCard();
+    updateStats();
+  }
+
+  function currentCardIdx(){
+    return state.deck[state.pos];
+  }
+
+  function renderCard(){
+    if (state.pos >= state.deck.length) {
+      showEnd();
+      return;
+    }
+    var card = CARDS[currentCardIdx()];
+    el('card').classList.remove('flipped');
+    state.flipped = false;
+    el('cat-chip').textContent = card.cat;
+    el('text-front').textContent = card.it;
+    el('text-back').textContent = card.en;
+    el('progress-text').textContent = 'Carta ' + (state.pos + 1) + ' / ' + state.deck.length;
+    var pct = Math.round(((state.pos) / state.deck.length) * 100);
+    el('progress-pct').textContent = pct + '%';
+    el('progress-fill').style.width = pct + '%';
+  }
+
+  function updateStats(){
+    el('stat-know').textContent = Object.keys(state.knownSet).length;
+    el('stat-review').textContent = Object.keys(state.reviewSet).length;
+    el('stat-left').textContent = state.deck.length - state.pos;
+  }
+
+  function flipCard(){
+    state.flipped = !state.flipped;
+    el('card').classList.toggle('flipped', state.flipped);
+  }
+
+  function markKnow(){
+    if (state.pos >= state.deck.length) return;
+    var idx = currentCardIdx();
+    state.knownSet[idx] = true;
+    delete state.reviewSet[idx];
+    advance();
+  }
+
+  function markReview(){
+    if (state.pos >= state.deck.length) return;
+    var idx = currentCardIdx();
+    state.reviewSet[idx] = true;
+    delete state.knownSet[idx];
+    // requeue this card near the end of the current deck so it comes back around
+    state.deck.push(idx);
+    advance();
+  }
+
+  function advance(){
+    state.pos += 1;
+    updateStats();
+    renderCard();
+  }
+
+  function showEnd(){
+    el('screen-game').classList.add('hidden');
+    el('screen-end').classList.remove('hidden');
+    el('final-know').textContent = Object.keys(state.knownSet).length;
+    el('final-total').textContent = CARDS.length;
+  }
+
+  function startGame(){
+    el('screen-intro').classList.add('hidden');
+    el('screen-end').classList.add('hidden');
+    el('screen-game').classList.remove('hidden');
+    newSession();
+  }
+
+  el('btn-start').addEventListener('click', startGame);
+  el('btn-play-again').addEventListener('click', startGame);
+  el('card').addEventListener('click', flipCard);
+  el('btn-know').addEventListener('click', markKnow);
+  el('btn-review').addEventListener('click', markReview);
+  el('btn-shuffle').addEventListener('click', function(){ newSession(); });
+  el('btn-restart').addEventListener('click', function(){ newSession(); });
+
+  window.__flashcards = { cards: CARDS, state: state };
+
+})();
+</script>
+
+</body>
+</html>

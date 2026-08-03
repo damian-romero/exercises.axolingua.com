@@ -13,7 +13,7 @@ permalink: /ejercicios/
 {% assign pg = site.data.pages.exercises[site.active_lang] %}
 {% assign tax = site.data.exercise_taxonomy %}
 {% assign lang = site.active_lang %}
-{% assign exercises = site.data.exercise_catalog | where: "target_lang", "es" %}
+{% assign exercises = site.data.exercise_catalog %}
 
 <section class="section--tight">
   <div class="wrap">
@@ -23,6 +23,13 @@ permalink: /ejercicios/
 
     <!-- FILTERS -->
     <div class="filter-bar" id="filterBar">
+      <div class="filter-group" data-filter-group="lang">
+        <span class="filter-group__label">{{ pg.filters.lang }}</span>
+        <button class="filter-pill is-active" data-value="all" type="button">{{ pg.filters.all }}</button>
+        {% for tl in tax.target_langs %}
+        <button class="filter-pill" data-value="{{ tl[0] }}" type="button">{{ tl[1][lang] }}</button>
+        {% endfor %}
+      </div>
       <div class="filter-group" data-filter-group="skill">
         <span class="filter-group__label">{{ pg.filters.skill }}</span>
         <button class="filter-pill is-active" data-value="all" type="button">{{ pg.filters.all }}</button>
@@ -50,6 +57,7 @@ permalink: /ejercicios/
     <div class="exercise-grid" id="exerciseGrid">
       {% for ex in exercises %}
       <article class="exercise-card"
+        data-lang="{{ ex.target_lang }}"
         data-skill="{{ ex.skill }}"
         data-level="{{ ex.level }}"
         data-theme="{{ ex.theme }}">
@@ -59,6 +67,7 @@ permalink: /ejercicios/
         </div>
         <div class="exercise-card__body">
           <div class="exercise-card__tags">
+            <span class="tag tag--neutral">{{ tax.target_langs[ex.target_lang][lang] }}</span>
             <span class="level level--{{ ex.level | slice: 0, 1 }}">{{ ex.level | upcase }}</span>
             <span class="tag tag--neutral">{{ tax.skills[ex.skill][lang] }}</span>
             {% if ex.theme != "general" %}<span class="tag tag--ochre">{{ tax.themes[ex.theme][lang] }}</span>{% endif %}
@@ -81,7 +90,7 @@ permalink: /ejercicios/
   var groups = document.querySelectorAll('[data-filter-group]');
   var cards = document.querySelectorAll('.exercise-card');
   var empty = document.getElementById('emptyState');
-  var state = { skill: 'all', level: 'all', theme: 'all' };
+  var state = { lang: 'all', skill: 'all', level: 'all', theme: 'all' };
 
   groups.forEach(function (group) {
     var key = group.getAttribute('data-filter-group');
@@ -96,10 +105,19 @@ permalink: /ejercicios/
     });
   });
 
+  // Pre-filter by ?lang=xx if present (used by the homepage language picker)
+  var presetLang = new URLSearchParams(window.location.search).get('lang');
+  if (presetLang) {
+    var langGroup = document.querySelector('[data-filter-group="lang"]');
+    var presetBtn = langGroup && langGroup.querySelector('.filter-pill[data-value="' + presetLang + '"]');
+    if (presetBtn) presetBtn.click();
+  }
+
   function applyFilters() {
     var visible = 0;
     cards.forEach(function (card) {
-      var match = (state.skill === 'all' || card.dataset.skill === state.skill) &&
+      var match = (state.lang === 'all' || card.dataset.lang === state.lang) &&
+                  (state.skill === 'all' || card.dataset.skill === state.skill) &&
                   (state.level === 'all' || card.dataset.level === state.level) &&
                   (state.theme === 'all' || card.dataset.theme === state.theme);
       card.hidden = !match;

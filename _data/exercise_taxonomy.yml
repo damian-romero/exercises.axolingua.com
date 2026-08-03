@@ -11,10 +11,12 @@ skills:
   tabu: { es: "Tabú", en: "Taboo" }
   cloze: { es: "Historia para completar", en: "Story fill-in" }
   drill: { es: "Repaso guiado", en: "Guided drill" }
+  flashcards: { es: "Tarjetas de memoria", en: "Flashcards" }
 
 grammar:
   presente: { es: "Presente", en: "Present tense" }
   tiempos_simples: { es: "Tiempos simples", en: "Simple tenses" }
+  vocab: { es: "Vocabulario", en: "Vocabulary" }
 
 levels:
   a1: { es: "A1 · Principiante", en: "A1 · Beginner" }
@@ -23,3 +25,10 @@ levels:
 themes:
   general: { es: "General", en: "General" }
   deportes: { es: "Deportes", en: "Sports" }
+  viajes: { es: "Viajes", en: "Travel" }
+
+# target_langs — labels for the language being PRACTICED, used by the
+# language filter pill group on /ejercicios/.
+target_langs:
+  es: { es: "Español", en: "Spanish" }
+  it: { es: "Italiano", en: "Italian" }

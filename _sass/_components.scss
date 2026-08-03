@@ -230,6 +230,7 @@
 }
 .path-card--pink { background: var(--pink-wash); border-color: var(--pink-pale); }
 .path-card--jade { background: var(--jade-wash); border-color: var(--jade-pale); }
+.path-card--ochre { background: var(--ochre-wash); border-color: var(--ochre-pale); }
 .path-card__title {
   font-family: var(--font-display);
   font-size: 1.5rem;
@@ -245,6 +246,7 @@
 }
 .path-card--pink .path-card__link { color: var(--pink-deep); }
 .path-card--jade .path-card__link { color: var(--jade-deep); }
+.path-card--ochre .path-card__link { color: var(--ochre-deep); }
 
 // ═══ HOW IT WORKS — STEPS ═══
 .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s4); }
