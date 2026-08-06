@@ -12,10 +12,12 @@ skills:
   cloze: { es: "Historia para completar", en: "Story fill-in" }
   drill: { es: "Repaso guiado", en: "Guided drill" }
   flashcards: { es: "Tarjetas de memoria", en: "Flashcards" }
+  guesswho: { es: "¿Quién es quién?", en: "Guess Who?" }
 
 grammar:
   presente: { es: "Presente", en: "Present tense" }
   tiempos_simples: { es: "Tiempos simples", en: "Simple tenses" }
+  preterito_imperfecto: { es: "Pretérito e imperfecto", en: "Preterite and imperfect" }
   vocab: { es: "Vocabulario", en: "Vocabulary" }
 
 levels:

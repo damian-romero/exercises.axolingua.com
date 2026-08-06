@@ -118,3 +118,17 @@
   description:
     es: "Haz que tu compañero adivine la palabra en italiano sin decir las 4 prohibidas. 34 tarjetas de vocabulario de viaje."
     en: "Get your partner to guess the Italian word without saying the 4 forbidden ones. 34 travel-vocabulary cards."
+
+- slug: guesswho-preterito-imperfecto-a2
+  file: guesswho_preterito_imperfecto_es_a2.html
+  skill: guesswho
+  grammar: preterito_imperfecto
+  target_lang: es
+  level: a2
+  theme: general
+  title:
+    es: "¿Quién es quién? — Pretérito e imperfecto"
+    en: "Guess Who? — Preterite and Imperfect"
+  description:
+    es: "Haz preguntas de sí o no sobre el pasado (cómo era vs. qué le pasó) para descartar personas y descubrir a la misteriosa. Para 2 jugadores, 28 personajes."
+    en: "Ask yes/no questions about the past — what people were like vs. what happened to them — to eliminate cards and find the mystery person. For 2 players, 28 characters."

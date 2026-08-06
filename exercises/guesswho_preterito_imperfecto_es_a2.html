@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>¿Quién es quién? · Pretérito e Imperfecto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700&family=Outfit:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============ Axolingua tokens — see _sass/_tokens.scss ============ */
+  :root{
+    --ivory:#F7F3EE; --paper:#FFFFFF; --charcoal:#2C2A27;
+    --pink:#D0736C; --pink-deep:#B8524A; --pink-wash:#FBF0EF;
+    --jade:#3D8876; --jade-deep:#2A6B5F; --jade-wash:#EAF4F2;
+    --ochre:#BC8A52; --ochre-deep:#9E6B35; --ochre-wash:#F9F1E6;
+    --rule:#D8CFBF; --mute:#8A847E;
+    --display:'Fraunces',Georgia,serif;
+    --ui:'Outfit',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:'DM Mono','Courier New',monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;min-height:100%;}
+  body{background:var(--ivory); color:var(--charcoal); font-family:var(--ui); padding:14px 18px 30px; max-width:1280px; margin:0 auto;}
+  button{font-family:inherit; cursor:pointer;}
+
+  .bar{display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:10px;}
+  .brand .eyebrow{font-family:var(--mono); font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--mute); font-weight:700;}
+  .brand h1{margin:1px 0 0; font-family:var(--display); font-size:clamp(19px,2.4vw,27px); font-weight:700; line-height:1.02;}
+  .brand .sub{font-size:12.5px; color:var(--mute); margin-top:2px;}
+
+  .controls{display:flex; gap:9px; align-items:center; flex-wrap:wrap;}
+  .seg{display:flex; background:var(--paper); border:1px solid var(--rule); border-radius:10px; overflow:hidden;}
+  .seg .lbl{font-family:var(--mono); padding:8px 11px; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--mute); font-weight:700; border-right:1px solid var(--rule); display:flex; align-items:center;}
+  .seg button{border:none; background:transparent; padding:8px 12px; font-size:12.5px; font-weight:600; color:var(--mute);}
+  .seg button + button{border-left:1px solid var(--rule);}
+  .seg button[aria-pressed="true"]{background:var(--charcoal); color:#fff;}
+  .btn{border:1px solid var(--rule); background:var(--paper); color:var(--charcoal); border-radius:10px; padding:9px 14px; font-size:12.5px; font-weight:600; display:inline-flex; align-items:center; gap:6px;}
+  .btn:hover{border-color:var(--charcoal);}
+  .btn.primary{background:var(--jade); color:#fff; border-color:var(--jade);}
+  .btn.primary:hover{filter:brightness(1.05);}
+  .stat{background:var(--paper); border:1px solid var(--rule); border-radius:10px; padding:5px 6px 5px 12px; display:flex; align-items:center; gap:8px;}
+  .stat .n{font-family:var(--display); font-size:20px; font-weight:700; line-height:1; min-width:20px; text-align:center;}
+  .stat .l{font-family:var(--mono); font-size:9.5px; letter-spacing:.11em; text-transform:uppercase; color:var(--mute); font-weight:700;}
+  .stat .plus{border:1px solid var(--rule); background:var(--ivory); border-radius:7px; width:26px; height:26px; font-size:16px; font-weight:700; color:var(--charcoal); line-height:1;}
+  .stat .plus:hover{border-color:var(--charcoal);}
+
+  .statusbar{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    background:var(--jade-wash); border:1px solid #CFE1DB; border-radius:12px; padding:9px 15px; margin:8px 0 14px;}
+  .statusbar .msg{font-size:13px; font-weight:600; color:var(--jade-deep);}
+  body[data-guess="1"] .statusbar{background:var(--pink-wash); border-color:#EAC7C3;}
+  body[data-guess="1"] .statusbar .msg{color:var(--pink-deep);}
+  .statusbar .acts{display:flex; gap:8px; flex-wrap:wrap;}
+
+  .board{display:grid; grid-template-columns:repeat(auto-fill,minmax(212px,1fr)); gap:12px;}
+  .person{position:relative; background:var(--paper); border:1px solid var(--rule); border-radius:14px; padding:0; overflow:hidden;
+    display:flex; flex-direction:column; transition:opacity .18s, border-color .15s, transform .1s, box-shadow .15s; cursor:pointer;}
+  .person:hover{border-color:var(--mute); transform:translateY(-1px); box-shadow:0 6px 16px rgba(44,42,39,.07);}
+  .person .top{display:flex; align-items:center; gap:11px; padding:12px 14px 10px; border-bottom:1px solid var(--rule);}
+  .person .av{width:40px; height:40px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
+    font-family:var(--display); font-weight:700; font-size:20px; color:#fff;}
+  .person .nm{font-family:var(--display); font-size:19px; font-weight:700; line-height:1.05;}
+  .person .facts{padding:11px 14px 13px; display:flex; flex-direction:column; gap:10px;}
+  .fgroup .fl{font-family:var(--mono); font-size:9.5px; letter-spacing:.13em; text-transform:uppercase; font-weight:700; margin-bottom:5px; display:flex; align-items:center; gap:6px;}
+  .fgroup.imp .fl{color:var(--ochre-deep);}
+  .fgroup.pre .fl{color:var(--pink-deep);}
+  .fgroup .fl i{width:8px; height:8px; border-radius:2px; display:inline-block;}
+  .fgroup.imp .fl i{background:var(--ochre);}
+  .fgroup.pre .fl i{background:var(--pink);}
+  .fgroup ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:3px;}
+  .fgroup li{font-size:12.5px; line-height:1.28; color:var(--charcoal); padding-left:11px; position:relative;}
+  .fgroup li::before{content:"·"; position:absolute; left:2px; color:var(--mute); font-weight:800;}
+
+  .person.out{opacity:.4;}
+  .person.out .av{filter:grayscale(1);}
+  .person.out .nm{text-decoration:line-through; color:var(--mute);}
+  .person .x{position:absolute; top:9px; right:12px; font-size:15px; color:var(--pink-deep); font-weight:800; opacity:0; z-index:2;}
+  .person.out .x{opacity:.9;}
+  .person.out::after{content:""; position:absolute; top:0; right:0; bottom:0; left:0; background:repeating-linear-gradient(135deg,transparent,transparent 12px,rgba(138,132,126,.10) 12px,rgba(138,132,126,.10) 13px); pointer-events:none;}
+
+  body[data-guess="1"] .person:not(.out){border-color:var(--pink); box-shadow:0 0 0 2px rgba(184,82,74,.15);}
+  .person.mystery{border-color:var(--jade); box-shadow:0 0 0 2px rgba(61,136,118,.35);}
+  .person.wrong{border-color:var(--pink-deep); animation:shake .35s ease;}
+  @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-5px);}75%{transform:translateX(5px);}}
+  .person:focus-visible{outline:3px solid var(--charcoal); outline-offset:2px;}
+
+  .ov{position:fixed; top:0; right:0; bottom:0; left:0; background:rgba(247,243,238,.94); display:none; align-items:center; justify-content:center; z-index:20; padding:20px;}
+  .ov.show{display:flex;}
+  .panelc{background:var(--paper); border:1px solid var(--rule); border-radius:18px; padding:26px 30px; max-width:520px; width:100%; max-height:90vh; overflow:auto;}
+  .panelc .eyebrow{font-family:var(--mono); font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--mute); font-weight:700;}
+  .panelc h2{font-family:var(--display); font-size:26px; margin:5px 0 12px; font-weight:700;}
+  .rules{font-size:13.5px; line-height:1.5; margin:0 0 16px; padding-left:18px;}
+  .rules li{margin-bottom:6px;} .rules b{color:var(--charcoal);}
+  .startbtn{width:100%; background:var(--jade); color:#fff; border:none; border-radius:12px; padding:14px; font-size:16px; font-weight:700;}
+  .win h2{color:var(--jade-deep);}
+  .peekcard{background:var(--ivory); border:1px solid var(--rule); border-radius:12px; padding:14px 16px; margin-bottom:8px;}
+  .peekcard .pn{display:flex; align-items:center; gap:12px; margin-bottom:10px;}
+  .peekcard .pn .av{width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--display); font-weight:700; font-size:22px; color:#fff;}
+  .peekcard .pn .rname{font-family:var(--display); font-size:22px; font-weight:700;}
+  .warn{font-size:12px; color:var(--mute); font-style:italic; margin:2px 0 14px;}
+
+  .errbox{display:none; background:#fff; border:1px solid var(--rule); border-radius:12px; padding:20px; text-align:center;}
+  .errbox.show{display:block;} .errbox b{color:var(--pink-deep);}
+</style>
+</head>
+<body data-guess="0">
+
+  <div class="bar">
+    <div class="brand">
+      <div class="eyebrow">Español A2–B1 · pretérito e imperfecto</div>
+      <h1>¿Quién es quién?</h1>
+      <div class="sub">Haz preguntas sobre el pasado y descarta a las personas hasta descubrir la misteriosa.</div>
+    </div>
+    <div class="controls">
+      <div class="stat"><span class="n" id="sPreg">0</span><span class="l">Preguntas</span><button class="plus" id="btnPreg" title="Suma una pregunta">+</button></div>
+      <div class="seg" role="group" aria-label="Tablero">
+        <span class="lbl">Tablero</span>
+        <button data-size="12" aria-pressed="false">12</button>
+        <button data-size="20" aria-pressed="true">20</button>
+        <button data-size="28" aria-pressed="false">28</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="statusbar">
+    <span class="msg" id="statusMsg">Se eligió una persona misteriosa. ¡A preguntar!</span>
+    <div class="acts">
+      <button class="btn" id="btnPeek">👁 Ver misteriosa</button>
+      <button class="btn primary" id="btnGuess">Adivinar</button>
+      <button class="btn" id="btnCancel" style="display:none">Cancelar</button>
+      <button class="btn" id="btnNew">Nueva partida</button>
+    </div>
+  </div>
+
+  <div class="board" id="board"></div>
+  <div class="errbox" id="errbox"></div>
+
+  <div class="ov show" id="startOv">
+    <div class="panelc">
+      <div class="eyebrow">Cómo se juega</div>
+      <h2>¿Quién es quién?</h2>
+      <ol class="rules">
+        <li>Cada tarjeta muestra a una persona: su <b>nombre</b> y cómo era (<b>imperfecto</b>) y qué le pasó (<b>pretérito</b>).</li>
+        <li>El juego elige una <b>persona misteriosa</b> en secreto. Quien responde puede verla con <b>«Ver misteriosa»</b>.</li>
+        <li>Quien pregunta hace preguntas de <b>sí o no</b> sobre el pasado (usa tu hoja de preguntas) y va <b>tocando las tarjetas para descartarlas</b>.</li>
+        <li>Cuando creas saber quién es, pulsa <b>Adivinar</b> y toca la tarjeta. ¡Menos preguntas es mejor!</li>
+      </ol>
+      <button class="startbtn" id="startBtn">▶︎ Empezar</button>
+    </div>
+  </div>
+
+  <div class="ov" id="peekOv">
+    <div class="panelc">
+      <div class="eyebrow">Solo para quien responde</div>
+      <h2>Persona misteriosa</h2>
+      <div class="peekcard" id="peekCard"></div>
+      <p class="warn">Ciérralo antes de que la otra persona lo vea.</p>
+      <button class="startbtn" id="peekClose">Cerrar</button>
+    </div>
+  </div>
+
+  <div class="ov" id="endOv">
+    <div class="panelc win" id="endPanel">
+      <div class="eyebrow" id="endEyebrow">Resultado</div>
+      <h2 id="endTitle">¡Correcto!</h2>
+      <div class="peekcard" id="endReveal"></div>
+      <button class="startbtn" id="endBtn">Jugar otra vez</button>
+    </div>
+  </div>
+
+<script>
+(function(){
+  "use strict";
+
+  function C(name, imp, pret){ return { name:name, imp:imp, pret:pret }; }
+  var CHARACTERS = [
+    C("Ana", ["Era muy tímida.","Vivía cerca del mar.","Siempre caminaba a la escuela.","Le encantaban los perros."],
+      ["En 2018 ganó un concurso de fotografía.","Viajó a Japón.","Perdió su pasaporte durante un viaje."]),
+    C("Carlos", ["Era muy deportista.","Jugaba fútbol todos los sábados.","Tenía dos hermanos.","Trabajaba en un banco."],
+      ["Corrió un maratón.","Compró una motocicleta.","Se rompió una pierna esquiando."]),
+    C("Sofía", ["Era muy organizada.","Siempre llevaba una libreta.","Vivía con su abuela.","Cocinaba todos los domingos."],
+      ["Abrió su propio café.","Ganó un premio de cocina.","Se mudó a otra ciudad."]),
+    C("Diego", ["Era muy curioso.","Le gustaban los videojuegos.","Siempre llegaba temprano.","Tenía un gato negro."],
+      ["Encontró una cartera llena de dinero.","Aprendió italiano.","Conoció a un actor famoso."]),
+    C("Marta", ["Era muy creativa.","Pintaba todos los días.","Llevaba ropa muy colorida.","Vivía en un pueblo pequeño."],
+      ["Publicó un libro.","Adoptó tres perros.","Ganó una beca."]),
+    C("Luis", ["Era muy tranquilo.","Trabajaba desde casa.","Siempre escuchaba música clásica.","Tenía una bicicleta roja."],
+      ["Escaló una montaña.","Se casó en la playa.","Perdió su teléfono durante las vacaciones."]),
+    C("Elena", ["Era muy habladora.","Siempre hacía nuevos amigos.","Vivía en un apartamento pequeño.","Le encantaban las películas."],
+      ["Aprendió francés.","Viajó por Europa.","Encontró un perro perdido."]),
+    C("Pablo", ["Era muy serio.","Trabajaba en un hospital.","Corría todas las mañanas.","Tenía barba."],
+      ["Salvó a una persona.","Compró una casa antigua.","Cambió de profesión."]),
+    C("Isabel", ["Era muy paciente.","Vivía cerca de un bosque.","Siempre leía antes de dormir.","Tenía un conejo blanco."],
+      ["Escribió una novela.","Viajó a Perú.","Encontró un billete de cien dólares."]),
+    C("Javier", ["Era muy bromista.","Trabajaba en una oficina.","Siempre llegaba temprano.","Le gustaba hacer ejercicio."],
+      ["Cambió de carrera.","Corrió una media maratón.","Ganó un concurso de fotografía."]),
+    C("Lucía", ["Era muy curiosa.","Coleccionaba postales.","Vivía con sus padres.","Le encantaban los museos."],
+      ["Visitó Egipto.","Aprendió a bucear.","Perdió su cámara."]),
+    C("Ricardo", ["Era muy callado.","Tenía barba.","Siempre tomaba café por la mañana.","Jugaba ajedrez."],
+      ["Compró una cafetería.","Se mudó a otra ciudad.","Adoptó un gato."]),
+    C("Valeria", ["Era muy extrovertida.","Bailaba salsa todos los viernes.","Vivía en un apartamento pequeño.","Le gustaban las flores."],
+      ["Ganó una competencia de baile.","Conoció a un cantante famoso.","Organizó un festival."]),
+    C("Miguel", ["Era muy aventurero.","Acampaba todos los veranos.","Tenía una camioneta vieja.","Le gustaban las montañas."],
+      ["Escaló un volcán.","Perdió su mochila.","Rescató a un perro."]),
+    C("Daniela", ["Era muy ordenada.","Escribía un diario.","Vivía con su hermana.","Siempre preparaba postres."],
+      ["Abrió una pastelería.","Ganó un concurso de cocina.","Publicó un libro de recetas."]),
+    C("Fernando", ["Era muy amable.","Trabajaba en una biblioteca.","Le gustaban los gatos.","Siempre ayudaba a sus vecinos."],
+      ["Encontró un manuscrito antiguo.","Viajó a España.","Aprendió portugués."]),
+    C("Camila", ["Era muy creativa.","Pintaba paisajes.","Tenía un estudio de arte.","Escuchaba música clásica."],
+      ["Vendió una pintura.","Expuso sus obras en un museo.","Recibió un premio."]),
+    C("Andrés", ["Era muy trabajador.","Vivía en un rancho.","Montaba a caballo.","Siempre se levantaba temprano."],
+      ["Compró un tractor.","Ganó una competencia ecuestre.","Plantó mil árboles."]),
+    C("Patricia", ["Era muy elegante.","Siempre llevaba sombreros.","Vivía cerca del centro.","Le encantaba el teatro."],
+      ["Actuó en una obra.","Conoció a un director famoso.","Recibió una ovación."]),
+    C("Roberto", ["Era muy paciente.","Reparaba bicicletas.","Tenía un taller.","Escuchaba la radio mientras trabajaba."],
+      ["Inventó una herramienta.","Ayudó a un ciclista profesional.","Viajó en bicicleta por Chile."]),
+    C("Teresa", ["Era muy optimista.","Siempre sonreía.","Vivía cerca de un lago.","Le gustaba remar."],
+      ["Participó en una regata.","Salvó a un niño.","Compró un velero."]),
+    C("Óscar", ["Era muy estudioso.","Leía libros de historia.","Tenía una colección de mapas.","Visitaba museos con frecuencia."],
+      ["Descubrió un documento histórico.","Dio una conferencia.","Escribió un artículo."]),
+    C("Natalia", ["Era muy deportista.","Nadaba todas las mañanas.","Vivía cerca de una piscina.","Comía muy saludable."],
+      ["Ganó una medalla.","Cruzó un río nadando.","Entrenó a un equipo infantil."]),
+    C("Sergio", ["Era muy ingenioso.","Construía modelos de aviones.","Tenía un garaje grande.","Siempre escuchaba podcasts."],
+      ["Diseñó un dron.","Presentó un invento.","Recibió una beca."]),
+    C("Alicia", ["Era muy cariñosa.","Trabajaba en una escuela.","Le gustaban los animales.","Siempre preparaba manualidades."],
+      ["Organizó una campaña solidaria.","Adoptó cuatro gatos.","Recibió un reconocimiento."]),
+    C("Tomás", ["Era muy competitivo.","Jugaba tenis los fines de semana.","Vivía con sus abuelos.","Tenía una bicicleta azul."],
+      ["Ganó un torneo.","Se lesionó el hombro.","Conoció a su deportista favorito."]),
+    C("Beatriz", ["Era muy independiente.","Siempre viajaba sola.","Escribía un blog.","Le fascinaban los trenes."],
+      ["Recorrió toda Europa en tren.","Publicó una guía de viajes.","Aprendió alemán."]),
+    C("Héctor", ["Era muy divertido.","Tocaba la guitarra.","Cantaba con sus amigos.","Vivía en una casa amarilla."],
+      ["Formó una banda.","Grabó un disco.","Dio un concierto para mil personas."])
+  ];
+
+  var PALETTE = ["#3D8876","#BC8A52","#D0736C","#2C2A27","#2A6B5F","#9E6B35"];
+  function colorFor(name){ var s=0; for(var i=0;i<name.length;i++) s=(s*31+name.charCodeAt(i))>>>0; return PALETTE[s%PALETTE.length]; }
+
+  var el=function(id){return document.getElementById(id);};
+  var board=el("board"), errbox=el("errbox"), statusMsg=el("statusMsg");
+  var sPreg=el("sPreg"), startOv=el("startOv"), peekOv=el("peekOv"), peekCard=el("peekCard");
+  var endOv=el("endOv"), endTitle=el("endTitle"), endEyebrow=el("endEyebrow"), endReveal=el("endReveal"), endPanel=el("endPanel");
+  var btnCancel=el("btnCancel");
+
+  var boardSize=20, boardChars=[], mystery=null, eliminated={}, questions=0, guessMode=false, over=false;
+
+  function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function cssName(n){ return n.replace(/"/g,'\\"'); }
+  function cardById(name){ return board.querySelector('.person[data-name="'+cssName(name)+'"]'); }
+
+  function factHTML(ch){
+    var imp=ch.imp.map(function(s){return "<li>"+s+"</li>";}).join("");
+    var pre=ch.pret.map(function(s){return "<li>"+s+"</li>";}).join("");
+    return '<div class="facts">'
+      + '<div class="fgroup imp"><div class="fl"><i></i>Imperfecto</div><ul>'+imp+'</ul></div>'
+      + '<div class="fgroup pre"><div class="fl"><i></i>Pretérito</div><ul>'+pre+'</ul></div></div>';
+  }
+
+  function newGame(){
+    over=false; guessMode=false; document.body.setAttribute("data-guess","0");
+    btnCancel.style.display="none";
+    eliminated={}; questions=0; sPreg.textContent="0";
+    endOv.classList.remove("show"); peekOv.classList.remove("show");
+    boardChars=shuffle(CHARACTERS.slice()).slice(0,boardSize);
+    mystery=boardChars[Math.floor(Math.random()*boardChars.length)];
+    statusMsg.textContent="Se eligió una persona misteriosa. ¡A preguntar!";
+    renderBoard();
+  }
+
+  function renderBoard(){
+    board.innerHTML="";
+    boardChars.forEach(function(ch){
+      var d=document.createElement("div");
+      d.className="person"+(eliminated[ch.name]?" out":"");
+      d.setAttribute("role","button"); d.setAttribute("tabindex","0"); d.dataset.name=ch.name;
+      d.innerHTML='<div class="x">✕</div>'
+        + '<div class="top"><div class="av" style="background:'+colorFor(ch.name)+'">'+ch.name.charAt(0)+'</div>'
+        + '<div class="nm">'+ch.name+'</div></div>'
+        + factHTML(ch);
+      d.addEventListener("click", function(){ onCard(ch.name); });
+      d.addEventListener("keydown", function(ev){ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); onCard(ch.name); } });
+      board.appendChild(d);
+    });
+  }
+
+  function onCard(name){
+    if(over) return;
+    if(guessMode){ makeGuess(name); return; }
+    eliminated[name]=!eliminated[name];
+    var c=cardById(name); if(c) c.classList.toggle("out", !!eliminated[name]);
+  }
+
+  el("btnPeek").addEventListener("click", function(){
+    if(!mystery) return;
+    peekCard.innerHTML='<div class="pn"><div class="av" style="background:'+colorFor(mystery.name)+'">'+mystery.name.charAt(0)+'</div>'
+      + '<div class="rname">'+mystery.name+'</div></div>'+factHTML(mystery);
+    peekOv.classList.add("show");
+  });
+  el("peekClose").addEventListener("click", function(){ peekOv.classList.remove("show"); });
+
+  el("btnGuess").addEventListener("click", function(){
+    if(over) return;
+    guessMode=true; document.body.setAttribute("data-guess","1");
+    btnCancel.style.display="";
+    statusMsg.textContent="Modo adivinar: toca a la persona que crees que es la misteriosa.";
+  });
+  btnCancel.addEventListener("click", function(){
+    guessMode=false; document.body.setAttribute("data-guess","0"); btnCancel.style.display="none";
+    statusMsg.textContent="Sigue preguntando y descartando.";
+  });
+
+  function makeGuess(name){
+    if(eliminated[name]) return;
+    guessMode=false; document.body.setAttribute("data-guess","0"); btnCancel.style.display="none";
+    if(name===mystery.name){ endGame(true); }
+    else{
+      eliminated[name]=true;
+      var c=cardById(name);
+      if(c){ c.classList.add("wrong"); setTimeout(function(){ c.classList.remove("wrong"); c.classList.add("out"); },360); }
+      statusMsg.textContent="No era "+name+". ¡Sigue!";
+    }
+  }
+
+  function endGame(won){
+    over=true;
+    endEyebrow.textContent=won?"¡Lo lograste!":"Fin";
+    endTitle.textContent=won?("¡Correcto! Era "+mystery.name):"Fin de la partida";
+    endPanel.className="panelc"+(won?" win":"");
+    endReveal.innerHTML='<div class="pn"><div class="av" style="background:'+colorFor(mystery.name)+'">'+mystery.name.charAt(0)+'</div>'
+      + '<div class="rname">'+mystery.name+'</div></div>'+factHTML(mystery)
+      + '<div style="margin-top:12px;font-size:13px;color:var(--mute)">Preguntas usadas: <b style="color:var(--charcoal)">'+questions+'</b></div>';
+    var c=cardById(mystery.name); if(c) c.classList.add("mystery");
+    endOv.classList.add("show");
+  }
+
+  el("btnPreg").addEventListener("click", function(){ if(over) return; questions++; sPreg.textContent=String(questions); });
+
+  el("startBtn").addEventListener("click", function(){ startOv.classList.remove("show"); newGame(); });
+  el("btnNew").addEventListener("click", newGame);
+  el("endBtn").addEventListener("click", newGame);
+  (function(){
+    var group=document.querySelectorAll("[data-size]");
+    Array.prototype.forEach.call(group, function(b){
+      b.addEventListener("click", function(){
+        Array.prototype.forEach.call(group, function(x){ x.setAttribute("aria-pressed","false"); });
+        b.setAttribute("aria-pressed","true");
+        boardSize=parseInt(b.getAttribute("data-size"),10)||20;
+        newGame();
+      });
+    });
+  })();
+  document.addEventListener("keydown", function(ev){
+    if(startOv.classList.contains("show")&&ev.key==="Enter"){ ev.preventDefault(); startOv.classList.remove("show"); newGame(); }
+  });
+
+  window.__quien={
+    get state(){ return { size:boardSize, len:boardChars.length, mystery:mystery&&mystery.name, questions:questions, remaining:boardChars.filter(function(c){return !eliminated[c.name];}).length, guessMode:guessMode, over:over }; },
+    chars:CHARACTERS, newGame:newGame, guess:makeGuess, eliminate:onCard, setSize:function(n){boardSize=n;}, boardChars:function(){return boardChars;}
+  };
+
+  try {
+    var bad=CHARACTERS.filter(function(c){ return !c.imp||!c.pret||!c.imp.length||!c.pret.length; });
+    if(bad.length) throw new Error("Datos incompletos: "+bad.map(function(c){return c.name;}).join(", "));
+  } catch(e){
+    board.style.display="none";
+    errbox.className="errbox show";
+    errbox.innerHTML="<b>No se pudo iniciar el juego.</b><div style='font-size:12px;color:#8B857C;margin-top:6px'>"+(e&&e.message?e.message:e)+"</div>";
+  }
+})();
+</script>
+</body>
+</html>
