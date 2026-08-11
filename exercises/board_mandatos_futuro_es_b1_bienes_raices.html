@@ -1,0 +1,346 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open House — Mandatos y Futuro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900&family=DM+Mono:wght@400;500&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#0D2135;
+  --blue-2:#143C5A;
+  --panel:#15334C;
+  --panel-2:#1B4062;
+  --line:rgba(126,196,232,.22);
+  --ink:#E8F1F7;
+  --dim:#8FB0C7;
+  --brass:#E3A44F;
+  --sold:#D8402C;
+  --green:#5FCf9E;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:
+    linear-gradient(rgba(126,196,232,.07) 1px,transparent 1px) 0 0/32px 32px,
+    linear-gradient(90deg,rgba(126,196,232,.07) 1px,transparent 1px) 0 0/32px 32px,
+    radial-gradient(120% 90% at 50% 0%, #17405F 0%, var(--blue) 62%, #081726 100%);
+  color:var(--ink);
+  font-family:'Outfit',system-ui,sans-serif;
+  min-height:100vh;
+  padding:22px 16px 60px;
+}
+.wrap{max-width:1080px;margin:0 auto}
+
+/* ---------- header ---------- */
+header{display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:14px}
+.brand{display:flex;align-items:center;gap:14px}
+.sign{
+  background:var(--brass);color:#14202C;font-family:'Fraunces',Georgia,serif;font-weight:900;
+  font-size:15px;letter-spacing:.16em;padding:7px 10px 5px;transform:rotate(-3deg);line-height:1;
+  box-shadow:3px 3px 0 rgba(0,0,0,.35)
+}
+h1{font-family:'Fraunces',Georgia,serif;font-weight:900;font-size:clamp(34px,6vw,58px);
+   line-height:.86;margin:0;letter-spacing:.01em;text-transform:uppercase}
+h1 span{display:block;color:var(--brass);font-size:.42em;letter-spacing:.22em;font-weight:700}
+.stats{display:flex;gap:10px;flex-wrap:wrap}
+.stat{background:rgba(255,255,255,.04);border:1px solid var(--line);padding:8px 14px;min-width:88px}
+.stat b{display:block;font-family:'Fraunces',Georgia,serif;font-size:30px;line-height:1}
+.stat i{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--dim);font-style:normal;text-transform:uppercase}
+
+/* ---------- deed bar ---------- */
+.deed{margin:16px 0 8px}
+.deed .track{height:9px;background:rgba(0,0,0,.3);border:1px solid var(--line);position:relative;overflow:hidden}
+.deed .fill{height:100%;width:0;background:repeating-linear-gradient(45deg,var(--brass) 0 8px,#c98c36 8px 16px);transition:width .5s cubic-bezier(.2,.9,.2,1)}
+.deed .lbl{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.14em;color:var(--dim);display:flex;justify-content:space-between;margin-bottom:6px;text-transform:uppercase}
+
+/* ---------- legend ---------- */
+.legend{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 12px}
+.tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;padding:4px 8px;border:1px solid;text-transform:uppercase}
+.t-inf{color:#7ED0F5;border-color:#7ED0F5}
+.t-for{color:var(--brass);border-color:var(--brass)}
+.t-fut{color:#B69BF0;border-color:#B69BF0}
+
+/* ---------- board ---------- */
+.board{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:6px}
+@media(max-width:820px){.board{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:520px){.board{grid-template-columns:repeat(2,1fr)}}
+.room{
+  position:relative;background:var(--panel);border:1px solid var(--line);aspect-ratio:1/.82;
+  cursor:pointer;padding:12px;display:flex;flex-direction:column;justify-content:space-between;
+  transition:transform .16s,background .16s,box-shadow .16s;overflow:hidden;text-align:left;color:inherit;font:inherit
+}
+.room:hover:not(.done){transform:translateY(-3px);background:var(--panel-2);box-shadow:0 8px 0 -2px rgba(0,0,0,.35)}
+.room:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.room .num{font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:.14em}
+.room .name{font-family:'Fraunces',Georgia,serif;font-weight:700;font-size:26px;line-height:.95;text-transform:uppercase}
+.room .cat{font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase}
+.room.done{cursor:default;background:#102B41;opacity:.92}
+.room.done .name,.room.done .cat,.room.done .num{opacity:.35}
+.stamp{
+  position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;
+}
+.stamp span{
+  font-family:'Fraunces',Georgia,serif;font-weight:900;font-size:44px;letter-spacing:.08em;
+  color:var(--sold);border:4px solid var(--sold);padding:2px 12px 0;transform:rotate(-14deg) scale(2.4);opacity:0;
+  animation:slam .45s cubic-bezier(.2,1.4,.4,1) forwards
+}
+.stamp.half span{color:var(--dim);border-color:var(--dim);font-size:30px}
+@keyframes slam{to{transform:rotate(-14deg) scale(1);opacity:1}}
+
+/* ---------- modal ---------- */
+.veil{position:fixed;inset:0;background:rgba(4,14,24,.86);display:none;place-items:center;padding:18px;z-index:40}
+.veil.on{display:grid}
+.card{
+  width:min(640px,100%);background:#F4EFE4;color:#14202C;border:1px solid #000;
+  box-shadow:12px 12px 0 rgba(0,0,0,.4);padding:26px 24px 22px;position:relative;
+  animation:pop .22s ease-out
+}
+@keyframes pop{from{transform:translateY(14px) scale(.97);opacity:0}}
+.card .kind{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:#7A5C23}
+.card .roomname{font-family:'Fraunces',Georgia,serif;font-weight:900;font-size:34px;text-transform:uppercase;line-height:.9;margin:2px 0 14px}
+.prompt{font-size:21px;line-height:1.35;font-weight:500}
+.hint{font-family:'DM Mono',monospace;font-size:12.5px;color:#5C6B78;margin-top:8px}
+.answer{margin-top:16px;padding:14px;background:#14202C;color:#F4EFE4;display:none}
+.answer.on{display:block}
+.answer .es{font-family:'Fraunces',Georgia,serif;font-weight:700;font-size:30px;line-height:1;letter-spacing:.01em}
+.answer .why{font-size:13.5px;color:#A8C0D2;margin-top:7px;line-height:1.4}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+button{font:inherit;cursor:pointer;border:1px solid #14202C;background:#14202C;color:#F4EFE4;
+  padding:11px 18px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  transition:transform .1s}
+button:hover{transform:translateY(-2px)}
+button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+button.ghost{background:transparent;color:#14202C}
+button.good{background:#1E7A55;border-color:#1E7A55}
+button.mid{background:#8A6A1F;border-color:#8A6A1F}
+.timer{position:absolute;top:0;right:0;background:#14202C;color:#F4EFE4;font-family:'Fraunces',Georgia,serif;
+  font-size:30px;padding:2px 12px 0;min-width:56px;text-align:center}
+.timer.low{background:var(--sold)}
+
+/* ---------- lightning ---------- */
+.bolt{margin-top:34px;border:1px dashed var(--line);padding:18px}
+.bolt h2{font-family:'Fraunces',Georgia,serif;font-size:32px;margin:0 0 4px;text-transform:uppercase;letter-spacing:.02em}
+.bolt p{color:var(--dim);font-size:14px;margin:0 0 14px}
+.boltbox{display:none;margin-top:16px;background:var(--panel);border:1px solid var(--line);padding:20px}
+.boltbox.on{display:block}
+.boltq{font-size:22px;font-weight:500;min-height:60px}
+.bolta{font-family:'Fraunces',Georgia,serif;font-size:30px;color:var(--brass);min-height:36px;display:none}
+.bolta.on{display:block}
+.boltbar{display:flex;justify-content:space-between;align-items:center;font-family:'DM Mono',monospace;font-size:12px;color:var(--dim);margin-bottom:12px;letter-spacing:.12em}
+.boltbox button{border-color:var(--ink);background:transparent;color:var(--ink)}
+.boltbox button.good{background:#1E7A55;border-color:#1E7A55;color:#fff}
+
+/* ---------- win ---------- */
+.win{display:none;text-align:center;margin-top:30px;border:2px solid var(--brass);padding:28px}
+.win.on{display:block}
+.win h2{font-family:'Fraunces',Georgia,serif;font-size:58px;margin:0;color:var(--brass);text-transform:uppercase;line-height:.9}
+.win p{color:var(--dim);margin:8px 0 0}
+footer{margin-top:28px;font-family:'DM Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:.08em;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="brand">
+    <div class="sign">SE VENDE</div>
+    <h1>Open House<span>Mandatos &amp; Futuro</span></h1>
+  </div>
+  <div class="stats">
+    <div class="stat"><b id="sScore">0</b><i>puntos</i></div>
+    <div class="stat"><b id="sStreak">0</b><i>racha</i></div>
+    <div class="stat"><b id="sLeft">12</b><i>cuartos</i></div>
+  </div>
+</header>
+
+<div class="deed">
+  <div class="lbl"><span>Escritura de la casa</span><span id="deedPct">0%</span></div>
+  <div class="track"><div class="fill" id="deedFill"></div></div>
+</div>
+
+<div class="legend">
+  <span class="tag t-inf">Mandato informal (tú)</span>
+  <span class="tag t-for">Mandato formal (usted)</span>
+  <span class="tag t-fut">Futuro simple</span>
+  <span class="tag" style="color:var(--dim);border-color:var(--line)">10 pts al primer intento · 5 pts con pista</span>
+</div>
+
+<div class="board" id="board"></div>
+
+<div class="win" id="win">
+  <h2>¡Vendida!</h2>
+  <p id="winTxt"></p>
+  <div class="row" style="justify-content:center"><button onclick="location.reload()">Jugar otra vez</button></div>
+</div>
+
+<div class="bolt">
+  <h2>⚡ Ronda relámpago</h2>
+  <p>60 segundos. Estudiante 1 traduce lo más rápido posible. +5 puntos por acierto.</p>
+  <button id="boltStart">Empezar la ronda</button>
+  <div class="boltbox" id="boltBox">
+    <div class="boltbar"><span id="boltTime">0:60</span><span id="boltScore">0 aciertos</span></div>
+    <div class="boltq" id="boltQ"></div>
+    <div class="bolta" id="boltA"></div>
+    <div class="row">
+      <button id="boltShow" class="ghost" style="border-color:var(--ink)">Ver respuesta</button>
+      <button id="boltOk" class="good">¡Bien! →</button>
+      <button id="boltSkip">Pasar</button>
+    </div>
+  </div>
+</div>
+
+<footer><span>Clase de español · Estudiante 1</span><span>Imperativo afirmativo/negativo · Futuro simple</span></footer>
+</div>
+
+<!-- modal -->
+<div class="veil" id="veil">
+  <div class="card">
+    <div class="timer" id="timer">25</div>
+    <div class="kind" id="cKind"></div>
+    <div class="roomname" id="cRoom"></div>
+    <div class="prompt" id="cPrompt"></div>
+    <div class="hint" id="cHint"></div>
+    <div class="answer" id="cAnswer"><div class="es" id="cEs"></div><div class="why" id="cWhy"></div></div>
+    <div class="row" id="rowA">
+      <button id="bReveal">Ver respuesta</button>
+      <button class="ghost" id="bClose">Cerrar</button>
+    </div>
+    <div class="row" id="rowB" style="display:none">
+      <button class="good" id="bFirst">Lo dijo bien (10)</button>
+      <button class="mid" id="bHelp">Con ayuda (5)</button>
+      <button class="ghost" id="bAgain">Repetir después</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const ITEMS=[
+ // ---- informal (tú) ----
+ {c:"inf",room:"Cocina",p:"Tell your brother: <b>Clean the kitchen.</b>",h:"limpiar",es:"Limpia la cocina.",w:"Tú afirmativo = forma de él/ella: limpia."},
+ {c:"inf",room:"Sala",p:"Tell him: <b>Paint the walls white.</b>",h:"pintar",es:"Pinta las paredes de blanco.",w:"-ar → -a."},
+ {c:"inf",room:"Garaje",p:"Tell him: <b>Put the boxes in the garage.</b>",h:"poner — irregular",es:"Pon las cajas en el garaje.",w:"Irregular: pon (no 'pone')."},
+ {c:"inf",room:"Patio",p:"Tell him: <b>Come here and do the repairs.</b>",h:"venir + hacer — irregulares",es:"Ven aquí y haz las reparaciones.",w:"Ven / haz — los ocho irregulares: di, haz, ve, pon, sal, sé, ten, ven."},
+ {c:"inf",room:"Baño",p:"Tell him: <b>Don't open that window.</b>",h:"abrir — negativo",es:"No abras esa ventana.",w:"Negativo tú = subjuntivo: -ir/-er → -as."},
+ {c:"inf",room:"Ático",p:"Tell him: <b>Don't be impatient and don't go up there.</b>",h:"ser + ir — negativos",es:"No seas impaciente y no vayas allá arriba.",w:"No seas / no vayas — irregulares del subjuntivo."},
+
+ // ---- formal (usted) ----
+ {c:"for",room:"Entrada",p:"Tell the buyer: <b>Come in, please.</b>",h:"pasar",es:"Pase, por favor.",w:"Usted: -ar → -e."},
+ {c:"for",room:"Oficina",p:"Tell the client: <b>Sign here and tell me the price.</b>",h:"firmar + decir",es:"Firme aquí y dígame el precio.",w:"Dígame: pronombre pegado al mandato afirmativo + acento."},
+ {c:"for",room:"Comedor",p:"Tell the agent: <b>Don't touch the fresh paint.</b>",h:"tocar — negativo",es:"No toque la pintura fresca.",w:"c → qu antes de -e: toque."},
+ {c:"for",room:"Recámara",p:"Tell the visitor: <b>Go to the master bedroom and have patience.</b>",h:"ir + tener",es:"Vaya a la recámara principal y tenga paciencia.",w:"Vaya / tenga — irregulares de usted."},
+ {c:"for",room:"Jardín",p:"Tell them (ustedes): <b>Wait a moment outside.</b>",h:"esperar — ustedes",es:"Esperen un momento afuera.",w:"Ustedes = usted + -n."},
+ {c:"for",room:"Escalera",p:"Tell the client: <b>Don't go down without the agent.</b>",h:"bajar — negativo",es:"No baje sin el agente.",w:"Formal negativo = misma forma + no."},
+
+ // ---- futuro ----
+ {c:"fut",room:"Junio",p:"<b>I will sell the house in June.</b>",h:"vender",es:"Venderé la casa en junio.",w:"Infinitivo + é."},
+ {c:"fut",room:"Contrato",p:"<b>We will talk to the agent tomorrow.</b>",h:"hablar",es:"Hablaremos con el agente mañana.",w:"Infinitivo + emos."},
+ {c:"fut",room:"Mudanza",p:"<b>The buyers will come on Saturday.</b>",h:"venir — irregular",es:"Los compradores vendrán el sábado.",w:"Raíz irregular: vendr-."},
+ {c:"fut",room:"Llaves",p:"<b>You will have a new house.</b>",h:"tener — irregular",es:"Tendrás una casa nueva.",w:"Raíz: tendr-."},
+ {c:"fut",room:"Inspección",p:"<b>He will do the inspection and will say the price.</b>",h:"hacer + decir — irregulares",es:"Él hará la inspección y dirá el precio.",w:"Raíces: har- / dir-."},
+ {c:"fut",room:"Fiesta",p:"<b>There will be many people and we will be able to celebrate.</b>",h:"haber + poder",es:"Habrá muchas personas y podremos celebrar.",w:"Habrá (impersonal) / podr-."}
+];
+
+const LIGHT=[
+ ["Speak! (tú)","¡Habla!"],["Don't speak (tú)","No hables"],["Speak (usted)","Hable"],
+ ["Eat! (tú)","¡Come!"],["Don't eat (tú)","No comas"],["Eat (usted)","Coma"],
+ ["Write (tú)","Escribe"],["Don't write (tú)","No escribas"],["Write (usted)","Escriba"],
+ ["Go! (tú)","¡Ve!"],["Don't go (tú)","No vayas"],["Go (usted)","Vaya"],
+ ["Leave / go out (tú)","Sal"],["Leave (usted)","Salga"],
+ ["Be (tú, ser)","Sé"],["Don't be (tú, ser)","No seas"],["Be (usted, ser)","Sea"],
+ ["I will sell","Venderé"],["You will clean","Limpiarás"],["We will visit","Visitaremos"],
+ ["They will paint","Pintarán"],["She will have","Tendrá"],["I will do / make","Haré"],
+ ["You (usted) will be able","Podrá"],["There will be","Habrá"],["We will leave","Saldremos"],
+ ["He will say","Dirá"],["They will come","Vendrán"],["I will want","Querré"],["You will know","Sabrás"]
+];
+
+const KIND={inf:["Mandato informal · tú","t-inf"],for:["Mandato formal · usted / ustedes","t-for"],fut:["Futuro simple","t-fut"]};
+
+// build a 12-tile board: 4 of each category, shuffled
+const sh=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1]);
+const pick=c=>sh(ITEMS.filter(i=>i.c===c)).slice(0,4);
+let deck=sh([...pick("inf"),...pick("for"),...pick("fut")]);
+
+let score=0,streak=0,left=12,cur=null,curEl=null,tick=null;
+const $=id=>document.getElementById(id);
+
+const board=$("board");
+deck.forEach((it,i)=>{
+  const b=document.createElement("button");
+  b.className="room";b.dataset.i=i;
+  b.innerHTML=`<div class="num">${String(i+1).padStart(2,"0")}</div>
+    <div><div class="name">${it.room}</div>
+    <div class="cat ${KIND[it.c][1]}" style="color:inherit;opacity:.75">${it.c==="inf"?"tú":it.c==="for"?"usted":"futuro"}</div></div>`;
+  b.querySelector(".cat").className="cat "+KIND[it.c][1];
+  b.onclick=()=>open(it,b);
+  board.appendChild(b);
+});
+
+function open(it,el){
+  if(el.classList.contains("done"))return;
+  cur=it;curEl=el;
+  $("cKind").textContent=KIND[it.c][0];
+  $("cRoom").textContent=it.room;
+  $("cPrompt").innerHTML=it.p;
+  $("cHint").textContent="verbo: "+it.h;
+  $("cEs").textContent=it.es;$("cWhy").textContent=it.w;
+  $("cAnswer").classList.remove("on");
+  $("rowA").style.display="flex";$("rowB").style.display="none";
+  $("veil").classList.add("on");
+  startTimer(25);
+}
+function startTimer(n){
+  clearInterval(tick);const t=$("timer");t.textContent=n;t.classList.remove("low");
+  tick=setInterval(()=>{n--;t.textContent=n;if(n<=7)t.classList.add("low");
+    if(n<=0){clearInterval(tick);t.textContent="⏱";}},1000);
+}
+$("bReveal").onclick=()=>{clearInterval(tick);$("cAnswer").classList.add("on");
+  $("rowA").style.display="none";$("rowB").style.display="flex";};
+$("bClose").onclick=()=>{clearInterval(tick);$("veil").classList.remove("on");};
+$("bFirst").onclick=()=>close(10);
+$("bHelp").onclick=()=>close(5);
+$("bAgain").onclick=()=>{clearInterval(tick);streak=0;$("sStreak").textContent=0;$("veil").classList.remove("on");};
+
+function close(pts){
+  clearInterval(tick);
+  score+=pts; if(pts===10){streak++;if(streak>=3){score+=5;}}else streak=0;
+  left--;
+  curEl.classList.add("done");
+  const s=document.createElement("div");
+  s.className="stamp"+(pts===10?"":" half");
+  s.innerHTML=`<span>${pts===10?"VENDIDO":"EN TRÁMITE"}</span>`;
+  curEl.appendChild(s);
+  $("sScore").textContent=score;$("sStreak").textContent=streak;$("sLeft").textContent=left;
+  const pct=Math.round((12-left)/12*100);
+  $("deedFill").style.width=pct+"%";$("deedPct").textContent=pct+"%";
+  $("veil").classList.remove("on");
+  if(left===0){$("win").classList.add("on");
+    $("winTxt").textContent=`Estudiante 1 cerró la venta con ${score} puntos. Máximo posible: 145.`;
+    $("win").scrollIntoView({behavior:"smooth"});}
+}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("bClose").click();});
+
+/* lightning round */
+let lq=[],li=0,lsc=0,lt=null;
+$("boltStart").onclick=()=>{
+  lq=sh([...LIGHT]);li=0;lsc=0;
+  $("boltBox").classList.add("on");$("boltStart").style.display="none";
+  nextBolt();let n=60;$("boltTime").textContent="0:60";
+  lt=setInterval(()=>{n--;$("boltTime").textContent="0:"+String(n).padStart(2,"0");
+    if(n<=0){clearInterval(lt);endBolt();}},1000);
+};
+function nextBolt(){
+  if(li>=lq.length)lq=sh([...LIGHT]),li=0;
+  $("boltQ").innerHTML="<b>"+lq[li][0]+"</b>";
+  $("boltA").textContent=lq[li][1];$("boltA").classList.remove("on");
+}
+$("boltShow").onclick=()=>$("boltA").classList.add("on");
+$("boltOk").onclick=()=>{lsc++;score+=5;$("sScore").textContent=score;
+  $("boltScore").textContent=lsc+" aciertos";li++;nextBolt();};
+$("boltSkip").onclick=()=>{li++;nextBolt();};
+function endBolt(){
+  $("boltQ").innerHTML="<b>¡Tiempo!</b> "+lsc+" aciertos · +"+(lsc*5)+" puntos";
+  $("boltA").classList.remove("on");
+  $("boltShow").style.display="none";$("boltOk").style.display="none";
+  $("boltSkip").textContent="Otra ronda";
+  $("boltSkip").onclick=()=>location.reload();
+}
+</script>

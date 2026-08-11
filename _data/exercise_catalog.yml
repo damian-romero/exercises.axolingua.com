@@ -132,3 +132,17 @@
   description:
     es: "Haz preguntas de sí o no sobre el pasado (cómo era vs. qué le pasó) para descartar personas y descubrir a la misteriosa. Para 2 jugadores, 28 personajes."
     en: "Ask yes/no questions about the past — what people were like vs. what happened to them — to eliminate cards and find the mystery person. For 2 players, 28 characters."
+
+- slug: board-mandatos-futuro-b1-bienes-raices
+  file: board_mandatos_futuro_es_b1_bienes_raices.html
+  skill: board
+  grammar: mandatos_futuro
+  target_lang: es
+  level: b1
+  theme: bienes_raices
+  title:
+    es: "Open House — Mandatos y futuro"
+    en: "Open House — Commands and Future Tense"
+  description:
+    es: "Recorre las 12 habitaciones de una casa en venta y traduce órdenes formales, informales y frases en futuro. Incluye ronda relámpago de 60 segundos."
+    en: "Tour 12 rooms of a house for sale, translating formal and informal commands plus future-tense sentences. Includes a 60-second lightning round."
