@@ -14,6 +14,7 @@ skills:
   flashcards: { es: "Tarjetas de memoria", en: "Flashcards" }
   guesswho: { es: "¿Quién es quién?", en: "Guess Who?" }
   board: { es: "Juego de tablero", en: "Board game" }
+  escenas: { es: "Escenas", en: "Scenes" }
 
 grammar:
   presente: { es: "Presente", en: "Present tense" }
@@ -21,6 +22,7 @@ grammar:
   preterito_imperfecto: { es: "Pretérito e imperfecto", en: "Preterite and imperfect" }
   mandatos_futuro: { es: "Mandatos y futuro", en: "Commands and future tense" }
   vocab: { es: "Vocabulario", en: "Vocabulary" }
+  repaso_general: { es: "Repaso general", en: "General review" }
 
 levels:
   a1: { es: "A1 · Principiante", en: "A1 · Beginner" }
@@ -32,6 +34,7 @@ themes:
   deportes: { es: "Deportes", en: "Sports" }
   viajes: { es: "Viajes", en: "Travel" }
   bienes_raices: { es: "Bienes raíces", en: "Real estate" }
+  ciudad: { es: "Ciudad", en: "City" }
 
 # target_langs — labels for the language being PRACTICED, used by the
 # language filter pill group on /ejercicios/.

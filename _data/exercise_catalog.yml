@@ -146,3 +146,17 @@
   description:
     es: "Recorre las 12 habitaciones de una casa en venta y traduce órdenes formales, informales y frases en futuro. Incluye ronda relámpago de 60 segundos."
     en: "Tour 12 rooms of a house for sale, translating formal and informal commands plus future-tense sentences. Includes a 60-second lightning round."
+
+- slug: escenas-repaso-general-b1-ciudad
+  file: escenas_repaso_general_es_b1_ciudad.html
+  skill: escenas
+  grammar: repaso_general
+  target_lang: es
+  level: b1
+  theme: ciudad
+  title:
+    es: "Un día en la ciudad — Frases y gramática"
+    en: "A Day in the City — Phrases and Grammar"
+  description:
+    es: "Recorre un día completo en la ciudad con 16 escenas de frases cotidianas, gramática en contexto y role-play improvisado, más un comodín de situaciones y un reto exprés de traducción."
+    en: "Work through a full day in the city with 16 scenes covering everyday phrases, grammar in context, and improvised role-play, plus a random-situation wildcard and a rapid-fire translation challenge."

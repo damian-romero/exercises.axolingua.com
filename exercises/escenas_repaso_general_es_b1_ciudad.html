@@ -1,0 +1,378 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Un día en la ciudad — Frases y gramática</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900&family=Outfit:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --deep:#0E3B34;
+  --deep-2:#0A2C27;
+  --tile:#F0EAE1;
+  --tile-2:#ECDBC4;
+  --cobalt:#2B4BC4;
+  --marigold:#F0A72E;
+  --tomato:#DC4A32;
+  --ink:#0E2320;
+  --line:rgba(240,234,225,.22);
+  --dim:#93B3AC;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;padding:20px 16px 60px;color:var(--tile);
+  font-family:'Outfit',system-ui,sans-serif;
+  background:
+    radial-gradient(60% 45% at 85% 0%, rgba(240,167,46,.16), transparent 60%),
+    radial-gradient(50% 40% at 5% 100%, rgba(43,75,196,.22), transparent 60%),
+    var(--deep);
+  min-height:100vh;
+}
+.wrap{max-width:1060px;margin:0 auto}
+
+/* header */
+header{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between}
+h1{font-family:'Fraunces',Georgia,serif;font-weight:900;font-size:clamp(30px,5.4vw,50px);line-height:.94;margin:0;letter-spacing:-.02em}
+h1 em{font-style:normal;color:var(--marigold)}
+.sub{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-top:6px}
+.clockbox{display:flex;gap:10px;align-items:stretch}
+.chip{background:rgba(240,234,225,.06);border:1px solid var(--line);padding:8px 14px;text-align:center;min-width:84px}
+.chip b{display:block;font-family:'Fraunces',Georgia,serif;font-weight:900;font-size:26px;line-height:1.05}
+.chip i{font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.14em;color:var(--dim);font-style:normal;text-transform:uppercase}
+.chip.run b{color:var(--marigold)}
+.chip.low b{color:var(--tomato)}
+#startBtn{background:var(--marigold);color:var(--ink);border:none;padding:0 18px;font-family:'DM Mono',monospace;
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;font-weight:500}
+
+/* phase rail */
+.rail{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:22px 0 6px}
+.ph{border:1px solid var(--line);padding:12px 14px;background:rgba(240,234,225,.04);cursor:pointer;text-align:left;color:inherit;font:inherit;transition:.15s}
+.ph:hover{background:rgba(240,234,225,.09)}
+.ph.on{background:var(--tile);color:var(--ink);border-color:var(--tile)}
+.ph .t{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;opacity:.65}
+.ph .n{font-family:'Fraunces',Georgia,serif;font-weight:900;font-size:19px;line-height:1.05;margin-top:3px}
+.ph:focus-visible,button:focus-visible,.card:focus-visible{outline:2px solid var(--marigold);outline-offset:2px}
+@media(max-width:640px){.rail{grid-template-columns:1fr}}
+
+/* day bar */
+.day{margin:14px 0 26px}
+.day .lbl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--dim);display:flex;justify-content:space-between;text-transform:uppercase;margin-bottom:6px}
+.day .track{height:8px;background:rgba(0,0,0,.28);border:1px solid var(--line);overflow:hidden}
+.day .fill{height:100%;width:0;background:linear-gradient(90deg,var(--cobalt),var(--marigold),var(--tomato));transition:width .45s ease}
+
+/* grid of scenes */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
+@media(max-width:860px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:540px){.grid{grid-template-columns:repeat(2,1fr)}}
+.card{position:relative;background:var(--tile);color:var(--ink);border:none;padding:13px 12px 12px;
+  min-height:118px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;
+  text-align:left;font:inherit;transition:transform .14s,box-shadow .14s;overflow:hidden}
+.card:hover:not(.done){transform:translateY(-3px);box-shadow:0 7px 0 -1px rgba(0,0,0,.35)}
+.card .hr{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.1em;color:#6B7C77}
+.card .ttl{font-family:'Fraunces',Georgia,serif;font-weight:900;font-size:19px;line-height:1;letter-spacing:-.01em}
+.card .bar{height:5px;margin-top:9px;width:38px}
+.b-fr{background:var(--cobalt)}.b-gr{background:var(--tomato)}.b-rp{background:var(--marigold)}
+.card.done{background:var(--tile-2)}
+.card.done .ttl,.card.done .hr{opacity:.35}
+.card .mark{position:absolute;top:8px;right:9px;font-family:'Fraunces',Georgia,serif;font-weight:900;font-size:15px}
+.mk-full{color:#1C7A55}.mk-half{color:#9A7A22}
+
+/* modal */
+.veil{position:fixed;inset:0;background:rgba(6,26,23,.9);display:none;place-items:center;padding:16px;z-index:50}
+.veil.on{display:grid}
+.sheet{width:min(680px,100%);background:var(--tile);color:var(--ink);padding:26px 24px 22px;position:relative;
+  box-shadow:14px 14px 0 rgba(0,0,0,.35);animation:up .2s ease-out;max-height:92vh;overflow:auto}
+@keyframes up{from{transform:translateY(12px);opacity:0}}
+.sheet .band{position:absolute;top:0;left:0;right:0;height:6px}
+.tagline{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:#6B7C77;margin-top:6px}
+.scene{font-family:'Fraunces',Georgia,serif;font-weight:900;font-size:30px;line-height:.95;margin:3px 0 4px}
+.setup{font-size:14.5px;color:#3E524E;line-height:1.4;margin-bottom:16px}
+.task{font-size:21px;line-height:1.35;font-weight:500}
+.task b{background:rgba(240,167,46,.4);padding:0 3px}
+.cue{font-family:'DM Mono',monospace;font-size:12.5px;color:#6B7C77;margin-top:9px}
+.reveal{display:none;margin-top:16px;background:var(--ink);color:var(--tile);padding:15px}
+.reveal.on{display:block}
+.reveal .es{font-family:'Fraunces',Georgia,serif;font-weight:900;font-size:25px;line-height:1.12}
+.reveal .es small{display:block;font-family:'Outfit',sans-serif;font-weight:400;font-size:14px;color:var(--dim);margin-top:4px}
+.reveal .note{font-size:13.5px;color:#A9C6C0;margin-top:9px;line-height:1.45;border-top:1px solid rgba(240,234,225,.2);padding-top:9px}
+.row{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
+button{font:inherit;cursor:pointer;border:1px solid var(--ink);background:var(--ink);color:var(--tile);
+  padding:11px 16px;font-family:'DM Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;transition:transform .1s}
+button:hover{transform:translateY(-2px)}
+button.ghost{background:transparent;color:var(--ink)}
+button.good{background:#1C7A55;border-color:#1C7A55}
+button.mid{background:#9A7A22;border-color:#9A7A22}
+
+/* wildcard + finish */
+.strip{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:26px}
+@media(max-width:640px){.strip{grid-template-columns:1fr}}
+.box{border:1px dashed var(--line);padding:18px}
+.box h2{font-family:'Fraunces',Georgia,serif;font-weight:900;font-size:22px;margin:0 0 4px}
+.box p{color:var(--dim);font-size:13.5px;margin:0 0 13px;line-height:1.45}
+.box button{border-color:var(--tile);background:transparent;color:var(--tile)}
+.out{margin-top:14px;font-size:19px;line-height:1.35;min-height:26px}
+.out b{color:var(--marigold)}
+.done-panel{display:none;margin-top:26px;border:2px solid var(--marigold);padding:26px;text-align:center}
+.done-panel.on{display:block}
+.done-panel h2{font-family:'Fraunces',Georgia,serif;font-weight:900;font-size:44px;margin:0;color:var(--marigold);line-height:.95}
+.done-panel p{color:var(--dim);margin:8px 0 0;font-size:14.5px}
+footer{margin-top:26px;font-family:'DM Mono',monospace;font-size:10.5px;color:var(--dim);letter-spacing:.1em;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <div>
+    <h1>Un día en <em>la ciudad</em></h1>
+    <div class="sub">Frases cotidianas · Gramática en contexto · Role-play — 30 min</div>
+  </div>
+  <div class="clockbox">
+    <div class="chip" id="clockChip"><b id="clock">30:00</b><i>sesión</i></div>
+    <button id="startBtn">Empezar</button>
+    <div class="chip"><b id="sScore">0</b><i>puntos</i></div>
+    <div class="chip"><b id="sDone">0/15</b><i>escenas</i></div>
+  </div>
+</header>
+
+<div class="rail">
+  <button class="ph on" data-ph="fr"><div class="t">Bloque 1 · ~8 min</div><div class="n">Frases del día</div></button>
+  <button class="ph" data-ph="gr"><div class="t">Bloque 2 · ~12 min</div><div class="n">Gramática en contexto</div></button>
+  <button class="ph" data-ph="rp"><div class="t">Bloque 3 · ~10 min</div><div class="n">Role-play</div></button>
+</div>
+
+<div class="day">
+  <div class="lbl"><span>El día de Estudiante 1</span><span id="dayPct">0%</span></div>
+  <div class="track"><div class="fill" id="dayFill"></div></div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="strip">
+  <div class="box">
+    <h2>🎲 Comodín</h2>
+    <p>Saca una situación al azar. Estudiante 1 responde con una frase completa, sin traducir palabra por palabra.</p>
+    <button id="wildBtn">Sacar una situación</button>
+    <div class="out" id="wildOut"></div>
+  </div>
+  <div class="box">
+    <h2>🔁 Reto exprés</h2>
+    <p>Una frase en inglés. Estudiante 1 la dice en español en menos de 5 segundos. +2 puntos.</p>
+    <button id="fastBtn">Siguiente frase</button>
+    <div class="out" id="fastOut"></div>
+    <div class="row"><button id="fastShow" class="ghost" style="border-color:var(--tile);color:var(--tile)">Ver respuesta</button><button id="fastOk" class="good">Correcta (+2)</button></div>
+  </div>
+</div>
+
+<div class="done-panel" id="donePanel">
+  <h2>¡Fin del día!</h2>
+  <p id="doneTxt"></p>
+  <div class="row" style="justify-content:center"><button onclick="location.reload()" style="border-color:var(--marigold);background:var(--marigold);color:var(--ink)">Otra sesión</button></div>
+</div>
+
+<footer><span>Clase de español · Estudiante 1</span><span>Puntuación manual — el maestro evalúa la producción oral</span></footer>
+</div>
+
+<div class="veil" id="veil">
+  <div class="sheet">
+    <div class="band" id="band"></div>
+    <div class="tagline" id="mTag"></div>
+    <div class="scene" id="mScene"></div>
+    <div class="setup" id="mSetup"></div>
+    <div class="task" id="mTask"></div>
+    <div class="cue" id="mCue"></div>
+    <div class="reveal" id="mReveal">
+      <div class="es" id="mEs"></div>
+      <div class="note" id="mNote"></div>
+    </div>
+    <div class="row" id="rowA">
+      <button id="bShow">Ver respuesta</button>
+      <button class="ghost" id="bClose">Cerrar</button>
+    </div>
+    <div class="row" id="rowB" style="display:none">
+      <button class="good" id="bFull">Lo dijo bien (10)</button>
+      <button class="mid" id="bHalf">Con ayuda (5)</button>
+      <button class="ghost" id="bLater">Volver después</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA={
+fr:[
+ {t:"7:00 a.m.",s:"Despertar",set:"Estudiante 1 llega a la cocina y su familia ya está desayunando.",
+  q:"Saluda y pregunta cómo durmieron. Usa <b>tres</b> frases distintas.",cue:"saludo + pregunta + respuesta",
+  a:"Buenos días. ¿Cómo amaneciste? — Bien, gracias, ¿y tú?",
+  n:"'¿Cómo amaneciste?' es más natural que '¿Cómo dormiste?' en México. Ojo: 'Buenos días' en plural."},
+ {t:"8:15 a.m.",s:"La cafetería",set:"Hay fila. Le toca a Estudiante 1 pedir.",
+  q:"Pide un café con leche <b>para llevar</b> y pregunta cuánto es.",cue:"pedir + precio",
+  a:"Un café con leche para llevar, por favor. ¿Cuánto es?",
+  n:"'Para llevar' vs 'para aquí'. 'Me da...' también funciona: 'Me da un café, por favor.'"},
+ {t:"9:30 a.m.",s:"En la calle",set:"Estudiante 1 está perdido y busca el metro.",
+  q:"Pide indicaciones con cortesía y pregunta si <b>queda lejos</b>.",cue:"disculpe + dónde + lejos",
+  a:"Disculpe, ¿dónde está el metro? ¿Queda lejos de aquí?",
+  n:"'Disculpe' para abrir, no 'perdón' (eso es más para pedir perdón). 'Queda' = está ubicado."},
+ {t:"11:00 a.m.",s:"Malentendido",set:"La persona habla muy rápido y Estudiante 1 no entendió.",
+  q:"Di que no entendiste y pide que repita <b>más despacio</b>. Dos formas.",cue:"no entendí + repetir",
+  a:"Perdón, no entendí. ¿Puede repetir más despacio, por favor?",
+  n:"Frase de oro para clase: '¿Cómo se dice ___ en español?' y '¿Qué significa ___?'"},
+ {t:"1:00 p.m.",s:"El restaurante",set:"El mesero llega a la mesa.",
+  q:"Pide la recomendación de la casa y luego pide <b>la cuenta</b>.",cue:"recomendar + la cuenta",
+  a:"¿Qué me recomienda? — Más tarde: La cuenta, por favor.",
+  n:"'La cuenta' (nunca 'el bill'). '¿Me trae...?' suena natural y cortés."},
+],
+gr:[
+ {t:"2:30 p.m.",s:"El mercado",set:"Estudiante 1 compra fruta y habla del precio.",
+  q:"Dile a la vendedora (usted): <b>Give me a kilo and don't charge me extra.</b>",cue:"dar + cobrar — mandato formal",
+  a:"Deme un kilo y no me cobre de más.",
+  n:"Mandato formal afirmativo con pronombre pegado: 'deme'. En el negativo, el pronombre va antes: 'no me cobre'."},
+ {t:"3:00 p.m.",s:"El taxi",set:"Estudiante 1 sube al taxi y da instrucciones.",
+  q:"Dile al chofer (usted): <b>Turn right and stop here, please.</b>",cue:"dar vuelta + parar",
+  a:"Dé vuelta a la derecha y pare aquí, por favor.",
+  n:"'Dé' lleva acento para distinguirlo de la preposición 'de'."},
+ {t:"4:00 p.m.",s:"Con un amigo",set:"Su amigo llega tarde otra vez.",
+  q:"Dile (tú): <b>Don't worry, but tell me the truth next time.</b>",cue:"preocuparse + decir — tú",
+  a:"No te preocupes, pero dime la verdad la próxima vez.",
+  n:"Negativo tú = subjuntivo ('no te preocupes'); afirmativo tú de decir = 'di' + me = 'dime'."},
+ {t:"5:15 p.m.",s:"El plan",set:"Están organizando el fin de semana.",
+  q:"Di: <b>Tomorrow we will go out and there will be a party at my house.</b>",cue:"salir + haber — futuro",
+  a:"Mañana saldremos y habrá una fiesta en mi casa.",
+  n:"Raíces irregulares: saldr-, habr-. 'Habrá' siempre singular aunque el sujeto sea plural."},
+ {t:"6:00 p.m.",s:"Contando el día",set:"Su esposa pregunta qué hizo hoy.",
+  q:"Di: <b>This morning I went to the market, I bought fruit and I ate with a friend.</b>",cue:"ir + comprar + comer — pretérito",
+  a:"Esta mañana fui al mercado, compré fruta y comí con un amigo.",
+  n:"'Fui' sirve para ir y para ser. Ojo con los acentos: compré, comí."},
+ {t:"7:00 p.m.",s:"¿Ser o estar?",set:"Describe a la gente de la fiesta.",
+  q:"Di: <b>My friend is Mexican, he is a doctor, but today he is tired and the food is cold.</b>",cue:"ser / estar",
+  a:"Mi amigo es mexicano, es doctor, pero hoy está cansado y la comida está fría.",
+  n:"Ser = identidad y profesión. Estar = estado y condición temporal. 'Está fría' ≠ 'es fría'."},
+ {t:"8:00 p.m.",s:"Gustos",set:"Hablan de comida y música.",
+  q:"Di: <b>I like tacos but I don't like spicy food. We like this music.</b>",cue:"gustar",
+  a:"Me gustan los tacos pero no me gusta el picante. Nos gusta esta música.",
+  n:"El verbo concuerda con la cosa, no con la persona: gustan (los tacos), gusta (el picante)."},
+ {t:"9:00 p.m.",s:"La rutina",set:"Cuenta lo que hace cada noche.",
+  q:"Di: <b>I take a shower, I brush my teeth and I go to bed at eleven.</b>",cue:"reflexivos",
+  a:"Me baño, me lavo los dientes y me acuesto a las once.",
+  n:"Reflexivos: el pronombre va antes del verbo conjugado. Con partes del cuerpo se usa 'los', no 'mis'."},
+],
+rp:[
+ {t:"Escena A",s:"La farmacia",set:"Usted es el farmacéutico. Estudiante 1 tiene dolor de cabeza desde ayer.",
+  q:"Improvisen 90 segundos. Estudiante 1 debe: explicar el síntoma, preguntar el precio y entender su instrucción.",
+  cue:"pretérito + mandato formal",
+  a:"Me duele la cabeza desde ayer. ¿Qué me recomienda? — Tome una pastilla cada ocho horas.",
+  n:"Evalúe: ¿usó 'me duele' y no 'tengo dolor de'? ¿Entendió el mandato formal sin traducir?"},
+ {t:"Escena B",s:"Llamada telefónica",set:"Usted contesta el teléfono. Estudiante 1 llama para cambiar una cita.",
+  q:"Improvisen 90 segundos. Estudiante 1 debe: identificarse, pedir el cambio y confirmar la nueva fecha en futuro.",
+  cue:"cortesía + futuro",
+  a:"Buenas tardes, habla Estudiante 1. Quisiera cambiar mi cita. ¿Podría ser el jueves? — Entonces vendré el jueves a las diez.",
+  n:"Evalúe: 'habla Estudiante 1' (no 'soy Estudiante 1 es'), 'quisiera' como cortesía, y el futuro en la confirmación."},
+ {t:"Escena C",s:"El vecino nuevo",set:"Usted es el vecino. Se encuentran en el elevador.",
+  q:"Improvisen 90 segundos de small talk. Estudiante 1 debe: saludar, hacer dos preguntas y despedirse bien.",
+  cue:"presente + ser/estar",
+  a:"Mucho gusto, soy Estudiante 1. ¿Hace mucho que vive aquí? ¿A qué se dedica? — Que tenga buen día.",
+  n:"Evalúe: ¿usó 'usted' de forma consistente? ¿Cerró con una despedida real y no solo 'adiós'?"},
+]};
+
+const WILD=["Se te olvidó la cartera en el restaurante. Explícale al mesero qué pasó.",
+"Tu vecino puso música muy fuerte a la medianoche. Pídele que le baje, con cortesía.",
+"Estás en el aeropuerto y tu vuelo se retrasó tres horas. Pregunta qué va a pasar.",
+"Un amigo te invita a una fiesta pero no quieres ir. Di que no sin ser grosero.",
+"Compraste una camisa y te queda chica. Regrésala a la tienda.",
+"El internet no funciona. Llama y describe el problema.",
+"Alguien te pregunta cómo llegar a tu casa desde el centro. Explícale.",
+"Quieres invitar a alguien a cenar el viernes. Haz la invitación y propón una hora."];
+
+const FAST=[["See you tomorrow!","¡Nos vemos mañana!"],["I'm running late.","Voy tarde / Ya voy tarde."],
+["It doesn't matter.","No importa."],["Just a moment, please.","Un momento, por favor."],
+["I agree.","Estoy de acuerdo."],["What time is it?","¿Qué hora es?"],["It's my turn.","Me toca a mí."],
+["I have no idea.","No tengo idea."],["Can you help me?","¿Me puedes ayudar? / ¿Me ayudas?"],
+["Never mind.","Olvídalo / No te preocupes."],["I'm almost there.","Ya casi llego."],
+["How much do I owe you?","¿Cuánto le debo?"],["I forgot.","Se me olvidó."],["Be careful!","¡Ten cuidado!"],
+["It's worth it.","Vale la pena."],["Let's go.","Vámonos."],["I'll be right back.","Ahorita regreso."],
+["What a shame.","Qué lástima."],["It's on me.","Yo invito."],["Are you serious?","¿En serio?"]];
+
+const META={fr:["Frase cotidiana","var(--cobalt)","b-fr"],gr:["Gramática en contexto","var(--tomato)","b-gr"],rp:["Role-play","var(--marigold)","b-rp"]};
+const $=i=>document.getElementById(i);
+let phase="fr",score=0,done=0,cur=null,curEl=null;
+const TOTAL=DATA.fr.length+DATA.gr.length+DATA.rp.length;
+$("sDone").textContent="0/"+TOTAL;
+
+function render(){
+  const g=$("grid");g.innerHTML="";
+  DATA[phase].forEach((it,i)=>{
+    const b=document.createElement("button");
+    b.className="card"+(it.cleared?" done":"");
+    b.innerHTML=`<div class="hr">${it.t}</div>
+      <div><div class="ttl">${it.s}</div><div class="bar ${META[phase][2]}"></div></div>
+      ${it.cleared?`<div class="mark ${it.cleared===10?"mk-full":"mk-half"}">${it.cleared===10?"✓":"~"}</div>`:""}`;
+    b.onclick=()=>openIt(it,b);
+    g.appendChild(b);
+  });
+}
+document.querySelectorAll(".ph").forEach(p=>p.onclick=()=>{
+  document.querySelectorAll(".ph").forEach(x=>x.classList.remove("on"));
+  p.classList.add("on");phase=p.dataset.ph;render();});
+render();
+
+function openIt(it,el){
+  if(it.cleared)return;
+  cur=it;curEl=el;
+  $("band").style.background=META[phase][1];
+  $("mTag").textContent=META[phase][0]+" · "+it.t;
+  $("mScene").textContent=it.s;
+  $("mSetup").textContent=it.set;
+  $("mTask").innerHTML=it.q;
+  $("mCue").textContent="pista: "+it.cue;
+  $("mEs").innerHTML=it.a;
+  $("mNote").textContent=it.n;
+  $("mReveal").classList.remove("on");
+  $("rowA").style.display="flex";$("rowB").style.display="none";
+  $("veil").classList.add("on");
+}
+$("bShow").onclick=()=>{$("mReveal").classList.add("on");$("rowA").style.display="none";$("rowB").style.display="flex";};
+$("bClose").onclick=()=>$("veil").classList.remove("on");
+$("bLater").onclick=()=>$("veil").classList.remove("on");
+$("bFull").onclick=()=>score_it(10);
+$("bHalf").onclick=()=>score_it(5);
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("veil").classList.remove("on")});
+
+function score_it(p){
+  cur.cleared=p;score+=p;done++;
+  $("sScore").textContent=score;$("sDone").textContent=done+"/"+TOTAL;
+  const pct=Math.round(done/TOTAL*100);
+  $("dayFill").style.width=pct+"%";$("dayPct").textContent=pct+"%";
+  $("veil").classList.remove("on");render();
+  if(done===TOTAL)finish();
+}
+function finish(){
+  $("donePanel").classList.add("on");
+  $("doneTxt").textContent=`Estudiante 1 terminó el día con ${score} puntos de ${TOTAL*10} posibles.`;
+  $("donePanel").scrollIntoView({behavior:"smooth"});
+}
+
+/* session clock */
+let secs=1800,ticking=null;
+$("startBtn").onclick=()=>{
+  if(ticking){clearInterval(ticking);ticking=null;$("startBtn").textContent="Seguir";$("clockChip").classList.remove("run");return;}
+  $("startBtn").textContent="Pausa";$("clockChip").classList.add("run");
+  ticking=setInterval(()=>{
+    secs--;
+    $("clock").textContent=Math.floor(secs/60)+":"+String(secs%60).padStart(2,"0");
+    if(secs<=300)$("clockChip").classList.add("low");
+    if(secs<=0){clearInterval(ticking);$("clock").textContent="¡Fin!";}
+  },1000);
+};
+
+/* wildcard */
+let wpool=[];
+$("wildBtn").onclick=()=>{
+  if(!wpool.length)wpool=[...WILD].sort(()=>Math.random()-.5);
+  $("wildOut").innerHTML="<b>»</b> "+wpool.pop();
+};
+/* fast */
+let fpool=[],fcur=null;
+$("fastBtn").onclick=()=>{
+  if(!fpool.length)fpool=[...FAST].sort(()=>Math.random()-.5);
+  fcur=fpool.pop();$("fastOut").innerHTML="<b>"+fcur[0]+"</b>";
+};
+$("fastShow").onclick=()=>{if(fcur)$("fastOut").innerHTML="<b>"+fcur[0]+"</b> → "+fcur[1];};
+$("fastOk").onclick=()=>{if(!fcur)return;score+=2;$("sScore").textContent=score;$("fastBtn").click();};
+</script>
