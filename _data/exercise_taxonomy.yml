@@ -15,6 +15,7 @@ skills:
   guesswho: { es: "¿Quién es quién?", en: "Guess Who?" }
   board: { es: "Juego de tablero", en: "Board game" }
   escenas: { es: "Escenas", en: "Scenes" }
+  rueda: { es: "Rueda de letras", en: "Letter wheel" }
 
 grammar:
   presente: { es: "Presente", en: "Present tense" }

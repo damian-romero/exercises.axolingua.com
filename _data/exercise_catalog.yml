@@ -160,3 +160,17 @@
   description:
     es: "Recorre un día completo en la ciudad con 16 escenas de frases cotidianas, gramática en contexto y role-play improvisado, más un comodín de situaciones y un reto exprés de traducción."
     en: "Work through a full day in the city with 16 scenes covering everyday phrases, grammar in context, and improvised role-play, plus a random-situation wildcard and a rapid-fire translation challenge."
+
+- slug: rueda-vocab-a1
+  file: rueda_vocab_es_a1.html
+  skill: rueda
+  grammar: vocab
+  target_lang: es
+  level: a1
+  theme: general
+  title:
+    es: "Rueda de letras — Vocabulario"
+    en: "Letter Wheel — Vocabulary"
+  description:
+    es: "Elige o gira una letra y di una palabra de la categoría (animales, comida, países…) que empiece con ella, contrarreloj. Para 1 a 8 jugadores."
+    en: "Pick or spin a letter and say a word from the category (animals, food, countries…) starting with it, against the clock. For 1–8 players."
