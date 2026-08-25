@@ -15,7 +15,7 @@
 
     <nav class="nav__links" id="nav-links">
       <a class="nav__link {% if page.url == '/ejercicios/' %}is-active{% endif %}" href="{{ lang_prefix }}/ejercicios/">{{ t.nav.exercises }}</a>
-      <a class="nav__link" href="{{ site.main_site_url }}" target="_blank" rel="noopener">{{ t.nav.main_site }} ↗</a>
+      <a class="nav__link" href="{{ site.main_site_url }}{% if site.active_lang == 'en' %}/en/{% endif %}" target="_blank" rel="noopener">{{ t.nav.main_site }} ↗</a>
       <div class="lang-toggle lang-toggle--mobile">
         <a {% static_href %}href="{{ base_slug }}"{% endstatic_href %} {% if site.active_lang == 'es' %}class="is-active" aria-current="true"{% endif %} lang="es" hreflang="es">{{ t.lang_toggle.es }}</a>
         <a {% static_href %}href="/en{{ base_slug }}"{% endstatic_href %} {% if site.active_lang == 'en' %}class="is-active" aria-current="true"{% endif %} lang="en" hreflang="en">{{ t.lang_toggle.en }}</a>

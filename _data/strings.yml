@@ -10,6 +10,13 @@ es:
     exercises: "Ejercicios"
     main_site: "axolingua.com"
     menu_label: "Menú"
+  cta:
+    primary: "Solicitar mi clase gratuita →"
+    free_badge: "Gratis"
+  banner:
+    aria_label: "Sobre Axolingua"
+    title: "¿Quién está detrás de estos ejercicios?"
+    text: "Axolingua es un estudio boutique de tutoría bilingüe en la Ciudad de México, dirigido por dos lingüistas académicos. Si quieres ir más allá de la práctica libre, te invitamos a reservar una clase — la primera es gratis."
   footer:
     tagline: "El idioma para tu vida real."
     about_label: "Axolingua"
@@ -28,6 +35,13 @@ en:
     exercises: "Exercises"
     main_site: "axolingua.com"
     menu_label: "Menu"
+  cta:
+    primary: "Request my free class →"
+    free_badge: "Free"
+  banner:
+    aria_label: "About Axolingua"
+    title: "Who's behind these exercises?"
+    text: "Axolingua is a boutique bilingual tutoring studio in Mexico City, run by two academic linguists. If you want to go beyond self-practice, we'd love to have you in a class — your first one is free."
   footer:
     tagline: "Language for the life you're living."
     about_label: "Axolingua"

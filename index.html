@@ -8,6 +8,8 @@ permalink: /
 {% if site.active_lang == site.default_lang %}{% assign lang_prefix = '' %}{% else %}{% assign lang_prefix = '/' | append: site.active_lang %}{% endif %}
 {% assign pg = site.data.pages.home[site.active_lang] %}
 
+{% include about-banner.html %}
+
 <!-- HERO -->
 <section class="hero">
   <div class="wrap">
@@ -34,7 +36,7 @@ permalink: /
         <p class="path-card__text">{{ pg.picker.italian.text }}</p>
         <span class="path-card__link">{{ pg.picker.italian.link }}</span>
       </a>
-      <a class="path-card path-card--jade" href="/404.html">
+      <a class="path-card path-card--jade" href="{{ lang_prefix }}/ejercicios/?lang=en">
         <span class="tag tag--jade">{{ pg.picker.english.tag }}</span>
         <h2 class="path-card__title">{{ pg.picker.english.title }}</h2>
         <p class="path-card__text">{{ pg.picker.english.text }}</p>

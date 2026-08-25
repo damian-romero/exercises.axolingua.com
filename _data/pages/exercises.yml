@@ -1,7 +1,7 @@
 es:
   meta:
     title: "Ejercicios de idiomas · Axolingua"
-    description: "Explora todos nuestros ejercicios interactivos de español e italiano, filtrables por idioma, nivel, tipo y tema."
+    description: "Explora todos nuestros ejercicios interactivos de español, inglés e italiano, filtrables por idioma, nivel, tipo y tema."
   eyebrow: "Ejercicios"
   heading: "Ejercicios de idiomas"
   intro: "Filtra por idioma, nivel, tipo de ejercicio o tema para encontrar la práctica ideal. Haz clic en cualquier tarjeta para abrir el ejercicio."
@@ -19,7 +19,7 @@ es:
 en:
   meta:
     title: "Language Exercises · Axolingua"
-    description: "Browse all our interactive Spanish and Italian exercises, filterable by language, level, type, and theme."
+    description: "Browse all our interactive Spanish, English, and Italian exercises, filterable by language, level, type, and theme."
   eyebrow: "Exercises"
   heading: "Language exercises"
   intro: "Filter by language, level, exercise type, or theme to find the right practice. Click any card to open the exercise."

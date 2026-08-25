@@ -174,3 +174,17 @@
   description:
     es: "Elige o gira una letra y di una palabra de la categoría (animales, comida, países…) que empiece con ella, contrarreloj. Para 1 a 8 jugadores."
     en: "Pick or spin a letter and say a word from the category (animals, food, countries…) starting with it, against the clock. For 1–8 players."
+
+- slug: rueda-vocab-en-a1
+  file: rueda_vocab_en_a1.html
+  skill: rueda
+  grammar: vocab
+  target_lang: en
+  level: a1
+  theme: general
+  title:
+    es: "Rueda de letras — Vocabulario en inglés"
+    en: "Letter Wheel — Vocabulary"
+  description:
+    es: "Elige o gira una letra y di una palabra en inglés de la categoría (animales, comida, viajes…) que empiece con ella, contrarreloj. Para 1 a 8 jugadores."
+    en: "Pick or spin a letter and say an English word from the category (animals, food, trips…) starting with it, against the clock. For 1–8 players."

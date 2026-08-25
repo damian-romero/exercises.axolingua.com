@@ -1,0 +1,23 @@
+{% comment %}
+  About + free-class banner. Sits at the very top of the page (before any
+  H1), so its title is a styled <p>, not a heading — this keeps heading
+  order correct: the page's own H1 stays the first heading a screen
+  reader / outline tool encounters. The wrapping <section> carries an
+  aria-label instead, so it's still an identifiable landmark.
+  Reuses .consult-banner, already ported from axolingua.com's brand
+  components (_sass/_components.scss) — no new CSS needed.
+{% endcomment %}
+<section class="section--tight" aria-label="{{ t.banner.aria_label }}">
+  <div class="wrap">
+    <div class="consult-banner">
+      <div>
+        <span class="free-badge">{{ t.cta.free_badge }}</span>
+        <p class="consult-banner__title">{{ t.banner.title }}</p>
+        <p class="consult-banner__text">{{ t.banner.text }}</p>
+      </div>
+      <div>
+        <a class="btn btn-pink btn-lg" href="{{ site.main_site_url }}{% if site.active_lang == 'en' %}/en{% endif %}/contacto/" target="_blank" rel="noopener">{{ t.cta.primary }}</a>
+      </div>
+    </div>
+  </div>
+</section>

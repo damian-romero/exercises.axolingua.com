@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Letter Wheel · Vocabulary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,800&family=Outfit:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#F7F3EE; --paper:#FFFFFF; --cream:#F0EAE1; --charcoal:#2C2A27;
+    --pink:#D0736C; --pink-deep:#B8524A; --pink-wash:#FBF0EF;
+    --jade:#3D8876; --jade-deep:#2A6B5F; --jade-wash:#EAF4F2;
+    --ochre:#BC8A52; --ochre-deep:#9E6B35; --ochre-soft:#D4AE84; --ochre-pale:#ECDBC4; --ochre-wash:#F9F1E6;
+    --rule:#D8CFBF; --mute:#8A847E; --pebble:#BEB8B2; --slate:#5A5652;
+    --display:'Fraunces',Georgia,serif;
+    --ui:'Outfit',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:'DM Mono','Courier New',monospace;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; min-height:100%; }
+  body{
+    min-height:100vh;
+    font-family:var(--ui);
+    background:var(--ivory);
+    color:var(--charcoal);
+    padding:28px 16px 60px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  button{ font-family:inherit; cursor:pointer; }
+
+  .brandhead{ text-align:center; margin-bottom:6px; }
+  .eyebrow{
+    font-family:var(--mono); font-size:11px; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--mute); font-weight:500;
+  }
+  h1{
+    font-family:var(--display); font-weight:700;
+    font-size:clamp(24px, 4.5vw, 34px);
+    letter-spacing:.2px;
+    margin:4px 0 4px;
+    color:var(--charcoal);
+  }
+  .subtitle{
+    text-align:center;
+    color:var(--slate);
+    font-size:14px;
+    line-height:1.5;
+    margin:0 0 22px;
+    max-width:480px;
+  }
+  .panel{
+    background:var(--paper);
+    border:1px solid var(--rule);
+    border-radius:16px;
+    padding:14px 18px;
+    box-shadow:0 8px 22px rgba(44,42,39,.06);
+  }
+  .controls{
+    width:100%; max-width:620px;
+    display:flex; flex-direction:column; gap:12px;
+    margin-bottom:26px;
+  }
+  .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  label.small{
+    font-family:var(--mono);
+    font-size:11px; text-transform:uppercase; letter-spacing:.1em;
+    color:var(--mute); font-weight:500; margin-right:2px;
+  }
+  select, input[type="text"]{
+    font-family:var(--ui); font-weight:600;
+    background:var(--cream);
+    border:1px solid var(--rule);
+    color:var(--charcoal);
+    border-radius:10px;
+    padding:8px 10px;
+    font-size:14px;
+    outline:none;
+  }
+  select:disabled, input:disabled, button:disabled{ opacity:.45; cursor:not-allowed; }
+  select:focus-visible, input:focus-visible, button:focus-visible{
+    outline:2px solid var(--ochre-deep); outline-offset:2px;
+  }
+  .chip-btn{
+    font-family:var(--ui); font-weight:700; font-size:13px;
+    background:var(--cream);
+    border:1px solid var(--rule);
+    color:var(--charcoal);
+    border-radius:999px;
+    padding:6px 14px;
+    cursor:pointer;
+    transition:transform .12s ease, background .15s ease, border-color .15s ease;
+  }
+  .chip-btn:hover:not(:disabled){ transform:translateY(-1px); }
+  .chip-btn.active{
+    background:var(--ochre); color:#fff; border-color:var(--ochre-deep);
+  }
+  .icon-btn{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:var(--ui); font-weight:700; font-size:14px;
+    border-radius:12px; padding:9px 16px; border:none; cursor:pointer;
+    transition:transform .12s ease, filter .15s ease, box-shadow .15s ease;
+  }
+  .icon-btn:hover:not(:disabled){ transform:translateY(-1px); filter:brightness(1.06); }
+  .icon-btn.primary{ background:var(--pink); color:#fff; box-shadow:0 8px 18px rgba(208,115,108,.3); }
+  .icon-btn.secondary{ background:var(--jade); color:#fff; box-shadow:0 8px 18px rgba(61,136,118,.28); }
+  .icon-btn.ghost{ background:var(--cream); color:var(--charcoal); border:1px solid var(--rule); }
+  .stepper{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--cream); border:1px solid var(--rule);
+    border-radius:999px; padding:4px 6px;
+  }
+  .stepper button{
+    background:rgba(44,42,39,.08); border:none; color:var(--charcoal);
+    width:26px; height:26px; border-radius:50%;
+    display:grid; place-items:center;
+  }
+  .stepper button:disabled{ opacity:.4; cursor:not-allowed; }
+  .stepper span{ min-width:18px; text-align:center; font-weight:800; }
+
+  .wheelzone{
+    position:relative;
+    width:min(84vw, 520px);
+    aspect-ratio:1;
+    margin:6px 0 20px;
+  }
+  .ring-deco{
+    position:absolute; inset:-3%;
+    border-radius:50%;
+    background:repeating-conic-gradient(
+      from 0deg,
+      rgba(158,107,53,.35) 0deg 6.9deg,
+      rgba(158,107,53,0) 6.9deg 13.8deg
+    );
+    opacity:.55;
+  }
+  .tile{
+    position:absolute;
+    width:clamp(32px, 8.6vw, 46px);
+    height:clamp(32px, 8.6vw, 46px);
+    border-radius:50%;
+    display:grid; place-items:center;
+    font-family:var(--display); font-weight:700;
+    font-size:clamp(13px, 3.4vw, 17px);
+    color:#fff; border:none; cursor:pointer;
+    transform:translate(-50%, -50%);
+    transition:transform .18s ease, opacity .2s ease, box-shadow .18s ease;
+    box-shadow:0 2px 6px rgba(44,42,39,.22);
+  }
+  .tile:hover:not(:disabled){ transform:translate(-50%, -50%) scale(1.12); }
+  .tile:disabled{ cursor:not-allowed; }
+  .tile.used{
+    background:var(--pebble) !important;
+    color:var(--paper);
+    box-shadow:none;
+  }
+  .tile.used::after{
+    content:"✓";
+    position:absolute; font-size:11px; bottom:-2px; right:-2px;
+    background:var(--paper); border:1px solid var(--rule);
+    border-radius:50%; width:15px; height:15px;
+    display:grid; place-items:center; color:var(--jade-deep);
+  }
+  .tile.selected{
+    transform:translate(-50%, -50%) scale(1.25);
+    box-shadow:0 0 0 3px var(--paper), 0 0 18px rgba(184,82,74,.55);
+    z-index:5;
+  }
+  .tile.dimmed{ opacity:.4; }
+  .hub{
+    position:absolute; top:50%; left:50%;
+    transform:translate(-50%, -50%);
+    width:46%; aspect-ratio:1; border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--ochre-soft) 0%, var(--ochre) 48%, var(--ochre-deep) 100%);
+    border:4px solid var(--paper);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:10px;
+    box-shadow:0 10px 22px rgba(44,42,39,.22), inset 0 0 0 2px rgba(255,255,255,.18);
+  }
+  .hub .cat-label{
+    font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.1em;
+    font-weight:600; color:rgba(44,42,39,.65);
+  }
+  .hub .cat-name{
+    font-family:var(--display); font-weight:800;
+    font-size:clamp(12px, 2.6vw, 16px);
+    color:var(--charcoal); line-height:1.1; margin:2px 0 6px; word-break:break-word;
+  }
+  .hub .timer{
+    font-family:var(--display); font-weight:800;
+    font-size:clamp(22px, 5vw, 32px); color:var(--charcoal);
+    font-variant-numeric:tabular-nums;
+  }
+  .hub .timer.low{ color:var(--pink-deep); animation:pulse 1s infinite; }
+  .hub .turn{ margin-top:4px; font-size:11px; font-weight:700; color:rgba(44,42,39,.65); }
+  .hub .spin-char{
+    font-family:var(--display); font-weight:800;
+    font-size:clamp(30px, 7vw, 46px); color:var(--charcoal);
+  }
+  .judge{ display:flex; flex-direction:column; align-items:center; gap:6px; width:100%; }
+  .judge .letter-big{
+    font-family:var(--display); font-weight:800;
+    font-size:clamp(24px, 5.5vw, 34px); color:var(--charcoal); line-height:1;
+  }
+  .judge input[type="text"]{
+    width:88%; font-size:12px; padding:5px 8px;
+    background:rgba(255,255,255,.72);
+    border:1px solid rgba(44,42,39,.18);
+    color:var(--charcoal);
+  }
+  .judge input[type="text"]::placeholder{ color:rgba(44,42,39,.5); }
+  .judge-btns{ display:flex; gap:6px; }
+  .judge-btns button{
+    border:none; border-radius:8px; width:34px; height:34px;
+    display:grid; place-items:center; cursor:pointer;
+  }
+  .judge-btns .ok{ background:var(--jade-deep); color:#fff; }
+  .judge-btns .no{ background:var(--pink-deep); color:#fff; }
+  .judge-btns .cancel{ background:rgba(44,42,39,.15); color:var(--charcoal); font-size:12px; padding:0 8px; width:auto; }
+
+  @keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:.45; } }
+
+  .overlay-msg{ font-family:var(--display); text-align:center; margin-bottom:4px; }
+  .overlay-msg .big{ font-size:clamp(20px, 4.6vw, 27px); font-weight:800; color:var(--charcoal); }
+  .overlay-msg .sub{ font-family:var(--ui); font-size:13px; color:rgba(44,42,39,.7); margin-top:4px; }
+
+  .log-panel{ width:100%; max-width:620px; margin-top:4px; }
+  .log-title{
+    font-family:var(--display); font-weight:700; font-size:16px;
+    margin-bottom:8px; color:var(--charcoal);
+  }
+  .log-chips{ display:flex; flex-wrap:wrap; gap:8px; }
+  .log-chip{
+    background:var(--cream); border:1px solid var(--rule); border-radius:10px;
+    padding:6px 10px; font-size:13px; font-weight:600; color:var(--charcoal);
+  }
+  .log-chip b{ color:var(--ochre-deep); }
+  .log-empty{ font-size:13px; color:var(--mute); }
+
+  svg.ic{ display:block; }
+
+  @media (prefers-reduced-motion: reduce){
+    .tile, .icon-btn, .chip-btn{ transition:none !important; }
+    .hub .timer.low{ animation:none !important; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="brandhead">
+    <div class="eyebrow">English A1 · vocabulary</div>
+    <h1>Letter Wheel</h1>
+  </div>
+  <p class="subtitle">
+    Pick a letter or spin the wheel. Say a word from the category that starts with that letter.
+    If it's correct, the letter locks; if not, it becomes available again.
+  </p>
+
+  <div class="controls panel">
+    <div class="row">
+      <label class="small" for="cat">Category</label>
+      <select id="cat">
+        <option value="Animals">Animals</option>
+        <option value="Food">Food</option>
+        <option value="Fruits and vegetables">Fruits and vegetables</option>
+        <option value="Countries">Countries</option>
+        <option value="Colors">Colors</option>
+        <option value="Professions">Professions</option>
+        <option value="Clothing">Clothing</option>
+        <option value="Sports">Sports</option>
+        <option value="Household objects">Household objects</option>
+        <option value="Cities">Cities</option>
+        <option value="Crossfit and Hyrox">Crossfit and Hyrox</option>
+        <option value="Trips">Trips</option>
+        <option value="The Lab">The Lab</option>
+        <option value="Mystery Party">Mystery Party</option>
+        <option value="__custom__">Custom…</option>
+      </select>
+      <input type="text" id="customCat" placeholder="Type your category" style="min-width:160px; display:none;" />
+    </div>
+    <div class="row">
+      <label class="small">Time</label>
+      <button class="chip-btn" data-duration="30">30s</button>
+      <button class="chip-btn active" data-duration="60">60s</button>
+      <button class="chip-btn" data-duration="90">90s</button>
+      <button class="chip-btn" data-duration="120">120s</button>
+      <label class="small" style="margin-left:8px; display:inline-flex; align-items:center; gap:4px;">
+        <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Players
+      </label>
+      <div class="stepper">
+        <button id="playersMinus" aria-label="Fewer players">
+          <svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>
+        </button>
+        <span id="playersCount">1</span>
+        <button id="playersPlus" aria-label="More players">
+          <svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <button class="icon-btn primary" id="btnToggle">
+        <svg class="ic" id="icPlayPause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+        <span id="txtToggle">Start</span>
+      </button>
+      <button class="icon-btn secondary" id="btnSpin">
+        <svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.8-1.1 2-1.7 3.3-1.7H22"/><path d="m18 2 4 4-4 4"/><path d="M2 6h1.4c1.3 0 2.5.6 3.3 1.7l.7 1"/><path d="M22 18h-5.9c-1.3 0-2.5-.6-3.3-1.7l-.7-1"/><path d="m18 14 4 4-4 4"/></svg>
+        Spin
+      </button>
+      <button class="icon-btn ghost" id="btnNewRound">
+        <svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        New round
+      </button>
+    </div>
+  </div>
+
+  <div class="wheelzone" id="wheelzone">
+    <div class="ring-deco" aria-hidden="true"></div>
+    <div class="hub" id="hub"></div>
+  </div>
+
+  <div class="log-panel panel">
+    <div class="log-title">Words from this round</div>
+    <div id="logBody">
+      <div class="log-empty">No correct words yet this round.</div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  "use strict";
+
+  var ALPHABET = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z".split(" ");
+  var PALETTE = ["#D0736C", "#3D8876", "#BC8A52"]; // pink-mid, jade-mid, ochre-mid
+  var DURATIONS = [30, 60, 90, 120];
+
+  function fmt(s){
+    var m = Math.floor(s / 60).toString().padStart(2, "0");
+    var r = (s % 60).toString().padStart(2, "0");
+    return m + ":" + r;
+  }
+
+  // ---------- state ----------
+  var letters = ALPHABET.map(function(char){ return { char: char, status: "available" }; });
+  var category = "Animals";
+  var customCategory = "";
+  var duration = 60;
+  var timeLeft = 60;
+  var isRunning = false;
+  var roundEnded = false;
+  var numPlayers = 1;
+  var currentPlayer = 0;
+  var selectedIndex = null;
+  var wordInput = "";
+  var roundLog = [];
+  var spinning = false;
+  var spinChar = null;
+  var intervalId = null;
+  var spinIntervalId = null;
+
+  function usingCustom(){ return category === "__custom__"; }
+  function activeCategory(){
+    return usingCustom() ? (customCategory.trim() || "Free category") : category;
+  }
+  function availableCount(){
+    return letters.filter(function(l){ return l.status === "available"; }).length;
+  }
+  function controlsLocked(){ return isRunning || spinning; }
+
+  // ---------- elements ----------
+  var el = function(id){ return document.getElementById(id); };
+  var catSelect = el("cat"), customCatInput = el("customCat");
+  var wheelzone = el("wheelzone"), hub = el("hub");
+  var btnToggle = el("btnToggle"), txtToggle = el("txtToggle"), icPlayPause = el("icPlayPause");
+  var btnSpin = el("btnSpin"), btnNewRound = el("btnNewRound");
+  var playersMinus = el("playersMinus"), playersPlus = el("playersPlus"), playersCount = el("playersCount");
+  var logBody = el("logBody");
+  var durationBtns = Array.prototype.slice.call(document.querySelectorAll("[data-duration]"));
+
+  var ICON_PLAY = '<polygon points="6 3 20 12 6 21 6 3"/>';
+  var ICON_PAUSE = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+
+  // ---------- letter tiles (created once) ----------
+  var n = ALPHABET.length;
+  var radius = 40; // % of container
+  var tileEls = letters.map(function(l, i){
+    var angle = (360 / n) * i - 90;
+    var rad = (angle * Math.PI) / 180;
+    var x = 50 + radius * Math.cos(rad);
+    var y = 50 + radius * Math.sin(rad);
+    var btn = document.createElement("button");
+    btn.className = "tile";
+    btn.style.left = x + "%";
+    btn.style.top = y + "%";
+    btn.textContent = l.char;
+    btn.addEventListener("click", function(){ selectLetter(i); });
+    wheelzone.appendChild(btn);
+    return btn;
+  });
+
+  // ---------- rendering ----------
+  function renderTiles(){
+    letters.forEach(function(l, i){
+      var btn = tileEls[i];
+      var isUsed = l.status === "used";
+      var isSelected = i === selectedIndex;
+      var dimmed = selectedIndex !== null && !isSelected;
+      btn.className = "tile" + (isUsed ? " used" : "") + (isSelected ? " selected" : "") + (dimmed ? " dimmed" : "");
+      btn.style.background = isUsed ? "" : PALETTE[i % PALETTE.length];
+      btn.disabled = isUsed || roundEnded || spinning;
+      btn.setAttribute("aria-label", "Letter " + l.char + (isUsed ? ", already used" : ""));
+    });
+  }
+
+  function renderHub(){
+    var lowTime = timeLeft <= 10 && timeLeft > 0;
+    if (roundEnded) {
+      hub.innerHTML =
+        '<div class="overlay-msg">' +
+          '<div class="big">Time\'s up!</div>' +
+          '<div class="sub">' + roundLog.length + ' correct word' + (roundLog.length === 1 ? "" : "s") + '</div>' +
+        '</div>';
+    } else if (spinning) {
+      hub.innerHTML = '<div class="spin-char">' + (spinChar || "") + '</div>';
+    } else if (selectedIndex !== null) {
+      hub.innerHTML =
+        '<div class="judge">' +
+          '<div class="letter-big">' + letters[selectedIndex].char + '</div>' +
+          '<input type="text" id="wordInputEl" placeholder="word (optional)" value="' +
+            wordInput.replace(/"/g, "&quot;") + '" />' +
+          '<div class="judge-btns">' +
+            '<button class="ok" id="btnJudgeOk" aria-label="Correct"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button>' +
+            '<button class="no" id="btnJudgeNo" aria-label="Incorrect"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>' +
+            '<button class="cancel" id="btnJudgeCancel">Cancel</button>' +
+          '</div>' +
+        '</div>';
+      var wi = el("wordInputEl");
+      wi.addEventListener("input", function(e){ wordInput = e.target.value; });
+      el("btnJudgeOk").addEventListener("click", function(){ judge(true); });
+      el("btnJudgeNo").addEventListener("click", function(){ judge(false); });
+      el("btnJudgeCancel").addEventListener("click", cancelSelection);
+      wi.focus();
+    } else {
+      hub.innerHTML =
+        '<div class="cat-label">Category</div>' +
+        '<div class="cat-name">' + escapeHtml(activeCategory()) + '</div>' +
+        '<div class="timer' + (lowTime ? " low" : "") + '">' + fmt(timeLeft) + '</div>' +
+        (numPlayers > 1 ? '<div class="turn">Turn: Player ' + (currentPlayer + 1) + '</div>' : "");
+    }
+  }
+
+  function escapeHtml(s){
+    var d = document.createElement("div");
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  function renderControls(){
+    var locked = controlsLocked();
+    catSelect.disabled = locked;
+    customCatInput.disabled = locked;
+    durationBtns.forEach(function(b){
+      b.disabled = locked;
+      b.classList.toggle("active", parseInt(b.getAttribute("data-duration"), 10) === duration);
+    });
+    playersMinus.disabled = locked || numPlayers <= 1;
+    playersPlus.disabled = locked || numPlayers >= 8;
+    playersCount.textContent = String(numPlayers);
+
+    btnToggle.disabled = roundEnded || spinning;
+    icPlayPause.innerHTML = isRunning ? ICON_PAUSE : ICON_PLAY;
+    txtToggle.textContent = isRunning ? "Pause" : "Start";
+
+    btnSpin.disabled = roundEnded || spinning || selectedIndex !== null || availableCount() === 0;
+  }
+
+  function renderLog(){
+    if (roundLog.length === 0) {
+      logBody.innerHTML = '<div class="log-empty">No correct words yet this round.</div>';
+      return;
+    }
+    logBody.innerHTML = '<div class="log-chips">' +
+      roundLog.map(function(entry){
+        return '<div class="log-chip"><b>' + entry.char + '</b> — ' + escapeHtml(entry.word) +
+          (numPlayers > 1 ? ' (P' + (entry.player + 1) + ')' : '') + '</div>';
+      }).join("") +
+      '</div>';
+  }
+
+  function render(){
+    renderTiles();
+    renderHub();
+    renderControls();
+    renderLog();
+  }
+
+  // ---------- timer ----------
+  function startTimerIfNeeded(){
+    if (!isRunning && !roundEnded && timeLeft > 0) {
+      isRunning = true;
+      runTimer();
+    }
+  }
+
+  function runTimer(){
+    clearInterval(intervalId);
+    intervalId = setInterval(function(){
+      timeLeft -= 1;
+      if (timeLeft <= 0) {
+        timeLeft = 0;
+        clearInterval(intervalId);
+        isRunning = false;
+        roundEnded = true;
+      }
+      render();
+    }, 1000);
+  }
+
+  function toggleRunning(){
+    if (roundEnded || timeLeft === 0) return;
+    isRunning = !isRunning;
+    if (isRunning) { runTimer(); } else { clearInterval(intervalId); }
+    render();
+  }
+
+  // ---------- round lifecycle ----------
+  function newRound(){
+    clearInterval(intervalId);
+    clearInterval(spinIntervalId);
+    letters = ALPHABET.map(function(char){ return { char: char, status: "available" }; });
+    timeLeft = duration;
+    isRunning = false;
+    roundEnded = false;
+    selectedIndex = null;
+    wordInput = "";
+    roundLog = [];
+    currentPlayer = 0;
+    spinning = false;
+    spinChar = null;
+    render();
+  }
+
+  function changeDuration(d){
+    if (controlsLocked()) return;
+    duration = d;
+    timeLeft = d;
+    render();
+  }
+
+  function selectLetter(i){
+    if (roundEnded || spinning) return;
+    if (letters[i].status !== "available") return;
+    selectedIndex = i;
+    wordInput = "";
+    startTimerIfNeeded();
+    render();
+  }
+
+  function judge(isCorrect){
+    if (selectedIndex === null) return;
+    var idx = selectedIndex;
+    letters[idx] = { char: letters[idx].char, status: isCorrect ? "used" : "available" };
+    if (isCorrect) {
+      roundLog.push({ char: letters[idx].char, word: wordInput.trim() || "—", player: currentPlayer });
+    }
+    if (numPlayers > 1) currentPlayer = (currentPlayer + 1) % numPlayers;
+    selectedIndex = null;
+    wordInput = "";
+    var remaining = letters.filter(function(l, i2){ return i2 === idx ? false : l.status === "available"; }).length;
+    if (isCorrect && remaining === 0) {
+      clearInterval(intervalId);
+      isRunning = false;
+      roundEnded = true;
+    }
+    render();
+  }
+
+  function cancelSelection(){
+    selectedIndex = null;
+    wordInput = "";
+    render();
+  }
+
+  function spin(){
+    if (roundEnded || spinning || selectedIndex !== null) return;
+    var availableIdx = letters
+      .map(function(l, i){ return l.status === "available" ? i : null; })
+      .filter(function(i){ return i !== null; });
+    if (availableIdx.length === 0) return;
+    startTimerIfNeeded();
+    spinning = true;
+    render();
+    var ticks = 0;
+    var maxTicks = 14;
+    spinIntervalId = setInterval(function(){
+      var r = availableIdx[Math.floor(Math.random() * availableIdx.length)];
+      spinChar = letters[r].char;
+      ticks += 1;
+      render();
+      if (ticks >= maxTicks) {
+        clearInterval(spinIntervalId);
+        var final = availableIdx[Math.floor(Math.random() * availableIdx.length)];
+        spinChar = null;
+        spinning = false;
+        selectedIndex = final;
+        wordInput = "";
+        render();
+      }
+    }, 70);
+  }
+
+  // ---------- wire up controls ----------
+  catSelect.addEventListener("change", function(e){
+    category = e.target.value;
+    customCatInput.style.display = usingCustom() ? "" : "none";
+    render();
+  });
+  customCatInput.addEventListener("input", function(e){
+    customCategory = e.target.value;
+    render();
+  });
+  durationBtns.forEach(function(b){
+    b.addEventListener("click", function(){
+      changeDuration(parseInt(b.getAttribute("data-duration"), 10));
+    });
+  });
+  playersMinus.addEventListener("click", function(){
+    if (controlsLocked() || numPlayers <= 1) return;
+    numPlayers = Math.max(1, numPlayers - 1);
+    render();
+  });
+  playersPlus.addEventListener("click", function(){
+    if (controlsLocked() || numPlayers >= 8) return;
+    numPlayers = Math.min(8, numPlayers + 1);
+    render();
+  });
+  btnToggle.addEventListener("click", toggleRunning);
+  btnSpin.addEventListener("click", spin);
+  btnNewRound.addEventListener("click", newRound);
+
+  // ---------- test hook (harmless in production) ----------
+  window.__letterWheel = {
+    get state(){
+      return {
+        category: activeCategory(), duration: duration, timeLeft: timeLeft, isRunning: isRunning,
+        roundEnded: roundEnded, numPlayers: numPlayers, currentPlayer: currentPlayer,
+        selectedIndex: selectedIndex, roundLog: roundLog, spinning: spinning,
+        available: availableCount()
+      };
+    },
+    selectLetter: selectLetter, judge: judge, spin: spin, newRound: newRound, toggleRunning: toggleRunning
+  };
+
+  render();
+})();
+</script>
+</body>
+</html>

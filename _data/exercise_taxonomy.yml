@@ -42,3 +42,4 @@ themes:
 target_langs:
   es: { es: "Español", en: "Spanish" }
   it: { es: "Italiano", en: "Italian" }
+  en: { es: "Inglés", en: "English" }

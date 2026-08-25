@@ -1,7 +1,7 @@
 es:
   meta:
     title: "Ejercicios gratuitos de idiomas · Axolingua"
-    description: "Ejercicios interactivos gratuitos para practicar español e italiano, creados por Axolingua. Nuestro banco de ejercicios sigue creciendo."
+    description: "Ejercicios interactivos gratuitos para practicar español, inglés e italiano, creados por Axolingua. Nuestro banco de ejercicios sigue creciendo."
   hero:
     eyebrow: "Axolingua · Recursos gratuitos"
     headline: "Practica el idioma, no memorices reglas."
@@ -16,7 +16,7 @@ es:
     english:
       tag: "English"
       title: "Practicar inglés"
-      text: "Muy pronto: ejercicios interactivos para practicar inglés."
+      text: "Rueda de letras para practicar vocabulario en inglés."
       link: "Ver ejercicios de inglés →"
     italian:
       tag: "Italiano"
@@ -27,7 +27,7 @@ es:
 en:
   meta:
     title: "Free Language Exercises · Axolingua"
-    description: "Free interactive exercises to practice Spanish and Italian, made by Axolingua. Our exercise library keeps growing."
+    description: "Free interactive exercises to practice Spanish, English, and Italian, made by Axolingua. Our exercise library keeps growing."
   hero:
     eyebrow: "Axolingua · Free resources"
     headline: "Practice the language, don't just memorize the rules."
@@ -42,7 +42,7 @@ en:
     english:
       tag: "English"
       title: "Practice English"
-      text: "Coming soon: interactive exercises to practice English."
+      text: "A letter-wheel game to practice English vocabulary."
       link: "See English exercises →"
     italian:
       tag: "Italian"
