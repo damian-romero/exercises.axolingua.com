@@ -188,3 +188,31 @@
   description:
     es: "Elige o gira una letra y di una palabra en inglés de la categoría (animales, comida, viajes…) que empiece con ella, contrarreloj. Para 1 a 8 jugadores."
     en: "Pick or spin a letter and say an English word from the category (animals, food, trips…) starting with it, against the clock. For 1–8 players."
+
+- slug: cloze-vocab-en-b1
+  file: cloze_vocab_en_b1.html
+  skill: cloze
+  grammar: vocab
+  target_lang: en
+  level: b1
+  theme: general
+  title:
+    es: "La historia de los seis mundos — Vocabulario"
+    en: "The Six-World Story — Vocabulary"
+  description:
+    es: "Completa una historia continua que recorre seis escenarios de la vida diaria —el laboratorio, el gym, CrossFit, Hyrox, un viaje y una fiesta de misterio— colocando 24 palabras de vocabulario en inglés desde un banco de palabras."
+    en: "Fill in a continuous story across six everyday worlds — the lab, the gym, CrossFit, Hyrox, a trip, and a mystery party — placing 24 English vocabulary words from a word bank."
+
+- slug: tabu-vocab-en-b1
+  file: tabu_vocab_en_b1.html
+  skill: tabu
+  grammar: vocab
+  target_lang: en
+  level: b1
+  theme: general
+  title:
+    es: "Tabú en inglés — Vocabulario mixto"
+    en: "English Taboo — Mixed Vocabulary"
+  description:
+    es: "Haz que tu compañero adivine la palabra en inglés sin decir las 4 prohibidas. 24 tarjetas de vocabulario de laboratorio, gimnasio, CrossFit, Hyrox, viajes y fiesta de misterio."
+    en: "Get your partner to guess the English word without saying the 4 forbidden ones. 24 vocabulary cards spanning the lab, the gym, CrossFit, Hyrox, travel, and a mystery party."

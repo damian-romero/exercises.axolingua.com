@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Six-World Story · Class 17</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,600&family=Outfit:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#F7F3EE; --paper:#FFFFFF; --linen:#D8CFBF;
+    --ink:#17302B; --slate:#5A5652; --pebble:#BEB8B2;
+
+    --jade:#3D8876;   --jade-wash:#EAF4F2;
+    --pink:#F2547E;   --pink-wash:#FCE7ED;
+    --orange:#E8643C; --orange-wash:#FBE7DF;
+    --cyan:#1E93AC;   --cyan-wash:#E0F0F3;
+    --gold:#B9832A;   --gold-wash:#F6ECD9;
+    --purple:#7C56B0; --purple-wash:#EFE7F7;
+
+    --good:#2F8F6B; --good-wash:#EAF4F2;
+    --bad:#D24B4B;  --bad-wash:#FBF0EF;
+    --empty:#C79A3A; --empty-wash:#F9F1E6;
+
+    --display:'Fraunces', Georgia, serif;
+    --body:'Outfit', system-ui, sans-serif;
+    --mono:'DM Mono', 'Courier New', monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ivory); color:var(--ink); font-family:var(--body);
+    min-height:100vh;
+  }
+  .wrap{ width:100%; max-width:720px; margin:0 auto; padding:28px 16px 60px; }
+
+  header{ text-align:center; margin-bottom:20px; }
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--slate); margin-bottom:6px;
+  }
+  h1{
+    font-family:var(--display); font-weight:700; font-size:clamp(30px,7vw,42px);
+    margin:0 0 4px; letter-spacing:-0.01em;
+  }
+  .tagline{ font-size:15px; color:var(--slate); font-style:italic; }
+
+  /* ---------- scoreboard ---------- */
+  .board{ display:flex; gap:10px; margin:20px 0; }
+  .stat{
+    flex:1; background:var(--paper); border-radius:14px; padding:12px 14px;
+    text-align:center; border:1px solid var(--linen);
+  }
+  .stat .num{ font-family:var(--display); font-weight:700; font-size:24px; line-height:1; }
+  .stat .lbl{ font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--slate); margin-top:4px; }
+
+  .actions{ display:flex; gap:10px; justify-content:center; margin-bottom:24px; flex-wrap:wrap; }
+  .actions button{
+    font-family:var(--mono); font-size:12px; letter-spacing:.06em; text-transform:uppercase;
+    padding:11px 20px; border-radius:999px; cursor:pointer; border:1.5px solid var(--linen);
+    background:var(--paper); color:var(--ink);
+  }
+  .actions button.primary{ background:var(--ink); color:#fff; border-color:var(--ink); }
+  .actions button:disabled{ opacity:.4; cursor:not-allowed; }
+
+  /* ---------- word bank ---------- */
+  .bank-card{
+    background:var(--paper); border:1px solid var(--linen); border-radius:18px;
+    padding:16px 18px 18px; margin-bottom:26px;
+  }
+  .bank-label{
+    font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--slate); margin-bottom:10px;
+  }
+  .bank{ display:flex; flex-wrap:wrap; gap:8px; min-height:38px; }
+  .bank-chip{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:var(--body); font-weight:500; font-size:14px;
+    background:var(--ivory); border:1.5px solid var(--linen); border-radius:999px;
+    padding:7px 13px 7px 9px; cursor:pointer; user-select:none;
+    transition:transform .1s ease, box-shadow .1s ease;
+  }
+  .bank-chip:hover{ transform:translateY(-1px); box-shadow:0 4px 10px -6px rgba(0,0,0,.4); }
+  .bank-chip .dot{ width:8px; height:8px; border-radius:50%; flex:none; }
+  .bank-empty-msg{ font-size:13px; color:var(--slate); font-style:italic; padding:6px 2px; }
+
+  /* ---------- story ---------- */
+  .story{ display:flex; flex-direction:column; gap:22px; }
+  .world-block{
+    background:var(--paper); border-radius:18px; padding:20px 22px;
+    border-left:5px solid var(--jade);
+    box-shadow:0 10px 24px -18px rgba(23,48,43,.3);
+  }
+  .world-tag{
+    display:inline-block; font-family:var(--mono); font-size:11px; letter-spacing:.14em;
+    text-transform:uppercase; color:#fff; padding:5px 12px; border-radius:999px; margin-bottom:12px;
+  }
+  .world-text{ font-size:16.5px; line-height:1.75; color:var(--ink); }
+
+  .blank{
+    display:inline-flex; align-items:center; justify-content:center;
+    min-width:96px; height:30px; padding:0 10px; margin:0 2px;
+    border-radius:8px; border:2px dashed var(--pebble); background:var(--ivory);
+    font-family:var(--body); font-weight:600; font-size:15px; color:var(--ink);
+    cursor:pointer; vertical-align:middle; position:relative; top:-2px;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .blank.empty::after{ content:'\2014\2014\2014'; color:var(--pebble); letter-spacing:2px; font-size:12px; }
+  .blank.active{ border-color:var(--ink); border-style:solid; background:#fff; }
+  .blank.filled{ border-style:solid; background:#fff; }
+  .blank.correct{ border-color:var(--good); background:var(--good-wash); color:var(--good); }
+  .blank.incorrect{ border-color:var(--bad); background:var(--bad-wash); color:var(--bad); text-decoration:line-through; }
+  .blank.missed{ border-color:var(--empty); background:var(--empty-wash); color:var(--empty); }
+  .answer-key{
+    display:block; font-family:var(--mono); font-size:11px; color:var(--slate);
+    margin-top:2px;
+  }
+
+  .status-line{
+    text-align:center; font-family:var(--mono); font-size:12px; color:var(--slate);
+    margin:18px 0 6px; letter-spacing:.03em; min-height:16px;
+  }
+
+  footer{ text-align:center; margin-top:30px; font-size:12px; color:var(--pebble); font-style:italic; }
+
+  @media (max-width:480px){
+    .world-block{ padding:16px 16px; }
+    .world-text{ font-size:15.5px; }
+    .blank{ min-width:82px; font-size:14px; }
+  }
+</style>
+</head>
+<body>
+<!-- AXOLINGUA: exercise nav bar v2 — brand mark + catalog link + instructions button, styled like the site nav. Hidden automatically inside the catalog iframe preview. -->
+<header class="axl-nav" id="axlNav">
+  <div class="axl-nav__inner">
+    <div class="axl-nav__left">
+      <a class="axl-nav__brand" href="/en/">
+        <img src="/assets/img/mark-nav.png" alt="Axolingua">
+        <span class="axl-wordmark"><em>axo</em>lingua</span>
+      </a>
+      <a class="axl-nav__link" href="/en/ejercicios/">All exercises</a>
+    </div>
+    <button type="button" class="axl-nav__instr-btn" id="axlInstrBtn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2 1.8-2 3.5"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Instructions
+    </button>
+  </div>
+</header>
+<div class="axl-instr-overlay" id="axlInstrOverlay">
+  <div class="axl-instr-card">
+    <button class="axl-instr-close" id="axlInstrClose" aria-label="Close">✕</button>
+    <h4>How to play</h4>
+    <ol>
+      <li>Tap a word in the word bank, then tap a blank to place it.</li>
+      <li>Tap a filled blank to send its word back to the bank.</li>
+      <li>Fill in all 24 blanks across the six worlds of the story.</li>
+      <li>Press "Check the Story" to see what's correct, wrong, or left blank.</li>
+      <li>Press "Try Again" to reshuffle the word bank and start over.</li>
+    </ol>
+  </div>
+</div>
+<style>
+  .axl-nav{display:none;position:relative;z-index:9999;background:#FAF7F3;border-bottom:1px solid #D8CFBF;font-family:'Outfit',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .axl-nav__inner{max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;height:60px;padding:0 20px;box-sizing:border-box}
+  .axl-nav__left{display:flex;align-items:center;gap:22px;min-width:0}
+  .axl-nav__brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+  .axl-nav__brand img{height:26px;width:auto;display:block}
+  .axl-wordmark{font-family:'Fraunces',Georgia,serif;font-weight:300;font-size:1.1rem;letter-spacing:-.01em;color:#2C2A27}
+  .axl-wordmark em{font-style:italic;color:#D0736C}
+  .axl-nav__link{font-size:.85rem;color:#5A5652;text-decoration:none;letter-spacing:.01em;padding-bottom:2px;border-bottom:1.5px solid transparent;white-space:nowrap;text-transform:none;box-shadow:none;transition:color .2s,border-color .2s}
+  .axl-nav__link:hover{color:#2C2A27;border-bottom-color:#D0736C}
+  .axl-nav__instr-btn{display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:.78rem;font-weight:500;letter-spacing:.01em;text-transform:none;text-align:left;color:#D0736C;background:transparent;border:1.5px solid #D0736C;border-radius:4px;padding:7px 14px;cursor:pointer;white-space:nowrap;box-shadow:none;flex-shrink:0;transition:background .2s,color .2s}
+  .axl-nav__instr-btn:hover{background:#FBF0EF;color:#B8524A}
+  @media (max-width:560px){
+    .axl-wordmark{display:none}
+    .axl-nav__inner{padding:0 12px;gap:10px}
+    .axl-nav__left{gap:14px}
+    .axl-nav__link,.axl-nav__instr-btn{font-size:.74rem}
+  }
+  .axl-instr-overlay{position:fixed;inset:0;background:rgba(20,18,16,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:100000}
+  .axl-instr-overlay.is-open{display:flex}
+  .axl-instr-card{background:#FAF7F3;border-radius:16px;max-width:380px;width:100%;padding:22px 24px;box-shadow:0 20px 44px -16px rgba(0,0,0,.4);position:relative;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#2C2A27}
+  .axl-instr-card h4{font-size:1.05rem;margin:0 0 12px;color:#2A6B5F;font-family:Georgia,serif;font-weight:400}
+  .axl-instr-card ol{margin:0;padding-left:20px;font-size:.88rem;line-height:1.55}
+  .axl-instr-card li{margin-bottom:8px}
+  .axl-instr-card li:last-child{margin-bottom:0}
+  .axl-instr-close{position:absolute;top:10px;right:12px;background:none;border:none;font-size:1.15rem;line-height:1;text-transform:none;letter-spacing:normal;box-shadow:none;cursor:pointer;color:#8A847E;padding:4px}
+  .axl-instr-close:hover{color:#2C2A27}
+</style>
+<script>
+(function () {
+  if (window.self !== window.top) return; // stay hidden inside the /ejercicios/ catalog preview
+  var bar = document.getElementById('axlNav');
+  bar.style.display = 'block';
+  var overlay = document.getElementById('axlInstrOverlay');
+  document.getElementById('axlInstrBtn').addEventListener('click', function () { overlay.classList.add('is-open'); });
+  document.getElementById('axlInstrClose').addEventListener('click', function () { overlay.classList.remove('is-open'); });
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.classList.remove('is-open'); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') overlay.classList.remove('is-open'); });
+})();
+</script>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Axolingua &middot; Class 17</div>
+    <h1>The Six-World Story</h1>
+    <div class="tagline">One ordinary week. Six ordinary worlds. Fill in the blanks to finish it.</div>
+  </header>
+
+  <div class="board">
+    <div class="stat"><div class="num" id="filledNum">0 / 24</div><div class="lbl">Filled In</div></div>
+    <div class="stat"><div class="num" id="scoreNum">&mdash;</div><div class="lbl">Score</div></div>
+  </div>
+
+  <div class="actions">
+    <button class="primary" id="checkBtn">Check the Story</button>
+    <button id="resetBtn">&#8635; Try Again</button>
+  </div>
+
+  <div class="bank-card">
+    <div class="bank-label">Word bank &mdash; click a word, then click a blank</div>
+    <div class="bank" id="bank"></div>
+  </div>
+
+  <div class="story" id="story"></div>
+
+  <div class="status-line" id="statusLine">Tap a word below, then tap a blank to place it.</div>
+
+  <footer>Axolingua &middot; Mexico City &middot; axolingua.com</footer>
+</div>
+
+<script>
+const WORLDS = {
+  lab:      { label:'The Lab',       hex:'#3D8876' },
+  gym:      { label:'The Gym',       hex:'#F2547E' },
+  crossfit: { label:'CrossFit',      hex:'#E8643C' },
+  hyrox:    { label:'Hyrox',         hex:'#1E93AC' },
+  trips:    { label:'Trips',         hex:'#B9832A' },
+  mystery:  { label:'Mystery Party', hex:'#7C56B0' },
+};
+
+// Each paragraph: world key + template with {0},{1}... placeholders + the answers in order.
+const PARAGRAPHS = [
+  {
+    world:'lab',
+    template:"Your alarm goes off before sunrise, but you're already thinking about the lab. You grab a small {0} from the fridge and check it against yesterday's {1} one more time before your shift starts. Someone left the {2} uncapped again, and there's a cracked {3} sitting by the sink \u2014 not your problem today.",
+    answers:['sample','results','pipette','beaker'],
+  },
+  {
+    world:'gym',
+    template:"By six, you're at the gym. Your {0} is already waiting by the rack. \u201CNew {1} today?\u201D she asks, nodding at the whiteboard. You'll need a good {2} for the last set, so you grab your gym buddy first. Warm-up done, you swing by the {3} to change into your lifting shoes.",
+    answers:['trainer','personal best','spotter','locker room'],
+  },
+  {
+    world:'crossfit',
+    template:"Today's {0} is written on the board, and it's a brutal one. Every {1} makes your shoulders burn \u2014 that squat-to-press combo never gets easier. Somewhere in the middle, the {2} almost feels like a break by comparison. By the last round, even lifting the loaded {3} off the floor feels like a personal battle.",
+    answers:['WOD','thruster','box jump','barbell'],
+  },
+  {
+    world:'hyrox',
+    template:"Two weeks later, you're standing at the Hyrox start line. Training flashes back with every step: the heavy {0} push across the turf, the endless {1}s that made your legs shake for days, the {2} sprints that never seemed to end. At station six, deep in the {3}, your legs somehow find one more gear.",
+    answers:['sled','lunge','rower','roxzone'],
+  },
+  {
+    world:'trips',
+    template:"Medal around your neck, you're back at the airport by Sunday morning. A six-hour {0} in Houston turns into an accidental nap. You check your {1} twice \u2014 gate change, of course \u2014 and hope your {2} made it onto the same flight as you. At least this time you remembered to print your {3} before your phone died.",
+    answers:['layover','itinerary','luggage','boarding pass'],
+  },
+  {
+    world:'mystery',
+    template:"Monday night, though, is the strangest part. Your building's group chat lights up \u2014 a package has vanished from the lobby. You have a perfect {0}: you were literally still at the airport. Still, the doorman eyes you like a {1} until you show him your boarding pass. The only real {2} is a muddy footprint by the elevator. When the {3} finally comes, it's almost disappointing: just the delivery driver, who left it in 4B by mistake.",
+    answers:['alibi','suspect','clue','reveal'],
+  },
+];
+
+// Flatten into a single ordered list of blanks with global index
+let GLOBAL = [];
+PARAGRAPHS.forEach((p, pi) => {
+  p.answers.forEach((ans, ai) => {
+    GLOBAL.push({ world:p.world, answer:ans, pi, ai });
+  });
+});
+const TOTAL = GLOBAL.length; // 24
+
+let filled = new Array(TOTAL).fill(null);   // word currently placed in each blank (or null)
+let bankOrder = [];                          // indices into GLOBAL, in bank display order (shuffled)
+let activeBlank = null;                      // index of currently selected blank
+let checked = false;
+
+function shuffle(arr){
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function initBank(){
+  bankOrder = shuffle(GLOBAL.map((_, i) => i));
+}
+
+function buildStoryDOM(){
+  const storyEl = document.getElementById('story');
+  storyEl.innerHTML = '';
+  let globalIdx = 0;
+  PARAGRAPHS.forEach((p) => {
+    const world = WORLDS[p.world];
+    const block = document.createElement('div');
+    block.className = 'world-block';
+    block.style.borderLeftColor = world.hex;
+
+    const tag = document.createElement('span');
+    tag.className = 'world-tag';
+    tag.style.background = world.hex;
+    tag.textContent = world.label;
+    block.appendChild(tag);
+
+    const textEl = document.createElement('div');
+    textEl.className = 'world-text';
+
+    // split template on {n} placeholders, interleave blank spans
+    const parts = p.template.split(/\{(\d+)\}/g);
+    parts.forEach((part, i) => {
+      if (i % 2 === 0) {
+        textEl.appendChild(document.createTextNode(part));
+      } else {
+        const idx = globalIdx++;
+        const span = document.createElement('span');
+        span.className = 'blank empty';
+        span.dataset.idx = idx;
+        span.addEventListener('click', () => onBlankClick(idx));
+        textEl.appendChild(span);
+      }
+    });
+    block.appendChild(textEl);
+    storyEl.appendChild(block);
+  });
+}
+
+function renderBank(){
+  const bankEl = document.getElementById('bank');
+  bankEl.innerHTML = '';
+  const placedSet = new Set(filled.filter(w => w !== null));
+  const available = bankOrder.filter(gi => !placedIndices().has(gi));
+  if (available.length === 0){
+    const msg = document.createElement('div');
+    msg.className = 'bank-empty-msg';
+    msg.textContent = checked ? 'All words placed.' : 'All words placed \u2014 tap a blank to swap one back.';
+    bankEl.appendChild(msg);
+    return;
+  }
+  available.forEach(gi => {
+    const item = GLOBAL[gi];
+    const world = WORLDS[item.world];
+    const chip = document.createElement('div');
+    chip.className = 'bank-chip';
+    const dot = document.createElement('span');
+    dot.className = 'dot';
+    dot.style.background = world.hex;
+    chip.appendChild(dot);
+    chip.appendChild(document.createTextNode(item.answer));
+    chip.addEventListener('click', () => onChipClick(gi));
+    bankEl.appendChild(chip);
+  });
+}
+
+function placedIndices(){
+  // returns set of GLOBAL indices currently sitting in some blank
+  const s = new Set();
+  filled.forEach(gi => { if (gi !== null) s.add(gi); });
+  return s;
+}
+
+function onChipClick(gi){
+  if (checked) return;
+  let targetBlank = activeBlank;
+  if (targetBlank === null || filled[targetBlank] !== null){
+    targetBlank = filled.findIndex(v => v === null);
+  }
+  if (targetBlank === -1 || targetBlank === null) return;
+  filled[targetBlank] = gi;
+  activeBlank = filled.findIndex((v, i) => v === null);
+  if (activeBlank === -1) activeBlank = null;
+  renderAll();
+}
+
+function onBlankClick(idx){
+  if (checked) return;
+  if (filled[idx] !== null){
+    filled[idx] = null;
+    activeBlank = idx;
+  } else {
+    activeBlank = idx;
+  }
+  renderAll();
+}
+
+function updateBlankVisuals(){
+  document.querySelectorAll('.blank').forEach(span => {
+    const idx = parseInt(span.dataset.idx, 10);
+    span.classList.remove('empty','active','filled','correct','incorrect','missed');
+    span.innerHTML = '';
+    const gi = filled[idx];
+    if (checked){
+      const correctAnswer = GLOBAL[idx].answer;
+      if (gi === null){
+        span.classList.add('missed');
+        span.textContent = '?';
+        const key = document.createElement('span');
+        key.className = 'answer-key';
+        key.textContent = correctAnswer;
+        span.appendChild(document.createElement('br'));
+        span.appendChild(key);
+      } else {
+        const placedWord = GLOBAL[gi].answer;
+        const isRight = placedWord.toLowerCase() === correctAnswer.toLowerCase();
+        span.classList.add(isRight ? 'correct' : 'incorrect');
+        span.textContent = placedWord;
+        if (!isRight){
+          const key = document.createElement('span');
+          key.className = 'answer-key';
+          key.textContent = '\u2192 ' + correctAnswer;
+          span.appendChild(document.createElement('br'));
+          span.appendChild(key);
+        }
+      }
+    } else if (gi !== null){
+      span.classList.add('filled');
+      span.textContent = GLOBAL[gi].answer;
+      if (idx === activeBlank) span.classList.add('active');
+    } else {
+      span.classList.add('empty');
+      if (idx === activeBlank) span.classList.add('active');
+    }
+  });
+}
+
+function updateBoard(){
+  const filledCount = filled.filter(v => v !== null).length;
+  document.getElementById('filledNum').textContent = filledCount + ' / ' + TOTAL;
+  const checkBtn = document.getElementById('checkBtn');
+  checkBtn.disabled = checked;
+  const statusEl = document.getElementById('statusLine');
+  if (checked){
+    const correctCount = filled.reduce((acc, gi, idx) => {
+      if (gi === null) return acc;
+      return acc + (GLOBAL[gi].answer.toLowerCase() === GLOBAL[idx].answer.toLowerCase() ? 1 : 0);
+    }, 0);
+    document.getElementById('scoreNum').textContent = correctCount + ' / ' + TOTAL;
+    statusEl.textContent = correctCount === TOTAL
+      ? 'Perfect \u2014 all six worlds, correctly told.'
+      : 'Green = correct, red = wrong word, amber = left blank. Press Try Again to reshuffle.';
+  } else {
+    document.getElementById('scoreNum').textContent = '\u2014';
+    if (filledCount === TOTAL){
+      statusEl.textContent = 'All 24 filled \u2014 press Check the Story when you\u2019re ready.';
+    } else {
+      statusEl.textContent = 'Tap a word below, then tap a blank to place it.';
+    }
+  }
+}
+
+function renderAll(){
+  renderBank();
+  updateBlankVisuals();
+  updateBoard();
+}
+
+document.getElementById('checkBtn').addEventListener('click', () => {
+  checked = true;
+  activeBlank = null;
+  renderAll();
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  filled = new Array(TOTAL).fill(null);
+  activeBlank = null;
+  checked = false;
+  initBank();
+  renderAll();
+});
+
+initBank();
+buildStoryDOM();
+renderAll();
+</script>
+</body>
+</html>

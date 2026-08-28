@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vocab Taboo · Class 17</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,600&family=Outfit:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#F7F3EE; --paper:#FFFFFF; --linen:#D8CFBF;
+    --ink:#2C2A27; --slate:#5A5652; --pebble:#BEB8B2;
+
+    --jade:#3D8876;   --jade-wash:#EAF4F2;
+    --pink:#D0736C;   --pink-wash:#FBF0EF;
+    --orange:#9E6B35; --orange-wash:#F9F1E6;
+    --cyan:#2A6B5F;   --cyan-wash:#EAF4F2;
+    --gold:#BC8A52;   --gold-wash:#F9F1E6;
+    --purple:#B8524A; --purple-wash:#FBF0EF;
+
+    --banned-bg:#FBF0EF; --banned-border:#F2CECC; --banned-text:#B8524A;
+    --good:#3D8876; --skip:#5A5652;
+
+    --display:'Fraunces', Georgia, serif;
+    --body:'Outfit', system-ui, sans-serif;
+    --mono:'DM Mono', 'Courier New', monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ivory);
+    color:var(--ink);
+    font-family:var(--body);
+    min-height:100vh;
+  }
+  .wrap{ width:100%; max-width:620px; margin:0 auto; padding:28px 16px 60px; }
+
+  header{ text-align:center; margin-bottom:22px; }
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--slate); margin-bottom:6px;
+  }
+  h1{
+    font-family:var(--display); font-weight:700; font-size:clamp(32px,7vw,44px);
+    margin:0 0 4px; letter-spacing:-0.01em;
+  }
+  .tagline{ font-size:15px; color:var(--slate); font-style:italic; }
+
+  /* ---------- filters ---------- */
+  .filters{
+    display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:20px;
+  }
+  .chip{
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase;
+    padding:7px 13px; border-radius:999px; border:1.5px solid var(--linen);
+    background:var(--paper); color:var(--slate); cursor:pointer; user-select:none;
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .chip:hover{ transform:translateY(-1px); }
+  .chip.active{ color:var(--paper); border-color:transparent; box-shadow:0 3px 10px -4px rgba(0,0,0,.4); }
+
+  /* ---------- scoreboard ---------- */
+  .board{
+    display:flex; gap:10px; margin-bottom:18px;
+  }
+  .stat{
+    flex:1; background:var(--paper); border-radius:14px; padding:12px 14px;
+    text-align:center; border:1px solid var(--linen);
+  }
+  .stat .num{ font-family:var(--display); font-weight:700; font-size:26px; line-height:1; }
+  .stat .lbl{ font-family:var(--mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--slate); margin-top:4px; }
+
+  .timer-stat .num{ font-family:var(--mono); font-variant-numeric:tabular-nums; }
+  .timer-stat.warn .num{ color:var(--pink); }
+  .timer-bar{ height:4px; border-radius:3px; background:var(--linen); margin-top:8px; overflow:hidden; }
+  .timer-bar > div{ height:100%; background:var(--good); width:100%; transition:width 1s linear, background .3s ease; }
+
+  /* ---------- card ---------- */
+  .stage{ position:relative; margin-bottom:20px; }
+  .card{
+    position:relative;
+    background:var(--paper);
+    border-radius:22px;
+    padding:0 0 26px;
+    box-shadow:0 18px 40px -20px rgba(23,48,43,.35), 0 2px 8px rgba(23,48,43,.06);
+    overflow:hidden;
+    animation:cardIn .32s cubic-bezier(.2,.7,.3,1);
+  }
+  @keyframes cardIn{
+    from{ opacity:0; transform:translateY(10px) scale(.98); }
+    to{ opacity:1; transform:translateY(0) scale(1); }
+  }
+  .card::after{ /* folded-corner flourish */
+    content:''; position:absolute; top:0; right:0; width:0; height:0;
+    border-style:solid; border-width:0 26px 26px 0;
+    border-color:transparent rgba(23,48,43,.08) transparent transparent;
+  }
+  .card-tab{
+    font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    color:#fff; padding:12px 24px; display:flex; align-items:center; justify-content:space-between;
+  }
+  .card-tab .n{ opacity:.85; font-size:11px; }
+  .card-body{ padding:30px 30px 4px; text-align:center; }
+  .target-label{
+    font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--slate); margin-bottom:10px;
+  }
+  .target-word{
+    font-family:var(--display); font-weight:900; font-size:clamp(34px,9vw,52px);
+    line-height:1.05; margin:0 0 8px; color:var(--ink);
+  }
+  .dash{
+    width:60px; height:2px; background:var(--linen); border:none; border-radius:2px;
+    margin:14px auto 22px; border-top:2px dashed var(--pebble); background:none; height:0;
+  }
+  .banned-label{
+    font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--banned-text); margin-bottom:12px;
+  }
+  .banned-list{
+    display:flex; flex-direction:column; gap:8px; padding:0 26px;
+  }
+  .banned-item{
+    background:var(--banned-bg); border:1px solid var(--banned-border); border-radius:10px;
+    padding:9px 14px; font-size:16px; color:var(--ink); text-align:left;
+    display:flex; align-items:center; gap:10px;
+  }
+  .banned-item .no{
+    font-size:13px; color:var(--banned-text); flex:none; opacity:.8;
+  }
+
+  /* ---------- controls ---------- */
+  .controls{ display:flex; gap:10px; margin-bottom:10px; }
+  .controls button{
+    flex:1; border:none; border-radius:14px; padding:16px 10px;
+    font-family:var(--body); font-weight:600; font-size:15.5px; cursor:pointer;
+    color:#fff; transition:transform .1s ease, filter .1s ease;
+  }
+  .controls button:active{ transform:translateY(1px); }
+  .controls button:disabled{ opacity:.45; cursor:not-allowed; }
+  .btn-pass{ background:var(--skip); }
+  .btn-good{ background:var(--good); }
+
+  .round-controls{
+    display:flex; gap:10px; align-items:center; justify-content:center; margin-bottom:6px;
+  }
+  .round-controls button{
+    font-family:var(--mono); font-size:12px; letter-spacing:.06em; text-transform:uppercase;
+    background:none; border:1.5px solid var(--linen); color:var(--ink);
+    padding:9px 16px; border-radius:999px; cursor:pointer;
+  }
+  .round-controls button.primary{ background:var(--ink); color:#fff; border-color:var(--ink); }
+  .round-controls select{
+    font-family:var(--mono); font-size:12px; border:1.5px solid var(--linen); border-radius:999px;
+    padding:8px 12px; background:var(--paper); color:var(--ink);
+  }
+
+  .deck-status{
+    text-align:center; font-family:var(--mono); font-size:11.5px; color:var(--slate);
+    letter-spacing:.04em; margin-top:16px;
+  }
+
+  footer{ text-align:center; margin-top:28px; font-size:12px; color:var(--pebble); font-style:italic; }
+
+  @media (max-width:420px){
+    .banned-list{ padding:0 18px; }
+    .card-body{ padding:24px 20px 4px; }
+  }
+</style>
+</head>
+<body>
+<!-- AXOLINGUA: exercise nav bar v2 — brand mark + catalog link + instructions button, styled like the site nav. Hidden automatically inside the catalog iframe preview. -->
+<header class="axl-nav" id="axlNav">
+  <div class="axl-nav__inner">
+    <div class="axl-nav__left">
+      <a class="axl-nav__brand" href="/en/">
+        <img src="/assets/img/mark-nav.png" alt="Axolingua">
+        <span class="axl-wordmark"><em>axo</em>lingua</span>
+      </a>
+      <a class="axl-nav__link" href="/en/ejercicios/">All exercises</a>
+    </div>
+    <button type="button" class="axl-nav__instr-btn" id="axlInstrBtn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2 1.8-2 3.5"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Instructions
+    </button>
+  </div>
+</header>
+<div class="axl-instr-overlay" id="axlInstrOverlay">
+  <div class="axl-instr-card">
+    <button class="axl-instr-close" id="axlInstrClose" aria-label="Close">✕</button>
+    <h4>How to play</h4>
+    <ol>
+      <li>One player holds the screen — that's the describer. Everyone else guesses.</li>
+      <li>Describe the target word to your team without saying any of the banned words below it.</li>
+      <li>Your team has to guess the word before time runs out.</li>
+      <li>Tap "Got it!" when they guess correctly, or "Pass" to skip to the next card.</li>
+      <li>Score a point for every word your team guesses before the clock hits zero.</li>
+    </ol>
+  </div>
+</div>
+<style>
+  .axl-nav{display:none;position:relative;z-index:9999;background:#FAF7F3;border-bottom:1px solid #D8CFBF;font-family:'Outfit',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .axl-nav__inner{max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;height:60px;padding:0 20px;box-sizing:border-box}
+  .axl-nav__left{display:flex;align-items:center;gap:22px;min-width:0}
+  .axl-nav__brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+  .axl-nav__brand img{height:26px;width:auto;display:block}
+  .axl-wordmark{font-family:'Fraunces',Georgia,serif;font-weight:300;font-size:1.1rem;letter-spacing:-.01em;color:#2C2A27}
+  .axl-wordmark em{font-style:italic;color:#D0736C}
+  .axl-nav__link{font-size:.85rem;color:#5A5652;text-decoration:none;letter-spacing:.01em;padding-bottom:2px;border-bottom:1.5px solid transparent;white-space:nowrap;text-transform:none;box-shadow:none;transition:color .2s,border-color .2s}
+  .axl-nav__link:hover{color:#2C2A27;border-bottom-color:#D0736C}
+  .axl-nav__instr-btn{display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:.78rem;font-weight:500;letter-spacing:.01em;text-transform:none;text-align:left;color:#D0736C;background:transparent;border:1.5px solid #D0736C;border-radius:4px;padding:7px 14px;cursor:pointer;white-space:nowrap;box-shadow:none;flex-shrink:0;transition:background .2s,color .2s}
+  .axl-nav__instr-btn:hover{background:#FBF0EF;color:#B8524A}
+  @media (max-width:560px){
+    .axl-wordmark{display:none}
+    .axl-nav__inner{padding:0 12px;gap:10px}
+    .axl-nav__left{gap:14px}
+    .axl-nav__link,.axl-nav__instr-btn{font-size:.74rem}
+  }
+  .axl-instr-overlay{position:fixed;inset:0;background:rgba(20,18,16,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:100000}
+  .axl-instr-overlay.is-open{display:flex}
+  .axl-instr-card{background:#FAF7F3;border-radius:16px;max-width:380px;width:100%;padding:22px 24px;box-shadow:0 20px 44px -16px rgba(0,0,0,.4);position:relative;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#2C2A27}
+  .axl-instr-card h4{font-size:1.05rem;margin:0 0 12px;color:#2A6B5F;font-family:Georgia,serif;font-weight:400}
+  .axl-instr-card ol{margin:0;padding-left:20px;font-size:.88rem;line-height:1.55}
+  .axl-instr-card li{margin-bottom:8px}
+  .axl-instr-card li:last-child{margin-bottom:0}
+  .axl-instr-close{position:absolute;top:10px;right:12px;background:none;border:none;font-size:1.15rem;line-height:1;text-transform:none;letter-spacing:normal;box-shadow:none;cursor:pointer;color:#8A847E;padding:4px}
+  .axl-instr-close:hover{color:#2C2A27}
+</style>
+<script>
+(function () {
+  if (window.self !== window.top) return; // stay hidden inside the /ejercicios/ catalog preview
+  var bar = document.getElementById('axlNav');
+  bar.style.display = 'block';
+  var overlay = document.getElementById('axlInstrOverlay');
+  document.getElementById('axlInstrBtn').addEventListener('click', function () { overlay.classList.add('is-open'); });
+  document.getElementById('axlInstrClose').addEventListener('click', function () { overlay.classList.remove('is-open'); });
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.classList.remove('is-open'); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') overlay.classList.remove('is-open'); });
+})();
+</script>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Axolingua &middot; Class 17</div>
+    <h1>Vocab Taboo</h1>
+    <div class="tagline">Describe the word. Skip the banned ones. Beat the clock.</div>
+  </header>
+
+  <div class="filters" id="filters"></div>
+
+  <div class="board">
+    <div class="stat">
+      <div class="num" id="scoreNum">0</div>
+      <div class="lbl">Score</div>
+    </div>
+    <div class="stat timer-stat" id="timerStat">
+      <div class="num" id="timerNum">60</div>
+      <div class="lbl">Seconds Left</div>
+      <div class="timer-bar"><div id="timerFill"></div></div>
+    </div>
+    <div class="stat">
+      <div class="num" id="cardsLeftNum">24</div>
+      <div class="lbl">Cards Left</div>
+    </div>
+  </div>
+
+  <div class="round-controls">
+    <button id="startBtn" class="primary">&#9654; Start Round</button>
+    <button id="resetBtn">&#8635; Reset</button>
+    <select id="lengthSelect">
+      <option value="30">30s</option>
+      <option value="60" selected>60s</option>
+      <option value="90">90s</option>
+    </select>
+  </div>
+
+  <div class="stage">
+    <div class="card" id="card">
+      <div class="card-tab" id="cardTab">
+        <span id="cardCategory">LAB</span>
+        <span class="n" id="cardIndex">1 / 24</span>
+      </div>
+      <div class="card-body">
+        <div class="target-label">Target word</div>
+        <div class="target-word" id="targetWord">SAMPLE</div>
+        <div class="banned-label">Banned words</div>
+      </div>
+      <div class="banned-list" id="bannedList"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn-pass" id="passBtn" disabled>&#8635; Pass</button>
+    <button class="btn-good" id="goodBtn" disabled>&#10003; Got it!</button>
+  </div>
+
+  <div class="deck-status" id="deckStatus">Press Start Round to begin &mdash; describer holds the screen.</div>
+
+  <footer>Axolingua &middot; Mexico City &middot; axolingua.com</footer>
+</div>
+
+<script>
+const CATEGORIES = [
+  { key:'lab',      label:'The Lab',       color:'var(--jade)',   hex:'#3D8876' },
+  { key:'gym',      label:'The Gym',       color:'var(--pink)',   hex:'#D0736C' },
+  { key:'crossfit', label:'CrossFit',      color:'var(--orange)', hex:'#9E6B35' },
+  { key:'hyrox',    label:'Hyrox',         color:'var(--cyan)',   hex:'#2A6B5F' },
+  { key:'trips',    label:'Trips',         color:'var(--gold)',   hex:'#BC8A52' },
+  { key:'mystery',  label:'Mystery Party', color:'var(--purple)', hex:'#B8524A' },
+];
+const CAT_BY_KEY = Object.fromEntries(CATEGORIES.map(c => [c.key, c]));
+
+const CARDS = [
+  // LAB
+  { cat:'lab', word:'SAMPLE',        banned:['test','small','amount','liquid'] },
+  { cat:'lab', word:'PIPETTE',       banned:['tool','liquid','measure','dropper'] },
+  { cat:'lab', word:'RESULTS',       banned:['data','test','outcome','experiment'] },
+  { cat:'lab', word:'BEAKER',        banned:['glass','cup','lab','liquid'] },
+  // GYM
+  { cat:'gym', word:'SPOTTER',       banned:['help','gym','lift','safety'] },
+  { cat:'gym', word:'TRAINER',       banned:['gym','coach','workout','teach'] },
+  { cat:'gym', word:'PERSONAL BEST', banned:['record','best','score','improve'] },
+  { cat:'gym', word:'LOCKER ROOM',   banned:['gym','changing','room','clothes'] },
+  // CROSSFIT
+  { cat:'crossfit', word:'WOD',        banned:['workout','day','crossfit','exercises'] },
+  { cat:'crossfit', word:'BARBELL',    banned:['bar','weights','gym','lift'] },
+  { cat:'crossfit', word:'BOX JUMP',   banned:['jump','box','height','legs'] },
+  { cat:'crossfit', word:'THRUSTER',   banned:['squat','press','bar','exercise'] },
+  // HYROX
+  { cat:'hyrox', word:'SLED',              banned:['push','pull','heavy','floor'] },
+  { cat:'hyrox', word:'LUNGE',             banned:['leg','step','squat','forward'] },
+  { cat:'hyrox', word:'ROWER',             banned:['machine','row','arms','cardio'] },
+  { cat:'hyrox', word:'ROXZONE',           banned:['hyrox','station','zone','race'] },
+  // TRIPS
+  { cat:'trips', word:'LAYOVER',       banned:['flight','stop','airport','wait'] },
+  { cat:'trips', word:'LUGGAGE',       banned:['bag','suitcase','pack','travel'] },
+  { cat:'trips', word:'ITINERARY',     banned:['plan','schedule','trip','list'] },
+  { cat:'trips', word:'BOARDING PASS', banned:['ticket','flight','airport','gate'] },
+  // MYSTERY PARTY
+  { cat:'mystery', word:'ALIBI',    banned:['excuse','proof','where','innocent'] },
+  { cat:'mystery', word:'SUSPECT',  banned:['guilty','person','crime','accused'] },
+  { cat:'mystery', word:'CLUE',     banned:['hint','evidence','detective','find'] },
+  { cat:'mystery', word:'REVEAL',   banned:['show','truth','secret','uncover'] },
+];
+
+let activeFilters = new Set(CATEGORIES.map(c => c.key));
+let queue = [];
+let discard = [];
+let current = null;
+let score = 0;
+let seenCount = 0;
+let totalInPlay = 0;
+
+let roundLength = 60;
+let timeLeft = roundLength;
+let timerId = null;
+let running = false;
+
+const filtersEl   = document.getElementById('filters');
+const scoreNumEl  = document.getElementById('scoreNum');
+const timerNumEl  = document.getElementById('timerNum');
+const timerFillEl = document.getElementById('timerFill');
+const timerStatEl = document.getElementById('timerStat');
+const cardsLeftEl = document.getElementById('cardsLeftNum');
+const cardTabEl   = document.getElementById('cardTab');
+const cardCatEl   = document.getElementById('cardCategory');
+const cardIdxEl   = document.getElementById('cardIndex');
+const targetWordEl= document.getElementById('targetWord');
+const bannedListEl= document.getElementById('bannedList');
+const startBtn    = document.getElementById('startBtn');
+const resetBtn    = document.getElementById('resetBtn');
+const lengthSelect= document.getElementById('lengthSelect');
+const passBtn     = document.getElementById('passBtn');
+const goodBtn     = document.getElementById('goodBtn');
+const deckStatusEl= document.getElementById('deckStatus');
+
+function shuffle(arr){
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function renderFilters(){
+  filtersEl.innerHTML = '';
+  CATEGORIES.forEach(cat => {
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (activeFilters.has(cat.key) ? ' active' : '');
+    chip.textContent = cat.label;
+    if (activeFilters.has(cat.key)) {
+      chip.style.background = cat.hex;
+      chip.style.borderColor = cat.hex;
+    }
+    chip.addEventListener('click', () => {
+      if (running) return;
+      if (activeFilters.has(cat.key)) {
+        if (activeFilters.size > 1) activeFilters.delete(cat.key);
+      } else {
+        activeFilters.add(cat.key);
+      }
+      renderFilters();
+      buildQueue();
+      current = null;
+      drawFresh();
+    });
+    filtersEl.appendChild(chip);
+  });
+}
+
+function buildQueue(){
+  const pool = CARDS.filter(c => activeFilters.has(c.cat));
+  queue = shuffle(pool);
+  discard = [];
+  totalInPlay = queue.length;
+  seenCount = 0;
+  cardsLeftEl.textContent = queue.length;
+}
+
+function nextCard(){
+  if (queue.length === 0){
+    queue = shuffle(discard);
+    discard = [];
+    deckStatusEl.textContent = 'Deck reshuffled — starting over.';
+  }
+  current = queue.shift();
+  seenCount += 1;
+  cardsLeftEl.textContent = queue.length;
+}
+
+function showCard(){
+  if (!current) nextCard();
+  const cat = CAT_BY_KEY[current.cat];
+  cardTabEl.style.background = cat.hex;
+  cardCatEl.textContent = cat.label;
+  cardIdxEl.textContent = (totalInPlay - queue.length) + ' / ' + totalInPlay;
+  targetWordEl.textContent = current.word;
+  bannedListEl.innerHTML = '';
+  current.banned.forEach(w => {
+    const div = document.createElement('div');
+    div.className = 'banned-item';
+    div.innerHTML = '<span class="no">&#8856;</span>' + w;
+    bannedListEl.appendChild(div);
+  });
+}
+
+function drawFresh(){
+  nextCard();
+  showCard();
+}
+
+function updateTimerUI(){
+  timerNumEl.textContent = timeLeft;
+  const pct = Math.max(0, (timeLeft / roundLength) * 100);
+  timerFillEl.style.width = pct + '%';
+  if (timeLeft <= 10){
+    timerFillEl.style.background = 'var(--pink)';
+    timerStatEl.classList.add('warn');
+  } else {
+    timerFillEl.style.background = 'var(--good)';
+    timerStatEl.classList.remove('warn');
+  }
+}
+
+function startRound(){
+  if (running) return;
+  running = true;
+  timeLeft = roundLength;
+  updateTimerUI();
+  passBtn.disabled = false;
+  goodBtn.disabled = false;
+  startBtn.textContent = '⏸ Running…';
+  startBtn.disabled = true;
+  lengthSelect.disabled = true;
+  deckStatusEl.textContent = 'Round running — describe, don’t say the banned words.';
+  if (!current) drawFresh();
+  timerId = setInterval(() => {
+    timeLeft -= 1;
+    updateTimerUI();
+    if (timeLeft <= 0){
+      endRound();
+    }
+  }, 1000);
+}
+
+function endRound(){
+  running = false;
+  clearInterval(timerId);
+  passBtn.disabled = true;
+  goodBtn.disabled = true;
+  startBtn.textContent = '▶ Start Round';
+  startBtn.disabled = false;
+  lengthSelect.disabled = false;
+  deckStatusEl.textContent = 'Time! Final score: ' + score + '. Press Start Round to go again.';
+}
+
+function resetAll(){
+  clearInterval(timerId);
+  running = false;
+  score = 0;
+  scoreNumEl.textContent = '0';
+  roundLength = parseInt(lengthSelect.value, 10);
+  timeLeft = roundLength;
+  updateTimerUI();
+  passBtn.disabled = true;
+  goodBtn.disabled = true;
+  startBtn.textContent = '▶ Start Round';
+  startBtn.disabled = false;
+  lengthSelect.disabled = false;
+  buildQueue();
+  current = null;
+  drawFresh();
+  deckStatusEl.textContent = 'Press Start Round to begin — describer holds the screen.';
+}
+
+goodBtn.addEventListener('click', () => {
+  if (!running) return;
+  score += 1;
+  scoreNumEl.textContent = score;
+  discard.push(current);
+  drawFresh();
+});
+
+passBtn.addEventListener('click', () => {
+  if (!running) return;
+  discard.push(current);
+  drawFresh();
+});
+
+startBtn.addEventListener('click', startRound);
+resetBtn.addEventListener('click', resetAll);
+lengthSelect.addEventListener('change', () => {
+  roundLength = parseInt(lengthSelect.value, 10);
+  timeLeft = roundLength;
+  updateTimerUI();
+});
+
+renderFilters();
+buildQueue();
+drawFresh();
+updateTimerUI();
+</script>
+</body>
+</html>
