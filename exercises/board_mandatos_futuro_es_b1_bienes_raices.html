@@ -11,7 +11,7 @@
   --panel:#15334C;
   --panel-2:#1B4062;
   --line:rgba(126,196,232,.22);
-  --ink:#E8F1F7;
+  --ink:#EAF4F2;
   --dim:#8FB0C7;
   --brass:#E3A44F;
   --sold:#D8402C;
@@ -27,9 +27,8 @@ body{
   color:var(--ink);
   font-family:'Outfit',system-ui,sans-serif;
   min-height:100vh;
-  padding:22px 16px 60px;
 }
-.wrap{max-width:1080px;margin:0 auto}
+.wrap{max-width:1080px;margin:0 auto;padding:22px 16px 60px}
 
 /* ---------- header ---------- */
 header{display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:14px}
@@ -91,7 +90,7 @@ h1 span{display:block;color:var(--brass);font-size:.42em;letter-spacing:.22em;fo
 .veil{position:fixed;inset:0;background:rgba(4,14,24,.86);display:none;place-items:center;padding:18px;z-index:40}
 .veil.on{display:grid}
 .card{
-  width:min(640px,100%);background:#F4EFE4;color:#14202C;border:1px solid #000;
+  width:min(640px,100%);background:#F9F1E6;color:#14202C;border:1px solid #000;
   box-shadow:12px 12px 0 rgba(0,0,0,.4);padding:26px 24px 22px;position:relative;
   animation:pop .22s ease-out
 }
@@ -100,12 +99,12 @@ h1 span{display:block;color:var(--brass);font-size:.42em;letter-spacing:.22em;fo
 .card .roomname{font-family:'Fraunces',Georgia,serif;font-weight:900;font-size:34px;text-transform:uppercase;line-height:.9;margin:2px 0 14px}
 .prompt{font-size:21px;line-height:1.35;font-weight:500}
 .hint{font-family:'DM Mono',monospace;font-size:12.5px;color:#5C6B78;margin-top:8px}
-.answer{margin-top:16px;padding:14px;background:#14202C;color:#F4EFE4;display:none}
+.answer{margin-top:16px;padding:14px;background:#14202C;color:#F9F1E6;display:none}
 .answer.on{display:block}
 .answer .es{font-family:'Fraunces',Georgia,serif;font-weight:700;font-size:30px;line-height:1;letter-spacing:.01em}
 .answer .why{font-size:13.5px;color:#A8C0D2;margin-top:7px;line-height:1.4}
 .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
-button{font:inherit;cursor:pointer;border:1px solid #14202C;background:#14202C;color:#F4EFE4;
+button{font:inherit;cursor:pointer;border:1px solid #14202C;background:#14202C;color:#F9F1E6;
   padding:11px 18px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
   transition:transform .1s}
 button:hover{transform:translateY(-2px)}
@@ -113,7 +112,7 @@ button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
 button.ghost{background:transparent;color:#14202C}
 button.good{background:#1E7A55;border-color:#1E7A55}
 button.mid{background:#8A6A1F;border-color:#8A6A1F}
-.timer{position:absolute;top:0;right:0;background:#14202C;color:#F4EFE4;font-family:'Fraunces',Georgia,serif;
+.timer{position:absolute;top:0;right:0;background:#14202C;color:#F9F1E6;font-family:'Fraunces',Georgia,serif;
   font-size:30px;padding:2px 12px 0;min-width:56px;text-align:center}
 .timer.low{background:var(--sold)}
 
@@ -138,6 +137,76 @@ button.mid{background:#8A6A1F;border-color:#8A6A1F}
 footer{margin-top:28px;font-family:'DM Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:.08em;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
+<!-- AXOLINGUA: exercise nav bar v2 — brand mark + catalog link + instructions button, styled like the site nav. Hidden automatically inside the catalog iframe preview. -->
+<header class="axl-nav" id="axlNav">
+  <div class="axl-nav__inner">
+    <div class="axl-nav__left">
+      <a class="axl-nav__brand" href="/">
+        <img src="/assets/img/mark-nav.png" alt="Axolingua">
+        <span class="axl-wordmark"><em>axo</em>lingua</span>
+      </a>
+      <a class="axl-nav__link" href="/ejercicios/">Todos los ejercicios</a>
+    </div>
+    <button type="button" class="axl-nav__instr-btn" id="axlInstrBtn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2 1.8-2 3.5"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Instrucciones
+    </button>
+  </div>
+</header>
+<div class="axl-instr-overlay" id="axlInstrOverlay">
+  <div class="axl-instr-card">
+    <button class="axl-instr-close" id="axlInstrClose" aria-label="Cerrar">✕</button>
+    <h4>Cómo se juega</h4>
+    <ol>
+      <li>Toca un cuarto de la casa: verás una frase en inglés para decir como mandato (tú/usted) o en futuro simple.</li>
+      <li>Tienes 25 segundos. Cuando estés listo, pulsa «Ver respuesta».</li>
+      <li>Marca «Lo dijo bien» (10 pts), «Con ayuda» (5 pts) o «Repetir después».</li>
+      <li>Vende los 12 cuartos para completar la escritura — o prueba la Ronda relámpago de traducción rápida.</li>
+    </ol>
+  </div>
+</div>
+<style>
+  .axl-nav{display:none;position:relative;z-index:9999;background:#FAF7F3;border-bottom:1px solid #D8CFBF;font-family:'Outfit',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .axl-nav__inner{max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;height:60px;padding:0 20px;box-sizing:border-box}
+  .axl-nav__left{display:flex;align-items:center;gap:22px;min-width:0}
+  .axl-nav__brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+  .axl-nav__brand img{height:26px;width:auto;display:block}
+  .axl-wordmark{font-family:'Fraunces',Georgia,serif;font-weight:300;font-size:1.1rem;letter-spacing:-.01em;color:#2C2A27}
+  .axl-wordmark em{font-style:italic;color:#D0736C}
+  .axl-nav__link{font-size:.85rem;color:#5A5652;text-decoration:none;letter-spacing:.01em;padding-bottom:2px;border-bottom:1.5px solid transparent;white-space:nowrap;text-transform:none;box-shadow:none;transition:color .2s,border-color .2s}
+  .axl-nav__link:hover{color:#2C2A27;border-bottom-color:#D0736C}
+  .axl-nav__instr-btn{display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:.78rem;font-weight:500;letter-spacing:.01em;text-transform:none;text-align:left;color:#D0736C;background:transparent;border:1.5px solid #D0736C;border-radius:4px;padding:7px 14px;cursor:pointer;white-space:nowrap;box-shadow:none;flex-shrink:0;transition:background .2s,color .2s}
+  .axl-nav__instr-btn:hover{background:#FBF0EF;color:#B8524A}
+  @media (max-width:560px){
+    .axl-wordmark{display:none}
+    .axl-nav__inner{padding:0 12px;gap:10px}
+    .axl-nav__left{gap:14px}
+    .axl-nav__link,.axl-nav__instr-btn{font-size:.74rem}
+  }
+  .axl-instr-overlay{position:fixed;inset:0;background:rgba(20,18,16,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:100000}
+  .axl-instr-overlay.is-open{display:flex}
+  .axl-instr-card{background:#FAF7F3;border-radius:16px;max-width:380px;width:100%;padding:22px 24px;box-shadow:0 20px 44px -16px rgba(0,0,0,.4);position:relative;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#2C2A27}
+  .axl-instr-card h4{font-size:1.05rem;margin:0 0 12px;color:#2A6B5F;font-family:Georgia,serif;font-weight:400}
+  .axl-instr-card ol{margin:0;padding-left:20px;font-size:.88rem;line-height:1.55}
+  .axl-instr-card li{margin-bottom:8px}
+  .axl-instr-card li:last-child{margin-bottom:0}
+  .axl-instr-close{position:absolute;top:10px;right:12px;background:none;border:none;font-size:1.15rem;line-height:1;text-transform:none;letter-spacing:normal;box-shadow:none;cursor:pointer;color:#8A847E;padding:4px}
+  .axl-instr-close:hover{color:#2C2A27}
+</style>
+<script>
+(function () {
+  if (window.self !== window.top) return; // stay hidden inside the /ejercicios/ catalog preview
+  var bar = document.getElementById('axlNav');
+  bar.style.display = 'block';
+  var overlay = document.getElementById('axlInstrOverlay');
+  document.getElementById('axlInstrBtn').addEventListener('click', function () { overlay.classList.add('is-open'); });
+  document.getElementById('axlInstrClose').addEventListener('click', function () { overlay.classList.remove('is-open'); });
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.classList.remove('is-open'); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') overlay.classList.remove('is-open'); });
+})();
+</script>
+
+
 
 <div class="wrap">
 <header>

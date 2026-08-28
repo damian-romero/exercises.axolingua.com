@@ -54,10 +54,10 @@
     background: var(--sand);
     min-height: 100vh;
     font-family: 'Source Serif 4', Georgia, serif;
-    padding: 28px 16px 60px;
     background-image:
       repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(44,42,39,0.04) 27px, rgba(44,42,39,0.04) 28px);
   }
+  .axl-content { padding: 28px 16px 60px; }
 
   .newspaper {
     max-width: 760px;
@@ -416,7 +416,78 @@
 </style>
 </head>
 <body>
+<!-- AXOLINGUA: exercise nav bar v2 — brand mark + catalog link + instructions button, styled like the site nav. Hidden automatically inside the catalog iframe preview. -->
+<header class="axl-nav" id="axlNav">
+  <div class="axl-nav__inner">
+    <div class="axl-nav__left">
+      <a class="axl-nav__brand" href="/">
+        <img src="/assets/img/mark-nav.png" alt="Axolingua">
+        <span class="axl-wordmark"><em>axo</em>lingua</span>
+      </a>
+      <a class="axl-nav__link" href="/ejercicios/">Todos los ejercicios</a>
+    </div>
+    <button type="button" class="axl-nav__instr-btn" id="axlInstrBtn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2 1.8-2 3.5"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Instrucciones
+    </button>
+  </div>
+</header>
+<div class="axl-instr-overlay" id="axlInstrOverlay">
+  <div class="axl-instr-card">
+    <button class="axl-instr-close" id="axlInstrClose" aria-label="Cerrar">✕</button>
+    <h4>Cómo se juega</h4>
+    <ol>
+      <li>Completa cada espacio con la forma correcta del verbo — el infinitivo y el tiempo vienen como pista.</li>
+      <li>Pasa el cursor sobre una respuesta en rojo para ver la corrección.</li>
+      <li>Cada tiempo verbal tiene su color: consulta la guía (presente, pretérito, imperfecto, futuro).</li>
+      <li>Tu conteo de correctas, incorrectas y puntos se actualiza arriba.</li>
+    </ol>
+  </div>
+</div>
+<style>
+  .axl-nav{display:none;position:relative;z-index:9999;background:#FAF7F3;border-bottom:1px solid #D8CFBF;font-family:'Outfit',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .axl-nav__inner{max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;height:60px;padding:0 20px;box-sizing:border-box}
+  .axl-nav__left{display:flex;align-items:center;gap:22px;min-width:0}
+  .axl-nav__brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+  .axl-nav__brand img{height:26px;width:auto;display:block}
+  .axl-wordmark{font-family:'Fraunces',Georgia,serif;font-weight:300;font-size:1.1rem;letter-spacing:-.01em;color:#2C2A27}
+  .axl-wordmark em{font-style:italic;color:#D0736C}
+  .axl-nav__link{font-size:.85rem;color:#5A5652;text-decoration:none;letter-spacing:.01em;padding-bottom:2px;border-bottom:1.5px solid transparent;white-space:nowrap;text-transform:none;box-shadow:none;transition:color .2s,border-color .2s}
+  .axl-nav__link:hover{color:#2C2A27;border-bottom-color:#D0736C}
+  .axl-nav__instr-btn{display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:.78rem;font-weight:500;letter-spacing:.01em;text-transform:none;text-align:left;color:#D0736C;background:transparent;border:1.5px solid #D0736C;border-radius:4px;padding:7px 14px;cursor:pointer;white-space:nowrap;box-shadow:none;flex-shrink:0;transition:background .2s,color .2s}
+  .axl-nav__instr-btn:hover{background:#FBF0EF;color:#B8524A}
+  @media (max-width:560px){
+    .axl-wordmark{display:none}
+    .axl-nav__inner{padding:0 12px;gap:10px}
+    .axl-nav__left{gap:14px}
+    .axl-nav__link,.axl-nav__instr-btn{font-size:.74rem}
+  }
+  .axl-instr-overlay{position:fixed;inset:0;background:rgba(20,18,16,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:100000}
+  .axl-instr-overlay.is-open{display:flex}
+  .axl-instr-card{background:#FAF7F3;border-radius:16px;max-width:380px;width:100%;padding:22px 24px;box-shadow:0 20px 44px -16px rgba(0,0,0,.4);position:relative;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#2C2A27}
+  .axl-instr-card h4{font-size:1.05rem;margin:0 0 12px;color:#2A6B5F;font-family:Georgia,serif;font-weight:400}
+  .axl-instr-card ol{margin:0;padding-left:20px;font-size:.88rem;line-height:1.55}
+  .axl-instr-card li{margin-bottom:8px}
+  .axl-instr-card li:last-child{margin-bottom:0}
+  .axl-instr-close{position:absolute;top:10px;right:12px;background:none;border:none;font-size:1.15rem;line-height:1;text-transform:none;letter-spacing:normal;box-shadow:none;cursor:pointer;color:#8A847E;padding:4px}
+  .axl-instr-close:hover{color:#2C2A27}
+</style>
+<script>
+(function () {
+  if (window.self !== window.top) return; // stay hidden inside the /ejercicios/ catalog preview
+  var bar = document.getElementById('axlNav');
+  bar.style.display = 'block';
+  var overlay = document.getElementById('axlInstrOverlay');
+  document.getElementById('axlInstrBtn').addEventListener('click', function () { overlay.classList.add('is-open'); });
+  document.getElementById('axlInstrClose').addEventListener('click', function () { overlay.classList.remove('is-open'); });
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.classList.remove('is-open'); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') overlay.classList.remove('is-open'); });
+})();
+</script>
 
+
+
+<div class="axl-content">
 <div class="newspaper">
 
   <div class="masthead">
@@ -659,6 +730,7 @@ tense are given as hints. Hover over a red answer to see the correction.
 
   </div><!-- /article-wrap -->
 </div><!-- /newspaper -->
+</div><!-- /axl-content -->
 
 <script>
 let checked = false;
