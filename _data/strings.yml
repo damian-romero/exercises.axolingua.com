@@ -7,7 +7,7 @@
 es:
   nav:
     home: "Inicio"
-    exercises: "Ejercicios"
+    exercises: "Todos los ejercicios"
     main_site: "axolingua.com"
     menu_label: "Menú"
   cta:
@@ -32,7 +32,7 @@ es:
 en:
   nav:
     home: "Home"
-    exercises: "Exercises"
+    exercises: "All exercises"
     main_site: "axolingua.com"
     menu_label: "Menu"
   cta:
