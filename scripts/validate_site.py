@@ -170,7 +170,12 @@ def main():
                     f"filename '{fname}'"
                 )
             theme = entry.get("theme")
-            if theme and theme != "general" and theme not in parts:
+            # theme keys can themselves contain underscores (e.g. "bienes_raices"),
+            # so check for the whole key as a contiguous run of parts rather than
+            # requiring it to be a single element of `parts` (which would never
+            # match a multi-word theme, since the filename convention also uses
+            # "_" to separate segments).
+            if theme and theme != "general" and theme not in parts and theme not in stem:
                 rep.warn(
                     f"{label}: theme '{theme}' does not appear in the filename '{fname}'"
                 )
