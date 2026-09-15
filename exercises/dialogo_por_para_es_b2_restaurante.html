@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Por y Para en el restaurante — Axolingua</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Outfit:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#F7F3EE; --cream:#F0EAE1; --sand:#E6DDCF; --linen:#D8CFBF; --feather:#FAF7F3;
+    --pink-deep:#B8524A; --pink-mid:#D0736C; --pink-soft:#E49E99; --pink-pale:#F2CECC; --pink-wash:#FBF0EF;
+    --jade-deep:#2A6B5F; --jade-mid:#3D8876; --jade-soft:#6AADA0; --jade-pale:#B5D9D3; --jade-wash:#EAF4F2;
+    --ochre-deep:#9E6B35; --ochre-mid:#BC8A52;
+    --charcoal:#2C2A27; --slate:#5A5652; --stone:#8A847E; --pebble:#BEB8B2;
+    --paper:#FFFFFF;
+    --display:'Fraunces',Georgia,serif;
+    --body:'Outfit',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --mono:'DM Mono','Courier New',monospace;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--ivory); color:var(--charcoal);
+    font-family:var(--body); line-height:1.5;
+    padding:16px 16px 64px;
+  }
+  .wrap{max-width:720px; margin:0 auto;}
+
+  /* header */
+  .eyebrow{
+    font-family:var(--mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--pink-deep); margin:0 0 10px;
+  }
+  h1{
+    font-family:var(--display); font-weight:600; font-size:2rem; line-height:1.15;
+    margin:0 0 10px; letter-spacing:-.01em;
+  }
+  h1 em.p-por{font-style:italic; color:var(--pink-deep); font-weight:500;}
+  h1 em.p-para{font-style:italic; color:var(--jade-deep); font-weight:500;}
+  .lede{color:var(--slate); font-size:.98rem; max-width:56ch; margin:0 0 22px;}
+
+  .top-row{display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+  .instr-btn{
+    display:inline-flex; align-items:center; gap:6px; font-family:var(--body); font-size:.8rem; font-weight:500;
+    color:var(--pink-deep); background:var(--pink-wash); border:1.5px solid var(--pink-soft); border-radius:20px;
+    padding:8px 16px; cursor:pointer; white-space:nowrap; flex-shrink:0;
+  }
+  .instr-btn:hover{background:var(--pink-pale);}
+
+  /* stats bar */
+  .stats{
+    display:flex; flex-wrap:wrap; gap:10px; margin:22px 0 24px;
+  }
+  .stat{
+    background:var(--paper); border:1px solid var(--linen); border-radius:12px;
+    padding:10px 16px; flex:1; min-width:120px;
+  }
+  .stat .num{font-family:var(--display); font-size:1.35rem; color:var(--charcoal); line-height:1;}
+  .stat .lbl{font-family:var(--mono); font-size:.66rem; letter-spacing:.08em; text-transform:uppercase; color:var(--stone); margin-top:4px;}
+
+  /* dialogue card */
+  .card{
+    background:var(--paper); border:1px solid var(--linen); border-radius:18px;
+    padding:28px 26px 24px; box-shadow:0 8px 24px -16px rgba(44,42,39,.25);
+  }
+  .card-eyebrow{
+    display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;
+  }
+  .card-tag{
+    font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--stone);
+  }
+  .turn{margin:0 0 16px; display:flex; gap:10px; align-items:baseline; flex-wrap:wrap;}
+  .turn:last-child{margin-bottom:0;}
+  .speaker{
+    font-family:var(--mono); font-size:.72rem; letter-spacing:.06em; text-transform:uppercase;
+    flex-shrink:0; padding:3px 9px; border-radius:6px; font-weight:500;
+  }
+  .speaker.staff{color:var(--jade-deep); background:var(--jade-wash);}
+  .speaker.client{color:var(--pink-deep); background:var(--pink-wash);}
+  .line{font-size:1.05rem; color:var(--charcoal); flex:1; min-width:200px;}
+
+  /* blanks */
+  .blank{
+    font-family:var(--mono); font-size:.72rem; letter-spacing:.06em; font-weight:500;
+    background:var(--feather); border:1.5px dashed var(--pebble); color:var(--slate);
+    border-radius:6px; padding:2px 9px; cursor:pointer; vertical-align:2px;
+    transition:background .15s,border-color .15s; display:inline-block;
+  }
+  .blank:hover{border-color:var(--pink-mid); color:var(--pink-deep);}
+  .blank-choices{display:inline-flex; gap:6px; vertical-align:2px;}
+  /* Deliberately NOT color-coded by word (por/pink vs. para/jade): before an
+     answer is picked, both options get identical neutral styling so there's
+     no "click the green one" affordance to lean on — the student has to
+     read the word. Word color only appears afterward, in the resolved
+     .answer state below. */
+  .choice-btn{
+    font-family:var(--body); font-size:.85rem; font-weight:600; border-radius:6px;
+    padding:3px 12px; cursor:pointer; border:1.5px solid var(--linen); background:var(--paper);
+    color:var(--charcoal);
+  }
+  .choice-btn:hover{background:var(--sand); border-color:var(--pebble);}
+
+  .answer{
+    font-weight:600; border-radius:6px; padding:2px 9px; display:inline-block;
+  }
+  /* Correctness feedback is intentionally color + icon together (green/check
+     for right, pink/cross for wrong) — consistent every time, regardless of
+     whether the word was "por" or "para". The pre-answer choice buttons above
+     stay neutral on purpose (no color hint while the student is still
+     deciding); color only appears once they've committed to an answer. */
+  .answer.correct{background:var(--jade-wash); color:var(--jade-deep);}
+  .answer.correct::after{content:" ✓"; font-weight:700;}
+  .answer.wrong{background:var(--pink-wash); color:var(--pink-deep); text-decoration:line-through; text-decoration-color:var(--pink-soft);}
+  .answer.wrong::after{content:" ✗"; text-decoration:none; font-weight:700;}
+  .answer-note{font-size:.85rem; color:var(--stone); margin-left:4px;}
+  .answer.wrong-fix{background:var(--jade-wash); color:var(--jade-deep); font-weight:600; border-radius:6px; padding:2px 9px; margin-left:4px;}
+  .answer.wrong-fix::before{content:"→ ";}
+  .answer.wrong-fix::after{content:" ✓"; font-weight:700;}
+
+  /* note panel */
+  .note{
+    margin-top:20px; padding:14px 16px; background:var(--jade-wash);
+    border:1px solid var(--jade-pale); border-radius:10px; font-size:.92rem; color:var(--charcoal);
+    display:none;
+  }
+  .note.show{display:block;}
+  .note b{color:var(--jade-deep); font-family:var(--mono); font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; display:block; margin-bottom:8px;}
+  .note-context{margin:0 0 10px; font-style:italic; color:var(--slate); display:none;}
+  .note-context.show{display:block;}
+  .note ul{margin:0; padding-left:20px;}
+  .note li{margin-bottom:8px;}
+  .note li:last-child{margin-bottom:0;}
+
+  /* controls */
+  .controls{display:flex; justify-content:space-between; align-items:center; margin-top:24px; gap:12px; flex-wrap:wrap;}
+  .progress-txt{font-family:var(--mono); font-size:.72rem; color:var(--stone); letter-spacing:.03em;}
+  .next-btn{
+    font-family:var(--body); font-weight:600; font-size:.92rem; color:var(--paper);
+    background:var(--pink-deep); border:none; border-radius:24px; padding:11px 24px; cursor:pointer;
+  }
+  .next-btn:disabled{background:var(--pebble); cursor:not-allowed;}
+  .next-btn:not(:disabled):hover{background:#9c463f;}
+  .restart-btn{
+    font-family:var(--body); font-size:.82rem; color:var(--slate); background:none; border:1px solid var(--linen);
+    border-radius:20px; padding:8px 16px; cursor:pointer;
+  }
+  .restart-btn:hover{border-color:var(--stone);}
+
+  /* modal */
+  .overlay{
+    position:fixed; inset:0; background:rgba(44,42,39,.5); display:none; align-items:center; justify-content:center; padding:20px; z-index:100;
+  }
+  .overlay.open{display:flex;}
+  .modal{
+    background:var(--feather); border-radius:16px; max-width:460px; width:100%; padding:26px 26px 22px;
+    box-shadow:0 20px 44px -16px rgba(0,0,0,.4); position:relative;
+  }
+  .modal h4{font-family:var(--display); font-weight:600; font-size:1.2rem; margin:0 0 14px; color:var(--jade-deep);}
+  .modal ol{margin:0; padding-left:20px; font-size:.92rem; line-height:1.6;}
+  .modal li{margin-bottom:9px;}
+  .modal li:last-child{margin-bottom:0;}
+  .modal-close{
+    position:absolute; top:12px; right:14px; background:none; border:none; font-size:1.2rem;
+    color:var(--stone); cursor:pointer; padding:4px;
+  }
+  .modal-close:hover{color:var(--charcoal);}
+  .legend{display:flex; gap:14px; margin-top:16px; font-size:.82rem; color:var(--slate); flex-wrap:wrap;}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .dot{width:10px; height:10px; border-radius:50%; display:inline-block;}
+  .dot.por{background:var(--pink-mid);}
+  .dot.para{background:var(--jade-mid);}
+
+  @media (max-width:480px){
+    h1{font-size:1.6rem;}
+    .card{padding:20px 18px 18px;}
+    .turn{gap:6px;}
+  }
+</style>
+</head>
+<body>
+<!-- AXOLINGUA: exercise nav bar v2 — brand mark + catalog link + instructions button, styled like the site nav. Hidden automatically inside the catalog iframe preview. -->
+<header class="axl-nav" id="axlNav">
+  <div class="axl-nav__inner">
+    <div class="axl-nav__left">
+      <a class="axl-nav__brand" href="/">
+        <img src="/assets/img/mark-nav.png" alt="Axolingua">
+        <span class="axl-wordmark"><em>axo</em>lingua</span>
+      </a>
+      <a class="axl-nav__link" href="/ejercicios/">Todos los ejercicios</a>
+    </div>
+    <button type="button" class="axl-nav__instr-btn" id="axlInstrBtn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2 1.8-2 3.5"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Instrucciones
+    </button>
+  </div>
+</header>
+<div class="axl-instr-overlay" id="axlInstrOverlay">
+  <div class="axl-instr-card">
+    <button class="axl-instr-close" id="axlInstrClose" aria-label="Cerrar">✕</button>
+    <h4>Cómo se juega</h4>
+    <ol>
+      <li>Cada tarjeta muestra un diálogo corto en un restaurante, con uno o más espacios marcados como <strong>FOR</strong> o <strong>PLEASE</strong>.</li>
+      <li>Haz clic en un espacio para ver dos opciones. Elige la que crees correcta: <strong>por</strong> o <strong>para</strong> (o <strong>por favor</strong> / <strong>para favor</strong>).</li>
+      <li>Cada espacio solo se responde una vez. Si te equivocas, verás la respuesta correcta al lado.</li>
+      <li>Cuando termines todos los espacios de un diálogo, aparecerá una nota con una explicación breve por cada espacio.</li>
+      <li>Haz clic en "Siguiente diálogo" para seguir practicando con otro par al azar.</li>
+    </ol>
+  </div>
+</div>
+<style>
+  .axl-nav{display:none;position:sticky;top:0;z-index:9999;background:#FAF7F3;border-bottom:1px solid #D8CFBF;font-family:'Outfit',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .axl-nav__inner{max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;height:60px;padding:0 20px;box-sizing:border-box}
+  .axl-nav__left{display:flex;align-items:center;gap:22px;min-width:0}
+  .axl-nav__brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+  .axl-nav__brand img{height:26px;width:auto;display:block}
+  .axl-wordmark{font-family:'Fraunces',Georgia,serif;font-weight:300;font-size:1.1rem;letter-spacing:-.01em;color:#2C2A27}
+  .axl-wordmark em{font-style:italic;color:#D0736C}
+  .axl-nav__link{font-size:.85rem;color:#5A5652;text-decoration:none;letter-spacing:.01em;padding-bottom:2px;border-bottom:1.5px solid transparent;white-space:nowrap;text-transform:none;box-shadow:none;transition:color .2s,border-color .2s}
+  .axl-nav__link:hover{color:#2C2A27;border-bottom-color:#D0736C}
+  .axl-nav__instr-btn{display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:.78rem;font-weight:500;letter-spacing:.01em;text-transform:none;text-align:left;color:#D0736C;background:transparent;border:1.5px solid #D0736C;border-radius:4px;padding:7px 14px;cursor:pointer;white-space:nowrap;box-shadow:none;flex-shrink:0;transition:background .2s,color .2s}
+  .axl-nav__instr-btn:hover{background:#FBF0EF;color:#B8524A}
+  @media (max-width:560px){
+    .axl-wordmark{display:none}
+    .axl-nav__inner{padding:0 12px;gap:10px}
+    .axl-nav__left{gap:14px}
+    .axl-nav__link,.axl-nav__instr-btn{font-size:.74rem}
+  }
+  .axl-instr-overlay{position:fixed;inset:0;background:rgba(20,18,16,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:100000}
+  .axl-instr-overlay.is-open{display:flex}
+  .axl-instr-card{background:#FAF7F3;border-radius:16px;max-width:380px;width:100%;padding:22px 24px;box-shadow:0 20px 44px -16px rgba(0,0,0,.4);position:relative;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#2C2A27}
+  .axl-instr-card h4{font-size:1.05rem;margin:0 0 12px;color:#2A6B5F;font-family:Georgia,serif;font-weight:400}
+  .axl-instr-card ol{margin:0;padding-left:20px;font-size:.88rem;line-height:1.55}
+  .axl-instr-card li{margin-bottom:8px}
+  .axl-instr-card li:last-child{margin-bottom:0}
+  .axl-instr-close{position:absolute;top:10px;right:12px;background:none;border:none;font-size:1.15rem;line-height:1;text-transform:none;letter-spacing:normal;box-shadow:none;cursor:pointer;color:#8A847E;padding:4px}
+  .axl-instr-close:hover{color:#2C2A27}
+</style>
+<script>
+(function () {
+  if (window.self !== window.top) return; // stay hidden inside the /ejercicios/ catalog preview
+  var bar = document.getElementById('axlNav');
+  bar.style.display = 'block';
+  var overlay = document.getElementById('axlInstrOverlay');
+  document.getElementById('axlInstrBtn').addEventListener('click', function () { overlay.classList.add('is-open'); });
+  document.getElementById('axlInstrClose').addEventListener('click', function () { overlay.classList.remove('is-open'); });
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.classList.remove('is-open'); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') overlay.classList.remove('is-open'); });
+})();
+</script>
+<div class="wrap">
+
+  <div class="top-row">
+    <div>
+      <p class="eyebrow">Gramática · B2 · Español</p>
+      <h1><em class="p-por">Por</em> y <em class="p-para">Para</em> en el restaurante</h1>
+    </div>
+    <button class="instr-btn" id="instrBtn" type="button">¿Cómo funciona?</button>
+  </div>
+  <p class="lede">Practica <strong>por</strong> y <strong>para</strong> con 40 diálogos reales de mesero, cajero y cliente. Haz clic en cada espacio marcado y elige la palabra correcta.</p>
+
+  <div class="stats">
+    <div class="stat"><div class="num" id="statScore">0/0</div><div class="lbl">Aciertos</div></div>
+    <div class="stat"><div class="num" id="statStreak">0</div><div class="lbl">Racha actual</div></div>
+    <div class="stat"><div class="num" id="statBest">0</div><div class="lbl">Mejor racha</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-eyebrow">
+      <span class="card-tag" id="cardTag">Diálogo 1 / 40 · Ronda 1</span>
+      <span class="card-tag" id="cardBlanks">0/0 espacios</span>
+    </div>
+    <div id="turns"></div>
+    <div class="note" id="note"><b>Nota gramatical</b><p class="note-context" id="noteContext"></p><ul id="noteList"></ul></div>
+  </div>
+
+  <div class="controls">
+    <button class="restart-btn" id="restartBtn" type="button">Reiniciar</button>
+    <span class="progress-txt" id="progressTxt"></span>
+    <button class="next-btn" id="nextBtn" type="button" disabled>Siguiente diálogo ▸</button>
+  </div>
+
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <button class="modal-close" id="modalClose" aria-label="Cerrar">✕</button>
+    <h4>Cómo funciona</h4>
+    <ol>
+      <li>Cada tarjeta muestra un diálogo corto en un restaurante, con uno o más espacios marcados como <strong>FOR</strong> o <strong>PLEASE</strong>.</li>
+      <li>Haz clic en un espacio para ver dos opciones. Elige la que crees correcta: <strong>por</strong> o <strong>para</strong> (o <strong>por favor</strong> / <strong>para favor</strong>).</li>
+      <li>Cada espacio solo se responde una vez. Si te equivocas, verás la respuesta correcta al lado.</li>
+      <li>Cuando termines todos los espacios de un diálogo, aparecerá una nota con una explicación breve por cada espacio.</li>
+      <li>Haz clic en "Siguiente diálogo" para seguir practicando con otro par al azar.</li>
+    </ol>
+    <div class="legend">
+      <span><span class="dot por"></span>por</span>
+      <span><span class="dot para"></span>para</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = [
+  {id:1, turns:[
+    {speaker:"Mesero", staff:true, text:"¿Y qué va a ser {para} tomar?"},
+    {speaker:"Cliente", staff:false, text:"{Para} mí, un vaso con agua, {por favor}."}
+  ], notes:[
+    "\"Para tomar\" indica el objeto de un verbo. Puede ser usada también con \"de\" como \"de tomar\".",
+    "\"Para\" indica el destinatario de la acción (mí = quien recibe la bebida).",
+    "\"Por favor\" es una fórmula fija de cortesía — nunca \"para favor\"."
+  ]},
+  {id:2, turns:[
+    {speaker:"Cajero", staff:true, text:"{Por} 60 pesos más, ¿quiere papas y refresco con su hamburguesa?"},
+    {speaker:"Cliente", staff:false, text:"No, gracias. Pero quiero un pie de manzana {para} llevar, {por favor}."}
+  ], notes:[
+    "\"Por\" + cantidad expresa el costo o el aumento de precio (\"por 60 pesos más\").",
+    "\"Para llevar\" expresa el propósito: comida que se consumirá fuera del restaurante.",
+    "\"Por favor\" es la fórmula fija de cortesía — nunca \"para favor\"."
+  ]},
+  {id:3, turns:[
+    {speaker:"Mesero", staff:true, text:"Buenas noches, ¿tienen reservación?"},
+    {speaker:"Cliente", staff:false, text:"Sí, hice la reservación {por} teléfono {para} las nueve."}
+  ], notes:[
+    "\"Por teléfono\" indica el medio de comunicación usado para hacer la reservación.",
+    "\"Para las nueve\" marca una hora límite o específica: la reservación es válida a partir de esa hora."
+  ]},
+  {id:4, turns:[
+    {speaker:"Anfitriona", staff:true, text:"¿Mesa {para} cuántas personas?"},
+    {speaker:"Cliente", staff:false, text:"{Para} cuatro, {por favor}."}
+  ], notes:[
+    "\"Para\" + número de personas indica el destinatario o el propósito de la mesa que se está pidiendo.",
+    "\"Para cuatro\" repite el mismo uso: indica el número de personas para quienes es la mesa.",
+    "\"Por favor\" es la fórmula fija de cortesía — nunca \"para favor\"."
+  ]},
+  {id:5, turns:[
+    {speaker:"Mesero", staff:true, text:"Aquí tiene el menú. Cualquier cosa que necesite, pregunte {por} mí, me llamo Iván."},
+    {speaker:"Cliente", staff:false, text:"Muchas gracias {por} su ayuda."}
+  ], notes:[
+    "\"Preguntar por alguien\" es una expresión fija: pedir hablar con esa persona específica.",
+    "\"Gracias por\" + sustantivo agradece la causa de algo (aquí, la ayuda recibida)."
+  ]},
+  {id:6, turns:[
+    {speaker:"Cliente", staff:false, text:"Disculpe, ¿este plato es {para} compartir o {para} una sola persona?"},
+    {speaker:"Mesero", staff:true, text:"Es {para} compartir, alcanza {para} dos."}
+  ], notes:[
+    "\"Para compartir\" expresa el propósito del platillo: está pensado para compartirse.",
+    "\"Para una sola persona\" indica el destinatario: una sola persona lo consume.",
+    "\"Para compartir\" — el mesero repite el mismo uso de propósito que preguntó el cliente.",
+    "\"Para dos\" indica el destinatario o la cantidad: cuántas personas alcanza el platillo."
+  ]},
+  {id:7, turns:[
+    {speaker:"Mesero", staff:true, text:"Por si le interesa, hoy el pescado viene recomendado {por} el chef."},
+    {speaker:"Cliente", staff:false, text:"Suena bien, lo voy a pedir {para} probar algo nuevo."}
+  ], notes:[
+    "\"Recomendado por el chef\" marca al agente que realiza la acción (equivalente a la voz pasiva con \"by\" en inglés).",
+    "\"Para probar algo nuevo\" expresa el propósito de pedir el plato."
+  ]},
+  {id:8, turns:[
+    {speaker:"Cliente", staff:false, text:"¿Tienen algo {para} los niños?"},
+    {speaker:"Mesero", staff:true, text:"Sí, el menú infantil trae quesadillas y agua de sabor, todo {por} 80 pesos."}
+  ], notes:[
+    "\"Para los niños\" indica el destinatario del menú infantil.",
+    "\"Por 80 pesos\" indica el precio o costo total."
+  ]},
+  {id:9, turns:[
+    {speaker:"Mesero", staff:true, text:"La sopa del día está preparada {por} la chef Ana, con receta de su abuela."},
+    {speaker:"Cliente", staff:false, text:"{Por} Dios, se ve deliciosa."}
+  ], notes:[
+    "\"Preparada por\" marca al agente: quién cocinó la sopa.",
+    "\"Por Dios\" es una expresión fija de exclamación (equivale a \"¡Dios mío!\"), no indica causa literal aquí."
+  ]},
+  {id:10, turns:[
+    {speaker:"Cliente", staff:false, text:"¿A qué hora cierran los domingos?"},
+    {speaker:"Mesero", staff:true, text:"Estamos abiertos {por} la tarde, hasta las seis."}
+  ], notes:[
+    "\"Por la tarde\" expresa un periodo de tiempo: durante la tarde, sin especificar el momento exacto."
+  ]},
+  {id:11, turns:[
+    {speaker:"Cliente", staff:false, text:"Perdón, ¿me puede traer más servilletas, {por favor}?"},
+    {speaker:"Mesero", staff:true, text:"Claro, se las traigo {para} acá enseguida."}
+  ], notes:[
+    "\"Por favor\" es la fórmula fija de cortesía.",
+    "\"Para acá\" expresa dirección o destino: hacia aquí."
+  ]},
+  {id:12, turns:[
+    {speaker:"Mesero", staff:true, text:"¿Le cambio su refresco {por} un agua mineral? Ya no tenemos refresco de manzana."},
+    {speaker:"Cliente", staff:false, text:"Sí, está bien, {para} mí es igual."}
+  ], notes:[
+    "\"Cambiar X por Y\" expresa un intercambio entre dos cosas.",
+    "\"Para mí\" expresa opinión o punto de vista personal (equivale a \"en mi opinión\")."
+  ]},
+  {id:13, turns:[
+    {speaker:"Cliente", staff:false, text:"Mesero, tráiganos un vino blanco, {por favor}. Quisiera brindar {por} el cumpleaños de mi amiga."},
+    {speaker:"Mesero", staff:true, text:"{Por} supuesto. También les traigo un postre de cortesía."}
+  ], notes:[
+    "\"Por favor\" es la fórmula fija de cortesía — nunca \"para favor\".",
+    "\"Brindar por algo/alguien\" es una expresión fija: celebrar en honor a algo.",
+    "\"Por supuesto\" es una expresión fija de afirmación."
+  ]},
+  {id:14, turns:[
+    {speaker:"Mesero", staff:true, text:"{Por} lo general, la especialidad se acaba temprano los viernes."},
+    {speaker:"Cliente", staff:false, text:"Entonces de una vez le pido una orden, {para} no quedarme sin probarla."}
+  ], notes:[
+    "\"Por lo general\" es una expresión fija de frecuencia: generalmente.",
+    "\"Para no quedarse sin probarla\" expresa el propósito de pedir la orden de inmediato."
+  ]},
+  {id:15, turns:[
+    {speaker:"Cliente", staff:false, text:"¿El estacionamiento es gratis?"},
+    {speaker:"Mesero", staff:true, text:"Sí, es gratis {para} clientes con ticket pagado, {por} las primeras dos horas."}
+  ], notes:[
+    "\"Para\" indica el destinatario/beneficiario: los clientes con ticket pagado son quienes reciben el estacionamiento gratis.",
+    "\"Por\" + periodo de tiempo expresa duración: durante las primeras dos horas."
+  ]},
+  {id:16, turns:[
+    {speaker:"Cliente", staff:false, text:"Buenas noches, ¿tienen una mesa {para} dos junto a la ventana?"},
+    {speaker:"Mesero", staff:true, text:"Buenas noches. Sí. {Por} aquí, síganme {para} llegar a su mesa."}
+  ], notes:[
+    "\"Para dos\" indica el destinatario de la mesa: cuántas personas la van a usar.",
+    "\"Por aquí\" indica dirección o ruta.",
+    "\"Para llegar a su mesa\" expresa el propósito del movimiento."
+  ]},
+  {id:17, turns:[
+    {speaker:"Cliente", staff:false, text:"Este vino está agrio, creo que se hizo vinagre."},
+    {speaker:"Mesero", staff:true, text:"Lo siento mucho, se lo cambio {por} otra botella sin costo."}
+  ], notes:[
+    "\"Cambiar X por Y\" expresa intercambio, igual que al cambiar comida o bebida en la mesa."
+  ]},
+  {id:18, turns:[
+    {speaker:"Mesero", staff:true, text:"¿Ya decidieron o necesitan más tiempo {para} pensarlo?"},
+    {speaker:"Cliente", staff:false, text:"Danos cinco minutos más, {por favor}."}
+  ], notes:[
+    "\"Para pensarlo\" expresa el propósito del tiempo que se pide.",
+    "\"Por favor\" es la fórmula fija de cortesía."
+  ]},
+  {id:19, turns:[
+    {speaker:"Cliente", staff:false, text:"¿La propina ya está incluida en la cuenta?"},
+    {speaker:"Mesero", staff:true, text:"No, la propina se calcula {por} separado, {por} el total del consumo."}
+  ], notes:[
+    "\"Por separado\" es una expresión fija: de manera individual, aparte del resto.",
+    "\"Por\" + base de cálculo indica el criterio usado (según, en base a) para calcular algo."
+  ]},
+  {id:20, turns:[
+    {speaker:"Mesero", staff:true, text:"{Por} lo visto, a la mesa seis se le olvidó pedir la cuenta."},
+    {speaker:"Cajero", staff:true, text:"Sí, ve {para} allá y pregúntales si ya van a pagar."}
+  ], notes:[
+    "\"Por lo visto\" es una expresión fija que introduce una deducción: aparentemente.",
+    "\"Para allá\" indica dirección hacia un lugar."
+  ]},
+  {id:21, turns:[
+    {speaker:"Cliente", staff:false, text:"Buenas tardes, quisiera ordenar algo {para} llevar. ¿Me lo pueden tener listo {para} las dos? Tengo una junta importante y no puedo llegar tarde."},
+    {speaker:"Mesero", staff:true, text:"Claro que sí, se lo tenemos listo {para} esa hora sin ningún problema."}
+  ], notes:[
+    "\"Para llevar\" expresa el propósito: es una orden para consumir fuera, no en el restaurante.",
+    "\"Para las dos\" expresa una hora límite: la orden debe estar lista antes de ese momento.",
+    "\"Para esa hora\" repite el mismo uso: confirma el mismo límite de tiempo."
+  ]},
+  {id:22, turns:[
+    {speaker:"Mesero", staff:true, text:"El chef preparó este platillo especialmente {para} el aniversario del restaurante."},
+    {speaker:"Cliente", staff:false, text:"Qué detalle, brindemos {por} muchos años más."}
+  ], notes:[
+    "\"Para el aniversario\" expresa el propósito o motivo especial del platillo.",
+    "\"Brindar por algo/alguien\" es una expresión fija: celebrar en honor a algo."
+  ]},
+  {id:23, turns:[
+    {speaker:"Cliente", staff:false, text:"Disculpe, pedí la carne término medio, no bien cocida."},
+    {speaker:"Mesero", staff:true, text:"Tiene toda la razón, se la cambio {por} una a término medio de inmediato."}
+  ], notes:[
+    "\"Cambiar X por Y\" expresa intercambio: aquí, corregir un error en la cocción."
+  ]},
+  {id:24, turns:[
+    {speaker:"Mesero", staff:true, text:"¿{Para} quién es la orden de tacos de pastor?"},
+    {speaker:"Cliente", staff:false, text:"Son {para} mí, los de camarón son {para} mi esposo."}
+  ], notes:[
+    "\"Para quién\" pregunta por el destinatario de la orden.",
+    "\"Para mí\" indica a quién va dirigida la primera orden.",
+    "\"Para mi esposo\" indica a quién va dirigida la segunda orden."
+  ]},
+  {id:25, turns:[
+    {speaker:"Cliente", staff:false, text:"¿Puedo pagar {por} adelantado {para} evitar la fila a la salida?"},
+    {speaker:"Cajero", staff:true, text:"Sí, {por} supuesto, permítame su tarjeta."}
+  ], context:"En muchos restaurantes de México (como Bisquets Obregón) no se paga en la mesa: hay que pasar a una caja cerca de la entrada al terminar de comer, y ahí a veces se hace fila — por eso algunos clientes prefieren pagar antes.", notes:[
+    "\"Por adelantado\" es una expresión fija: con anticipación.",
+    "\"Para evitar la fila\" expresa el propósito de pagar antes.",
+    "\"Por supuesto\" confirma con cortesía."
+  ]},
+  {id:26, turns:[
+    {speaker:"Mesero", staff:true, text:"Tenemos un descuento especial: dos platillos {por} el precio de uno, solo hoy."},
+    {speaker:"Cliente", staff:false, text:"{Para} ser un martes cualquiera, ¡qué buena promoción! Bueno, en ese caso tráiganos una copa extra de vino {para} mí y {para} mi amiga."}
+  ], notes:[
+    "\"X por el precio de Y\" expresa intercambio o proporción.",
+    "\"Para ser un martes cualquiera\" expresa contraste: algo sorprendente respecto a lo esperado para ese día.",
+    "\"Para mí\" indica el destinatario de la copa de vino.",
+    "\"Para mi amiga\" indica el destinatario de la segunda copa de vino."
+  ]},
+  {id:27, turns:[
+    {speaker:"Cliente", staff:false, text:"¿Aceptan tarjeta o solo efectivo?"},
+    {speaker:"Cajero", staff:true, text:"Aceptamos ambos, pero {para} pagos menores a cien pesos preferimos efectivo."}
+  ], notes:[
+    "\"Para\" + tipo de pago indica la categoría o el caso al que aplica la regla."
+  ]},
+  {id:28, turns:[
+    {speaker:"Mesero", staff:true, text:"Le traigo la cuenta enseguida, un momento {por favor}."},
+    {speaker:"Cliente", staff:false, text:"No hay prisa, seguimos platicando {por} un rato más."}
+  ], notes:[
+    "\"Por favor\" es la fórmula fija de cortesía.",
+    "\"Por un rato más\" expresa duración aproximada."
+  ]},
+  {id:29, turns:[
+    {speaker:"Cliente", staff:false, text:"¿Este postre alcanza {para} compartir entre tres?"},
+    {speaker:"Mesero", staff:true, text:"Sí, {por} lo regular alcanza bien {para} tres personas."}
+  ], notes:[
+    "\"Para compartir entre tres\" expresa el propósito del postre.",
+    "\"Por lo regular\" es sinónimo de \"por lo general\".",
+    "\"Para tres personas\" indica la capacidad o el destinatario del postre."
+  ]},
+  {id:30, turns:[
+    {speaker:"Mesero", staff:true, text:"¿Gustan algo más {para} tomar antes de que les traiga la cuenta?"},
+    {speaker:"Cliente", staff:false, text:"No, gracias, {por} ahora estamos bien así."}
+  ], notes:[
+    "\"Para tomar\" introduce el complemento de un verbo: indica qué se va a beber (mismo patrón que \"algo para comer\").",
+    "\"Por ahora\" es una expresión fija que indica el momento presente: de momento."
+  ]},
+  {id:31, turns:[
+    {speaker:"Cliente", staff:false, text:"Disculpe, ¿esta mesa está disponible para reservar hoy {por} la noche?"},
+    {speaker:"Anfitriona", staff:true, text:"No. Ya está apartada {para} un grupo que llega {por} la noche."}
+  ], notes:[
+    "\"Por la noche\" indica el momento del día (esta noche), no un destinatario ni un propósito — por eso no es \"para\".",
+    "\"Para un grupo\" indica el destinatario de la reservación.",
+    "\"Por la noche\" indica el momento del día en que llega el grupo."
+  ]},
+  {id:32, turns:[
+    {speaker:"Mesero", staff:true, text:"{Por} cierto, hoy no tenemos pan de elote, se nos terminó."},
+    {speaker:"Cliente", staff:false, text:"No hay problema, entonces tráigame flan {para} el postre."}
+  ], notes:[
+    "\"Por cierto\" es una expresión fija: introduce un comentario adicional.",
+    "\"Para el postre\" expresa el propósito del platillo pedido."
+  ]},
+  {id:33, turns:[
+    {speaker:"Cliente", staff:false, text:"¿Puedo cambiar el arroz {por} ensalada en mi plato?"},
+    {speaker:"Mesero", staff:true, text:"Sí, sin ningún problema, se lo cambio {por} ensalada de la casa."}
+  ], notes:[
+    "\"Cambiar X por Y\" expresa intercambio: aquí, entre dos guarniciones.",
+    "El mesero repite el mismo uso al confirmar el cambio."
+  ]},
+  {id:34, turns:[
+    {speaker:"Mesero", staff:true, text:"La casa invita este café {por} ser su primera vez aquí."},
+    {speaker:"Cliente", staff:false, text:"Muchas gracias. Me recomendaron este lugar {por} su gran servicio y sí que tenían razón."}
+  ], notes:[
+    "\"Por ser su primera vez\" expresa la causa de la cortesía.",
+    "\"Por su gran servicio\" expresa la causa: el motivo por el que le recomendaron el lugar."
+  ]},
+  {id:35, turns:[
+    {speaker:"Cliente", staff:false, text:"¿Hay algo {para} llevar que no se enfríe rápido en el camino?"},
+    {speaker:"Mesero", staff:true, text:"Le recomiendo la sopa, viene bien sellada {para} que no se derrame."}
+  ], notes:[
+    "\"Para llevar\" expresa el propósito: comida para consumir fuera.",
+    "\"Para que no se derrame\" introduce una cláusula de propósito (\"para\" + \"que\" + subjuntivo)."
+  ]},
+  {id:36, turns:[
+    {speaker:"Mesero", staff:true, text:"Vamos {para} allá, la terraza está lista {para} recibirlos."},
+    {speaker:"Cliente", staff:false, text:"Perfecto, {por} fin vamos a estrenar la terraza nueva."}
+  ], ambiguous:{
+    "0":{
+      answers:["para","por"],
+      explain:{
+        "para":"\"Para allá\" indica destino: el punto final del movimiento — hacia dónde van.",
+        "por":"\"Por allá\" indica ruta: la zona o el camino por donde pasan, sin ser necesariamente el destino final."
+      }
+    }
+  }, notes:[
+    "\"Para allá\" / \"Por allá\" son ambas correctas aquí, con matices distintos: \"para allá\" marca el destino (hacia dónde van); \"por allá\" marca la ruta (por dónde pasan). El clic acepta cualquiera de las dos y te explica la diferencia.",
+    "\"Para recibirlos\" expresa el propósito: la terraza está lista con ese fin.",
+    "\"Por fin\" es una expresión fija que indica el final de una espera."
+  ]},
+  {id:37, turns:[
+    {speaker:"Cliente", staff:false, text:"¿Ustedes hacen envíos a toda la ciudad?"},
+    {speaker:"Mesero", staff:true, text:"Sí, {por} medio de una aplicación de entregas cubrimos casi toda la zona."}
+  ], notes:[
+    "\"Por medio de\" es una expresión fija: a través de."
+  ]},
+  {id:38, turns:[
+    {speaker:"Mesero", staff:true, text:"{Por} error le traje la cuenta de otra mesa, disculpe."},
+    {speaker:"Cliente", staff:false, text:"{Por favor} no se preocupe. Aquí está la correcta, tráigame la mía."}
+  ], notes:[
+    "\"Por error\" expresa la causa de la confusión.",
+    "\"Por favor\" es la fórmula fija de cortesía."
+  ]},
+  {id:39, turns:[
+    {speaker:"Cliente", staff:false, text:"Todo estuvo delicioso, felicite {por} nosotros al chef."},
+    {speaker:"Mesero", staff:true, text:"Con gusto, muchas gracias {por} su visita, esperamos verlos pronto."}
+  ], notes:[
+    "\"Por nosotros\" significa \"en nuestro nombre\": en representación de alguien.",
+    "\"Gracias por\" agradece la causa: aquí, la visita del cliente."
+  ]},
+  {id:40, turns:[
+    {speaker:"Mesero", staff:true, text:"Aquí tiene su cambio, y esto es {para} usted, un dulce de cortesía."},
+    {speaker:"Cliente", staff:false, text:"Qué lindo detalle, mil gracias {por} todo."}
+  ], notes:[
+    "\"Para usted\" indica el destinatario del regalo.",
+    "\"Gracias por todo\" agradece la causa general."
+  ]}
+];
+
+// ---- state ----
+let queue = [];
+let cycle = 0;
+let shownInCycle = 0;
+let lastShownId = null;
+let current = null;
+let currentBlankTotal = 0;
+let currentBlankAnswered = 0;
+let answeredTotal = 0;
+let correctTotal = 0;
+let streak = 0;
+let bestStreak = 0;
+let currentAmbiguousMap = {};
+
+const turnsEl = document.getElementById('turns');
+const noteEl = document.getElementById('note');
+const noteListEl = document.getElementById('noteList');
+const noteContextEl = document.getElementById('noteContext');
+const nextBtn = document.getElementById('nextBtn');
+const restartBtn = document.getElementById('restartBtn');
+const cardTag = document.getElementById('cardTag');
+const cardBlanks = document.getElementById('cardBlanks');
+const progressTxt = document.getElementById('progressTxt');
+const statScore = document.getElementById('statScore');
+const statStreak = document.getElementById('statStreak');
+const statBest = document.getElementById('statBest');
+const instrBtn = document.getElementById('instrBtn');
+const overlay = document.getElementById('overlay');
+const modalClose = document.getElementById('modalClose');
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function refillQueue(){
+  cycle += 1;
+  shownInCycle = 0;
+  let shuffled = shuffle(DATA.map(d=>d.id));
+  if(shuffled[0] === lastShownId && shuffled.length > 1){
+    [shuffled[0], shuffled[1]] = [shuffled[1], shuffled[0]];
+  }
+  queue = shuffled;
+}
+
+function applyCase(sample, target){
+  if(/^[A-ZÁÉÍÓÚÑ]/.test(sample)){
+    return target.charAt(0).toUpperCase() + target.slice(1);
+  }
+  return target;
+}
+
+function parseText(text, itemId, turnIdx, counter, ambiguousConfig){
+  let blankIdx = 0;
+  const html = text.replace(/\{([^}]+)\}/g, function(match, word){
+    const norm = word.trim().toLowerCase();
+    let gloss, choices, kind;
+    if(norm === 'por favor'){
+      kind = 'porfavor'; gloss = 'PLEASE';
+      choices = [applyCase(word,'por favor'), applyCase(word,'para favor')];
+    } else if(norm === 'por'){
+      kind = 'por'; gloss = 'FOR';
+      choices = [applyCase(word,'por'), applyCase(word,'para')];
+    } else { // para
+      kind = 'para'; gloss = 'FOR';
+      choices = [applyCase(word,'por'), applyCase(word,'para')];
+    }
+    const id = itemId + '-' + turnIdx + '-' + (blankIdx++);
+    const globalIdx = counter.value++;
+    if(ambiguousConfig && ambiguousConfig[globalIdx]){
+      currentAmbiguousMap[id] = ambiguousConfig[globalIdx];
+    }
+    const choicesAttr = choices.join('|');
+    return '<button type="button" class="blank" data-id="'+id+'" data-kind="'+kind+'" '+
+      'data-correct="'+word.replace(/"/g,'&quot;')+'" data-choices="'+choicesAttr+'">'+gloss+'</button>';
+  });
+  return {html: html, count: blankIdx};
+}
+
+function renderItem(item){
+  current = item;
+  currentBlankTotal = 0;
+  currentBlankAnswered = 0;
+  currentAmbiguousMap = {};
+  turnsEl.innerHTML = '';
+  const blankCounter = {value:0};
+  item.turns.forEach(function(t, idx){
+    const parsed = parseText(t.text, item.id, idx, blankCounter, item.ambiguous);
+    currentBlankTotal += parsed.count;
+    const row = document.createElement('div');
+    row.className = 'turn';
+    const speakerClass = t.staff ? 'staff' : 'client';
+    row.innerHTML = '<span class="speaker '+speakerClass+'">'+t.speaker+'</span>' +
+      '<span class="line">'+parsed.html+'</span>';
+    turnsEl.appendChild(row);
+  });
+  noteEl.classList.remove('show');
+  if(item.context){
+    noteContextEl.textContent = item.context;
+    noteContextEl.classList.add('show');
+  } else {
+    noteContextEl.textContent = '';
+    noteContextEl.classList.remove('show');
+  }
+  noteListEl.innerHTML = item.notes.map(function(n){ return '<li>'+n+'</li>'; }).join('');
+  nextBtn.disabled = true;
+  cardBlanks.textContent = '0/' + currentBlankTotal + ' espacios';
+  cardTag.textContent = 'Diálogo ' + shownInCycle + ' / 40 · Ronda ' + cycle;
+  lastShownId = item.id;
+}
+
+function nextItem(){
+  if(queue.length === 0){ refillQueue(); }
+  const id = queue.shift();
+  shownInCycle += 1;
+  const item = DATA.find(function(d){ return d.id === id; });
+  renderItem(item);
+}
+
+function updateStats(){
+  statScore.textContent = correctTotal + '/' + answeredTotal;
+  statStreak.textContent = streak;
+  statBest.textContent = bestStreak;
+}
+
+turnsEl.addEventListener('click', function(e){
+  const blankBtn = e.target.closest('.blank');
+  if(blankBtn && !blankBtn.classList.contains('expanded') && !blankBtn.classList.contains('answered')){
+    blankBtn.classList.add('expanded');
+    const choices = blankBtn.getAttribute('data-choices').split('|');
+    const wrap = document.createElement('span');
+    wrap.className = 'blank-choices';
+    choices.forEach(function(word){
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'choice-btn';
+      b.textContent = word;
+      b.dataset.word = word;
+      wrap.appendChild(b);
+    });
+    blankBtn.replaceWith(wrap);
+    wrap.dataset.correct = blankBtn.getAttribute('data-correct');
+    wrap.dataset.blankId = blankBtn.getAttribute('data-id');
+    return;
+  }
+
+  const choiceBtn = e.target.closest('.choice-btn');
+  if(choiceBtn){
+    const wrap = choiceBtn.closest('.blank-choices');
+    if(!wrap || wrap.dataset.resolved) return;
+    wrap.dataset.resolved = '1';
+    const correct = wrap.dataset.correct;
+    const chosen = choiceBtn.dataset.word;
+    const chosenKey = chosen.trim().toLowerCase();
+    const ambCfg = currentAmbiguousMap[wrap.dataset.blankId];
+
+    let isCorrect, resultHtml;
+    if(ambCfg && ambCfg.answers.indexOf(chosenKey) !== -1){
+      isCorrect = true;
+      const explain = ambCfg.explain[chosenKey] || '';
+      resultHtml = '<span class="answer correct">'+chosen+'</span>' +
+        (explain ? '<span class="answer-note"> '+explain+'</span>' : '');
+    } else {
+      isCorrect = chosenKey === correct.trim().toLowerCase();
+      if(isCorrect){
+        resultHtml = '<span class="answer correct">'+correct+'</span>';
+      } else {
+        resultHtml = '<span class="answer wrong">'+chosen+'</span><span class="answer wrong-fix">'+correct+'</span>';
+      }
+    }
+
+    const result = document.createElement('span');
+    result.innerHTML = resultHtml;
+    wrap.replaceWith(result);
+
+    answeredTotal += 1;
+    currentBlankAnswered += 1;
+    if(isCorrect){
+      correctTotal += 1;
+      streak += 1;
+      if(streak > bestStreak) bestStreak = streak;
+    } else {
+      streak = 0;
+    }
+    updateStats();
+    cardBlanks.textContent = currentBlankAnswered + '/' + currentBlankTotal + ' espacios';
+
+    if(currentBlankAnswered >= currentBlankTotal){
+      noteEl.classList.add('show');
+      nextBtn.disabled = false;
+    }
+  }
+});
+
+nextBtn.addEventListener('click', nextItem);
+
+restartBtn.addEventListener('click', function(){
+  answeredTotal = 0; correctTotal = 0; streak = 0; bestStreak = 0;
+  cycle = 0; shownInCycle = 0; lastShownId = null; queue = [];
+  updateStats();
+  nextItem();
+});
+
+instrBtn.addEventListener('click', function(){ overlay.classList.add('open'); });
+modalClose.addEventListener('click', function(){ overlay.classList.remove('open'); });
+overlay.addEventListener('click', function(e){ if(e.target === overlay) overlay.classList.remove('open'); });
+document.addEventListener('keydown', function(e){ if(e.key === 'Escape') overlay.classList.remove('open'); });
+
+// init
+updateStats();
+nextItem();
+</script>
+</body>
+</html>
