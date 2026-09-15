@@ -16,6 +16,7 @@ skills:
   board: { es: "Juego de tablero", en: "Board game" }
   escenas: { es: "Escenas", en: "Scenes" }
   rueda: { es: "Rueda de letras", en: "Letter wheel" }
+  dialogo: { es: "Diálogo interactivo", en: "Interactive dialogue" }
 
 grammar:
   presente: { es: "Presente", en: "Present tense" }
@@ -24,11 +25,13 @@ grammar:
   mandatos_futuro: { es: "Mandatos y futuro", en: "Commands and future tense" }
   vocab: { es: "Vocabulario", en: "Vocabulary" }
   repaso_general: { es: "Repaso general", en: "General review" }
+  por_para: { es: "Por y para", en: "Por and para" }
 
 levels:
   a1: { es: "A1 · Principiante", en: "A1 · Beginner" }
   a2: { es: "A2 · Elemental", en: "A2 · Elementary" }
   b1: { es: "B1 · Intermedio", en: "B1 · Intermediate" }
+  b2: { es: "B2 · Intermedio alto", en: "B2 · Upper intermediate" }
 
 themes:
   general: { es: "General", en: "General" }
@@ -36,6 +39,7 @@ themes:
   viajes: { es: "Viajes", en: "Travel" }
   bienes_raices: { es: "Bienes raíces", en: "Real estate" }
   ciudad: { es: "Ciudad", en: "City" }
+  restaurante: { es: "Restaurante", en: "Restaurant" }
 
 # target_langs — labels for the language being PRACTICED, used by the
 # language filter pill group on /ejercicios/.

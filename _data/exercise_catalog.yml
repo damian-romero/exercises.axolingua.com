@@ -216,3 +216,17 @@
   description:
     es: "Haz que tu compañero adivine la palabra en inglés sin decir las 4 prohibidas. 24 tarjetas de vocabulario de laboratorio, gimnasio, CrossFit, Hyrox, viajes y fiesta de misterio."
     en: "Get your partner to guess the English word without saying the 4 forbidden ones. 24 vocabulary cards spanning the lab, the gym, CrossFit, Hyrox, travel, and a mystery party."
+
+- slug: dialogo-por-para-b2-restaurante
+  file: dialogo_por_para_es_b2_restaurante.html
+  skill: dialogo
+  grammar: por_para
+  target_lang: es
+  level: b2
+  theme: restaurante
+  title:
+    es: "Por y Para en el restaurante"
+    en: "Por and Para at the Restaurant"
+  description:
+    es: "Practica por y para con 40 diálogos reales de mesero, cajero y cliente. Haz clic en cada espacio marcado y elige la palabra correcta."
+    en: "Practice por and para with 40 real waiter, cashier, and customer dialogues. Click each marked blank and choose the correct word."
