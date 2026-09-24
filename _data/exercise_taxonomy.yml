@@ -17,6 +17,7 @@ skills:
   escenas: { es: "Escenas", en: "Scenes" }
   rueda: { es: "Rueda de letras", en: "Letter wheel" }
   dialogo: { es: "Diálogo interactivo", en: "Interactive dialogue" }
+  arbol: { es: "Árbol genealógico", en: "Family tree" }
 
 grammar:
   presente: { es: "Presente", en: "Present tense" }
@@ -40,6 +41,7 @@ themes:
   bienes_raices: { es: "Bienes raíces", en: "Real estate" }
   ciudad: { es: "Ciudad", en: "City" }
   restaurante: { es: "Restaurante", en: "Restaurant" }
+  familia: { es: "Familia", en: "Family" }
 
 # target_langs — labels for the language being PRACTICED, used by the
 # language filter pill group on /ejercicios/.

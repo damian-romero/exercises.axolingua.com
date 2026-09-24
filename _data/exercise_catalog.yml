@@ -230,3 +230,17 @@
   description:
     es: "Practica por y para con 40 diálogos reales de mesero, cajero y cliente. Haz clic en cada espacio marcado y elige la palabra correcta."
     en: "Practice por and para with 40 real waiter, cashier, and customer dialogues. Click each marked blank and choose the correct word."
+
+- slug: arbol-vocab-a1-familia
+  file: arbol_vocab_es_a1_familia.html
+  skill: arbol
+  grammar: vocab
+  target_lang: es
+  level: a1
+  theme: familia
+  title:
+    es: "Mi árbol genealógico — La familia"
+    en: "My Family Tree — Family Words"
+  description:
+    es: "Construye tu propio árbol: añade padres, hermanos, tíos y primos, y el árbol te dice el parentesco desde ti. Escribe un letrero para cada persona con su edad y sus rasgos, cumple 12 misiones y ponte a prueba en el Reto. Incluye una familia de ejemplo con 16 personas."
+    en: "Build your own tree: add parents, siblings, aunts, uncles and cousins, and it names each relationship from your point of view. Write a sign for each person with their age and traits, complete 12 missions, then test yourself in the Challenge. Includes a 16-person example family."

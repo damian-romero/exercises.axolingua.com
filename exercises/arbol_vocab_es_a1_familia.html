@@ -1,0 +1,817 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mi árbol genealógico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&family=Outfit:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#2C2A27;
+  --paper:#FFFFFF;
+  --page:#F7F3EE;
+  --dot:#D8CFBF;
+  --mute:#5A5652;
+  --soft:#F0EAE1;
+  --hi:#F2CECC;
+  --serif:'Fraunces',Georgia,serif;
+  --sans:'Outfit',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font-family:var(--sans);color:var(--ink);background:var(--page);display:grid;grid-template-rows:auto auto 1fr;font-size:16px}
+body>header:not(.axl-nav){grid-row:2}
+body>main{grid-row:3}
+header{display:flex;align-items:center;gap:16px;padding:12px 20px;border-bottom:2px solid var(--ink);flex-wrap:wrap}
+h1{font-family:var(--serif);font-weight:700;font-size:28px;margin:0 8px 0 0;letter-spacing:-.01em}
+.tabs{display:flex;border:2px solid var(--ink);border-radius:999px;overflow:hidden}
+.tabs button{border:0;border-radius:0;padding:8px 20px;font-weight:600}
+.tabs button[aria-pressed="true"],.tabs button[aria-pressed="true"]:hover:not(:disabled){background:var(--ink);color:var(--paper)}
+.tools{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+button{font:inherit;cursor:pointer;background:var(--paper);color:var(--ink);border:2px solid var(--ink);border-radius:8px;padding:7px 12px;line-height:1.2}
+button:hover:not(:disabled){background:var(--soft)}
+button:disabled{opacity:.3;cursor:not-allowed}
+button.primary{background:var(--ink);color:var(--paper)}
+button.primary:hover:not(:disabled){background:#5A5652}
+button:focus-visible,input:focus-visible,textarea:focus-visible,.card:focus-visible{outline:3px solid var(--ink);outline-offset:3px;box-shadow:0 0 0 7px var(--hi)}
+input,textarea{font:inherit;color:var(--ink);background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:8px 10px;width:100%}
+textarea{min-height:84px;resize:vertical}
+label{display:block;font-weight:600;margin:0 0 6px}
+main{display:grid;grid-template-columns:1fr 390px;min-height:0}
+.canvas-wrap{position:relative;min-height:0}
+#viewport{position:absolute;inset:0;overflow:auto}
+#sizer{position:relative}
+#stage{position:absolute;left:0;top:0;transform-origin:0 0;background-color:var(--page);background-image:radial-gradient(var(--dot) 1.3px,transparent 1.4px);background-size:28px 28px}
+#lines{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
+.zoom{position:absolute;left:16px;bottom:16px;display:flex;gap:6px;z-index:5}
+.zoom button{background:var(--paper);min-width:42px;font-weight:700}
+/* people */
+.node{position:absolute;width:170px;touch-action:none;user-select:none;-webkit-user-select:none}
+.card{background:var(--paper);border:2px solid var(--ink);border-radius:10px;padding:10px 10px 9px;text-align:center;cursor:grab}
+.node.dragging .card{cursor:grabbing}
+.node.me .card{border-width:4px;padding:8px 8px 7px}
+.node.sel .card{box-shadow:0 0 0 6px var(--hi)}
+.nm{font-family:var(--serif);font-size:21px;font-weight:700;line-height:1.15;overflow-wrap:anywhere}
+.nm.empty{font-weight:400;font-style:italic;color:var(--mute)}
+.rel{font-size:14px;margin-top:3px;color:var(--mute)}
+.sign{position:relative;margin:16px auto 0;width:140px;background:var(--paper);border:2px solid var(--ink);border-radius:3px;padding:6px 8px 7px;font-size:13px;line-height:1.3;text-align:left;box-shadow:3px 3px 0 var(--ink)}
+.sign::before,.sign::after{content:"";position:absolute;top:-18px;width:2px;height:16px;background:var(--ink)}
+.sign::before{left:20px}.sign::after{right:20px}
+.sign p{margin:0;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
+.sign.ghost{border-style:dashed;box-shadow:none;color:var(--mute);text-align:center;cursor:pointer}
+body.quiz .rel{visibility:hidden}
+.node.target .card{background:var(--hi)}
+.node.right .card{background:var(--ink);color:var(--paper)}
+.node.right .rel{color:#BEB8B2;visibility:visible}
+.node.wrong .card{border-style:dashed;background:var(--soft)}
+/* side panel */
+aside{border-left:2px solid var(--ink);overflow:auto;padding:20px 22px 40px}
+aside h2{font-family:var(--serif);font-size:30px;line-height:1.1;margin:0 0 4px}
+aside h3{font-family:var(--serif);font-size:21px;margin:26px 0 10px;padding-top:18px;border-top:2px solid var(--ink)}
+.sub{color:var(--mute);margin:0 0 16px}
+.row{display:grid;grid-template-columns:1fr 96px;gap:10px;margin-bottom:12px}
+.seg{display:flex;border:2px solid var(--ink);border-radius:8px;overflow:hidden;margin-bottom:12px}
+.seg button{flex:1;border:0;border-radius:0}
+.seg button+button{border-left:2px solid var(--ink)}
+.seg button[aria-pressed="true"],.seg button[aria-pressed="true"]:hover:not(:disabled){background:var(--ink);color:var(--paper)}
+.addgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.chip{border-radius:999px;padding:5px 11px;font-size:15px;border-width:1.5px}
+.chip[aria-pressed="true"],.chip[aria-pressed="true"]:hover:not(:disabled){background:var(--ink);color:var(--paper)}
+.inline{display:flex;gap:8px;margin-bottom:12px}
+.inline input{flex:1}
+.preview{border:2px solid var(--ink);border-radius:4px;padding:10px 12px;box-shadow:3px 3px 0 var(--ink);margin:6px 0 4px;min-height:44px;line-height:1.4}
+.hint{font-size:14px;color:var(--mute);margin:6px 0 12px;line-height:1.4}
+.danger{margin-top:26px;width:100%}
+.missions{list-style:none;padding:0;margin:0}
+.missions li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid #D8CFBF;line-height:1.35}
+.box{flex:none;width:22px;height:22px;border:2px solid var(--ink);border-radius:4px;display:grid;place-items:center;font-weight:800;font-size:15px;margin-top:1px}
+.done .box{background:var(--ink);color:var(--paper)}
+.done span:last-child{text-decoration:line-through;color:var(--mute)}
+.progress{height:12px;border:2px solid var(--ink);border-radius:999px;overflow:hidden;margin:6px 0 14px}
+.progress i{display:block;height:100%;background:var(--ink)}
+.score{display:flex;gap:18px;font-weight:700;margin:4px 0 18px}
+.q{font-family:var(--serif);font-size:25px;line-height:1.3;margin:0 0 16px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opts button{padding:12px;font-size:18px}
+.opts button.ok,.opts button.ok:disabled{opacity:1;background:var(--ink);color:var(--paper)}
+.opts button.no{border-style:dashed;text-decoration:line-through}
+.fb{margin:16px 0;padding:12px 14px;border:2px solid var(--ink);border-radius:8px;line-height:1.4}
+.fb.good{background:var(--ink);color:var(--paper)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:8px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+#fileIn{display:none}
+@media (max-width:900px){
+  main{grid-template-columns:1fr;grid-template-rows:60vh auto}
+  aside{border-left:0;border-top:2px solid var(--ink)}
+  .tools{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{
+  header .tools,.tabs,.zoom,aside,.axl-nav{display:none!important}
+  main{display:block}
+  #viewport{position:static;overflow:visible}
+  body{display:block}
+}
+</style>
+</head>
+<body>
+<!-- AXOLINGUA: exercise nav bar v2 — brand mark + catalog link + instructions button, styled like the site nav. Hidden automatically inside the catalog iframe preview. -->
+<header class="axl-nav" id="axlNav">
+  <div class="axl-nav__inner">
+    <div class="axl-nav__left">
+      <a class="axl-nav__brand" href="/">
+        <img src="/assets/img/mark-nav.png" alt="Axolingua">
+        <span class="axl-wordmark"><em>axo</em>lingua</span>
+      </a>
+      <a class="axl-nav__link" href="/ejercicios/">Todos los ejercicios</a>
+    </div>
+    <button type="button" class="axl-nav__instr-btn" id="axlInstrBtn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2 1.8-2 3.5"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Instrucciones
+    </button>
+  </div>
+</header>
+<div class="axl-instr-overlay" id="axlInstrOverlay">
+  <div class="axl-instr-card">
+    <button class="axl-instr-close" id="axlInstrClose" aria-label="Cerrar">✕</button>
+    <h4>Cómo se juega</h4>
+    <ol>
+      <li>Haz clic en una persona del árbol para ponerle nombre, añadir familiares o escribir su letrero. Empieza con <b>Yo</b>.</li>
+      <li>Arrastra las tarjetas para ordenar el árbol.</li>
+      <li>El árbol calcula el parentesco desde <b>Yo</b>: tu tía, tu primo, tu cuñada.</li>
+      <li>Cuando tengas varias personas con nombre, abre el <b>Reto</b>.</li>
+    </ol>
+  </div>
+</div>
+<style>
+  .axl-nav{display:none;position:sticky;top:0;z-index:9999;background:#FAF7F3;border-bottom:1px solid #D8CFBF;font-family:'Outfit',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;padding:0;gap:0;grid-row:1}
+  .axl-nav__inner{max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;height:60px;padding:0 20px;box-sizing:border-box}
+  .axl-nav__left{display:flex;align-items:center;gap:22px;min-width:0}
+  .axl-nav__brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+  .axl-nav__brand img{height:26px;width:auto;display:block}
+  .axl-wordmark{font-family:'Fraunces',Georgia,serif;font-weight:300;font-size:1.1rem;letter-spacing:-.01em;color:#2C2A27}
+  .axl-wordmark em{font-style:italic;color:#D0736C}
+  .axl-nav__link{font-size:.85rem;color:#5A5652;text-decoration:none;letter-spacing:.01em;padding-bottom:2px;border-bottom:1.5px solid transparent;white-space:nowrap;text-transform:none;box-shadow:none;transition:color .2s,border-color .2s}
+  .axl-nav__link:hover{color:#2C2A27;border-bottom-color:#D0736C}
+  .axl-nav .axl-nav__instr-btn{display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:.78rem;font-weight:500;line-height:1.2;letter-spacing:.01em;text-transform:none;text-align:left;color:#D0736C;background:transparent;border:1.5px solid #D0736C;border-radius:4px;padding:7px 14px;cursor:pointer;white-space:nowrap;box-shadow:none;outline-offset:2px;flex-shrink:0;transition:background .2s,color .2s}
+  .axl-nav .axl-nav__instr-btn:hover{background:#FBF0EF;color:#B8524A}
+  @media (max-width:560px){
+    .axl-wordmark{display:none}
+    .axl-nav__inner{padding:0 12px;gap:10px}
+    .axl-nav__left{gap:14px}
+    .axl-nav__link,.axl-nav .axl-nav__instr-btn{font-size:.74rem}
+  }
+  .axl-instr-overlay{position:fixed;inset:0;background:rgba(20,18,16,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:100000}
+  .axl-instr-overlay.is-open{display:flex}
+  .axl-instr-card{background:#FAF7F3;border-radius:16px;max-width:380px;width:100%;padding:22px 24px;box-shadow:0 20px 44px -16px rgba(0,0,0,.4);position:relative;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#2C2A27}
+  .axl-instr-card h4{font-size:1.05rem;margin:0 0 12px;color:#2A6B5F;font-family:Georgia,serif;font-weight:400}
+  .axl-instr-card ol{margin:0;padding-left:20px;font-size:.88rem;line-height:1.55}
+  .axl-instr-card li{margin-bottom:8px}
+  .axl-instr-card li:last-child{margin-bottom:0}
+  .axl-instr-card .axl-instr-close{position:absolute;top:10px;right:12px;background:none;border:none;border-radius:4px;font-size:1.15rem;line-height:1;text-transform:none;letter-spacing:normal;box-shadow:none;cursor:pointer;color:#8A847E;padding:4px}
+  .axl-instr-card .axl-instr-close:hover{color:#2C2A27;background:none}
+</style>
+<script>
+(function () {
+  if (window.self !== window.top) return; // stay hidden inside the /ejercicios/ catalog preview
+  var bar = document.getElementById('axlNav');
+  bar.style.display = 'block';
+  var overlay = document.getElementById('axlInstrOverlay');
+  document.getElementById('axlInstrBtn').addEventListener('click', function () { overlay.classList.add('is-open'); });
+  document.getElementById('axlInstrClose').addEventListener('click', function () { overlay.classList.remove('is-open'); });
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.classList.remove('is-open'); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') overlay.classList.remove('is-open'); });
+})();
+</script>
+<header>
+  <h1>Mi árbol genealógico</h1>
+  <div class="tabs" role="group" aria-label="Modo">
+    <button id="tabBuild" aria-pressed="true">Construir</button>
+    <button id="tabQuiz" aria-pressed="false">Reto</button>
+  </div>
+  <div class="tools">
+    <button id="btnExample">Ejemplo: familia Morales</button>
+    <button id="btnNew">Árbol nuevo</button>
+    <button id="btnSave">Guardar archivo</button>
+    <button id="btnOpen">Abrir archivo</button>
+    <button id="btnPrint">Imprimir</button>
+    <input type="file" id="fileIn" accept=".json,application/json">
+  </div>
+</header>
+<main>
+  <div class="canvas-wrap">
+    <div id="viewport">
+      <div id="sizer">
+        <div id="stage">
+          <svg id="lines" xmlns="http://www.w3.org/2000/svg"><path id="linePath" fill="none" stroke="#2C2A27" stroke-width="2.5"/><path id="marryPath" fill="none" stroke="#2C2A27" stroke-width="5"/></svg>
+          <div id="nodes"></div>
+        </div>
+      </div>
+    </div>
+    <div class="zoom">
+      <button id="zOut" aria-label="Alejar">−</button>
+      <button id="zIn" aria-label="Acercar">+</button>
+      <button id="zFit">Ver todo</button>
+    </div>
+  </div>
+  <aside id="panel" aria-live="polite"></aside>
+</main>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+"use strict";
+var W = 170, ROW = 280, GAP = 200, BOXH = 220;
+var STORE = "arbol-genealogico-v1";
+
+var TRAITS = [
+  ["simpático","simpática"],["divertido","divertida"],["alto","alta"],["bajo","baja"],
+  ["trabajador","trabajadora"],["cariñoso","cariñosa"],["generoso","generosa"],["tímido","tímida"],
+  ["serio","seria"],["creativo","creativa"],["perezoso","perezosa"],["hablador","habladora"],
+  ["inteligente"],["paciente"],["amable"],["alegre"],["deportista"],["joven"],["mayor"],
+  ["curioso","curiosa"],["tranquilo","tranquila"],["responsable"]
+];
+
+var LAB = {
+  "":["yo","yo"], P:["padre","madre"], PP:["abuelo","abuela"], PPP:["bisabuelo","bisabuela"],
+  C:["hijo","hija"], CC:["nieto","nieta"], CCC:["bisnieto","bisnieta"],
+  S:["hermano","hermana"], PS:["tío","tía"], PPS:["tío abuelo","tía abuela"],
+  PSC:["primo","prima"], PSCC:["sobrino segundo","sobrina segunda"], PPSC:["tío segundo","tía segunda"],
+  SC:["sobrino","sobrina"], SCC:["sobrino nieto","sobrina nieta"],
+  E:["esposo","esposa"], SE:["cuñado","cuñada"], ES:["cuñado","cuñada"],
+  EP:["suegro","suegra"], CE:["yerno","nuera"], PE:["padrastro","madrastra"], EC:["hijastro","hijastra"],
+  PSE:["tío político","tía política"], ESC:["sobrino político","sobrina política"],
+  EPP:["abuelo político","abuela política"], ESE:["concuñado","concuñada"]
+};
+var CORE = ["P","PP","C","CC","S","PS","PSC","SC","SE","E"];
+
+var S, sel = null, mode = "build", scale = 1, quiz = null, cardH = {};
+
+/* ---------- storage ---------- */
+function fresh(){
+  return {v:1, me:1, next:2, nextSib:2, nodes:{1:mk(1,"", "f", 900, 480, 1)}};
+}
+function mk(id,name,g,x,y,sib){
+  return {id:id,name:name,g:g,x:x,y:y,parents:[],partner:null,sib:sib,age:"",traits:[],desc:""};
+}
+function save(){ try{ localStorage.setItem(STORE, JSON.stringify(S)); }catch(e){} }
+function load(){
+  try{ var t = localStorage.getItem(STORE); if(t){ var o = JSON.parse(t); if(valid(o)) return o; } }catch(e){}
+  return null;
+}
+function valid(o){ return o && o.nodes && o.me && o.nodes[o.me]; }
+
+/* ---------- helpers ---------- */
+function N(id){ return S.nodes[id]; }
+function all(){ return Object.keys(S.nodes).map(function(k){ return S.nodes[k]; }); }
+function kids(id){ return all().filter(function(n){ return n.parents.indexOf(id) > -1; }); }
+function sibs(n){ return all().filter(function(m){ return m.sib === n.sib && m.id !== n.id; }); }
+function sameSet(a,b){ if(a.length!==b.length) return false; return a.every(function(x){ return b.indexOf(x)>-1; }); }
+function esc(s){ return String(s).replace(/[&<>"']/g,function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+function gi(n){ return n.g === "f" ? 1 : 0; }
+function cap(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
+function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+
+/* ---------- kinship ---------- */
+function paths(){
+  var dist = {}; dist[S.me] = ""; var q = [S.me];
+  while(q.length){
+    var id = q.shift(), n = N(id), p = dist[id], edges = [];
+    n.parents.forEach(function(x){ if(N(x)) edges.push([x,"P"]); });
+    kids(id).forEach(function(c){ edges.push([c.id,"C"]); });
+    sibs(n).forEach(function(s){ edges.push([s.id,"S"]); });
+    if(n.partner && N(n.partner)) edges.push([n.partner,"E"]);
+    edges.forEach(function(e){ if(!(e[0] in dist)){ dist[e[0]] = p + e[1]; q.push(e[0]); } });
+  }
+  return dist;
+}
+function norm(p){
+  var prev;
+  do{ prev = p;
+    p = p.replace(/PC/g,"S").replace(/SS/g,"S").replace(/SP/g,"P").replace(/CS/g,"C").replace(/CP/g,"E");
+  }while(p !== prev);
+  return p;
+}
+var PATHS = {};
+function relKey(id){ return (id in PATHS) ? norm(PATHS[id]) : null; }
+function relWord(id){
+  var k = relKey(id), n = N(id);
+  if(k === null) return null;
+  if(LAB[k]) return LAB[k][gi(n)];
+  return "familiar";
+}
+function relText(id){
+  if(id === S.me) return "yo";
+  var w = relWord(id);
+  if(w === null) return "sin conexión";
+  return "tu " + w;
+}
+function displayName(n){
+  if(n.name.trim()) return n.name.trim();
+  if(n.id === S.me) return "Yo";
+  var w = relWord(n.id); return w ? cap(w) : "Sin nombre";
+}
+function meRef(){ var m = N(S.me); return m.name.trim(); }
+
+/* ---------- sign text ---------- */
+function traitWord(k,n){
+  if(k.indexOf("b:")===0){ var t = TRAITS[+k.slice(2)]; if(!t) return ""; return t[n.g==="f" && t[1] ? 1 : 0]; }
+  return k.slice(2);
+}
+function listES(a){
+  if(a.length < 2) return a.join("");
+  var last = a[a.length-1];
+  var conj = /^(i|hi)(?!e)/i.test(last) ? " e " : " y ";
+  return a.slice(0,-1).join(", ") + conj + last;
+}
+function signText(n){
+  var me = n.id === S.me, parts = [];
+  var age = String(n.age||"").trim();
+  if(age) parts.push((me ? "Tengo " : "Tiene ") + age + (age === "1" ? " año." : " años."));
+  var ws = n.traits.map(function(k){ return traitWord(k,n); }).filter(Boolean);
+  if(ws.length) parts.push((me ? "Soy " : "Es ") + listES(ws) + ".");
+  if(n.desc.trim()) parts.push(n.desc.trim());
+  return parts.join(" ");
+}
+
+/* ---------- rendering ---------- */
+var vp = document.getElementById("viewport"), sizer = document.getElementById("sizer"),
+    stage = document.getElementById("stage"), nodesEl = document.getElementById("nodes"),
+    svg = document.getElementById("lines"), linePath = document.getElementById("linePath"),
+    marryPath = document.getElementById("marryPath"), panel = document.getElementById("panel");
+
+function stageSize(){
+  var w = 1400, h = 900;
+  all().forEach(function(n){ w = Math.max(w, n.x + W + 500); h = Math.max(h, n.y + BOXH + 400); });
+  return {w:w,h:h};
+}
+function render(){
+  PATHS = paths();
+  var sz = stageSize();
+  stage.style.width = sz.w + "px"; stage.style.height = sz.h + "px";
+  stage.style.transform = "scale(" + scale + ")";
+  sizer.style.width = (sz.w*scale) + "px"; sizer.style.height = (sz.h*scale) + "px";
+  svg.setAttribute("width", sz.w); svg.setAttribute("height", sz.h);
+  var html = "";
+  all().forEach(function(n){
+    var cls = "node" + (n.id===S.me?" me":"") + (n.id===sel && mode==="build"?" sel":"");
+    if(quiz && quiz.marks[n.id]) cls += " " + quiz.marks[n.id];
+    var nm = displayName(n), empty = !n.name.trim();
+    var st = signText(n);
+    var tilt = (n.id % 3 === 0) ? -1.6 : (n.id % 3 === 1 ? 1.2 : -0.6);
+    var sign = st ? '<div class="sign" style="transform:rotate('+tilt+'deg)"><p>'+esc(st)+'</p></div>'
+      : (n.id===sel && mode==="build" ? '<div class="sign ghost" data-sign="1">+ letrero</div>' : "");
+    html += '<div class="'+cls+'" data-id="'+n.id+'" style="left:'+n.x+'px;top:'+n.y+'px">'
+      + '<div class="card" tabindex="0" role="button" aria-label="'+esc(nm+", "+relText(n.id))+'">'
+      + '<div class="nm'+(empty?" empty":"")+'">'+esc(nm)+'</div>'
+      + '<div class="rel">'+esc(relText(n.id))+'</div></div>' + sign + '</div>';
+  });
+  nodesEl.innerHTML = html;
+  cardH = {};
+  Array.prototype.forEach.call(nodesEl.querySelectorAll(".node"), function(el){
+    cardH[el.getAttribute("data-id")] = el.querySelector(".card").offsetHeight;
+  });
+  drawLines();
+}
+function ch(id){ return cardH[id] || 70; }
+function drawLines(){
+  var d = "", m = "", seen = {};
+  all().forEach(function(n){
+    var p = n.partner && N(n.partner);
+    if(p && !seen[n.id+"-"+p.id]){
+      seen[n.id+"-"+p.id] = seen[p.id+"-"+n.id] = 1;
+      var L = n.x <= p.x ? n : p, R = L === n ? p : n;
+      m += "M"+(L.x+W)+" "+(L.y+ch(L.id)/2)+"L"+R.x+" "+(R.y+ch(R.id)/2);
+    }
+  });
+  all().forEach(function(c){
+    var ps = c.parents.map(N).filter(Boolean);
+    if(!ps.length) return;
+    var sx, sy;
+    if(ps.length >= 2){
+      sx = (ps[0].x + ps[1].x)/2 + W/2;
+      sy = (ps[0].y + ch(ps[0].id)/2 + ps[1].y + ch(ps[1].id)/2)/2;
+    } else { sx = ps[0].x + 8; sy = ps[0].y + ch(ps[0].id); }
+    var ex = c.x + W/2, ey = c.y, my = ey - 32;
+    if(my < sy + 10) my = (sy + ey)/2;
+    d += "M"+sx+" "+sy+"V"+my+"H"+ex+"V"+ey;
+  });
+  linePath.setAttribute("d", d); marryPath.setAttribute("d", m);
+}
+
+/* ---------- placing people ---------- */
+function overlaps(x,y,skip){
+  return all().some(function(n){
+    if(n.id === skip) return false;
+    return x < n.x + W + 24 && x + W + 24 > n.x && y < n.y + BOXH && y + BOXH > n.y;
+  });
+}
+function place(n,x,y){
+  var offs = [0];
+  for(var i=1;i<14;i++){ offs.push(i*GAP); offs.push(-i*GAP); }
+  for(var j=0;j<offs.length;j++){ if(!overlaps(x+offs[j], y, n.id)){ n.x = x+offs[j]; n.y = y; return; } }
+  n.x = x; n.y = y;
+}
+function normalizeCoords(){
+  var minX = Infinity, minY = Infinity;
+  all().forEach(function(n){ minX = Math.min(minX,n.x); minY = Math.min(minY,n.y); });
+  var dx = minX < 60 ? 60 - minX : 0, dy = minY < 60 ? 60 - minY : 0;
+  if(dx || dy){
+    all().forEach(function(n){ n.x += dx; n.y += dy; });
+    vp.scrollLeft += dx*scale; vp.scrollTop += dy*scale;
+  }
+}
+
+function addRel(sid, kind){
+  var s = N(sid), id = S.next++, n = mk(id,"","m",s.x,s.y,S.nextSib++), x = s.x, y = s.y;
+  if(kind === "padre" || kind === "madre"){
+    n.g = kind === "padre" ? "m" : "f";
+    var other = s.parents.map(N).filter(Boolean)[0];
+    all().filter(function(c){ return c.sib === s.sib; }).forEach(function(c){ if(c.parents.length < 2) c.parents.push(id); });
+    if(other && !other.partner){ other.partner = id; n.partner = other.id; }
+    y = s.y - ROW;
+    x = other ? other.x + (other.x <= s.x ? GAP : -GAP) : s.x + (n.g === "m" ? -100 : 100);
+  } else if(kind === "hermano" || kind === "hermana"){
+    n.g = kind === "hermano" ? "m" : "f"; n.sib = s.sib; n.parents = s.parents.slice(); x = s.x + GAP;
+  } else if(kind === "hijo" || kind === "hija"){
+    n.g = kind === "hijo" ? "m" : "f";
+    n.parents = [sid]; var pt = s.partner && N(s.partner);
+    if(pt) n.parents.push(pt.id);
+    var ex = all().filter(function(c){ return c.id !== id && sameSet(c.parents, n.parents); })[0];
+    if(ex) n.sib = ex.sib;
+    y = s.y + ROW; x = pt ? (s.x + pt.x)/2 : s.x;
+  } else if(kind === "esposo" || kind === "esposa"){
+    n.g = kind === "esposo" ? "m" : "f";
+    s.partner = id; n.partner = sid;
+    kids(sid).forEach(function(c){ if(c.parents.length === 1) c.parents.push(id); });
+    x = s.x + GAP;
+  }
+  S.nodes[id] = n;
+  place(n, x, y);
+  normalizeCoords();
+  sel = id;
+  save(); render(); renderPanel();
+  var nameIn = document.getElementById("fName"); if(nameIn) nameIn.focus();
+}
+function removeNode(id){
+  if(id === S.me) return;
+  var n = N(id);
+  if(!confirm("¿Borrar a " + displayName(n) + " del árbol?")) return;
+  delete S.nodes[id];
+  all().forEach(function(m){
+    m.parents = m.parents.filter(function(p){ return p !== id; });
+    if(m.partner === id) m.partner = null;
+  });
+  sel = null; save(); render(); renderPanel();
+}
+
+/* ---------- panel: build ---------- */
+function renderPanel(){
+  if(mode === "quiz"){ renderQuiz(); return; }
+  if(sel && N(sel)){ renderEditor(N(sel)); return; }
+  renderMissions();
+}
+function hasKey(keys, g){
+  return all().some(function(n){
+    if(n.id === S.me) return false;
+    var k = relKey(n.id);
+    return keys.indexOf(k) > -1 && (!g || n.g === g);
+  });
+}
+var MISSIONS = [
+  ["Añade a tu abuelo", function(){ return hasKey(["PP"],"m"); }],
+  ["Añade a tu abuela", function(){ return hasKey(["PP"],"f"); }],
+  ["Añade a un tío", function(){ return hasKey(["PS","PSE"],"m"); }],
+  ["Añade a una tía", function(){ return hasKey(["PS","PSE"],"f"); }],
+  ["Añade a un primo", function(){ return hasKey(["PSC"],"m"); }],
+  ["Añade a una prima", function(){ return hasKey(["PSC"],"f"); }],
+  ["Añade a un hermano o una hermana", function(){ return hasKey(["S"]); }],
+  ["Añade a un sobrino o una sobrina", function(){ return hasKey(["SC"]); }],
+  ["Añade a un cuñado o una cuñada", function(){ return hasKey(["SE","ES"]); }],
+  ["Pon nombre a 6 personas", function(){ return all().filter(function(n){ return n.name.trim(); }).length >= 6; }],
+  ["Escribe un letrero con 3 rasgos", function(){ return all().some(function(n){ return n.traits.length >= 3; }); }],
+  ["Describe a 3 personas", function(){ return all().filter(function(n){ return n.desc.trim(); }).length >= 3; }]
+];
+function renderMissions(){
+  var done = 0, li = MISSIONS.map(function(m){
+    var ok = m[1](); if(ok) done++;
+    return '<li class="'+(ok?"done":"")+'"><span class="box" aria-hidden="true">'+(ok?"✓":"")+'</span><span>'+esc(m[0])+'</span></li>';
+  }).join("");
+  panel.innerHTML =
+    '<h2>Tu familia</h2><p class="sub">Haz clic en una persona del árbol para ponerle nombre, añadir familiares o escribir su letrero. Empieza con <b>Yo</b>.</p>'
+    + '<button class="primary" id="goMe" style="width:100%">Editar a Yo</button>'
+    + '<h3>Misiones</h3><p class="hint" style="margin-top:0">'+done+' de '+MISSIONS.length+' completadas</p>'
+    + '<div class="progress" aria-hidden="true"><i style="width:'+(100*done/MISSIONS.length)+'%"></i></div>'
+    + '<ul class="missions">'+li+'</ul>'
+    + '<h3>Cómo se juega</h3><p class="hint" style="margin-top:0">Arrastra las tarjetas para ordenar el árbol. El árbol calcula el parentesco desde <b>Yo</b>: tu tía, tu primo, tu cuñada. Cuando tengas varias personas con nombre, abre el <b>Reto</b>.</p>';
+  document.getElementById("goMe").onclick = function(){ sel = S.me; render(); renderPanel(); };
+}
+function renderEditor(n){
+  var me = n.id === S.me, rel = relText(n.id);
+  var pCount = n.parents.filter(N).length;
+  var chips = TRAITS.map(function(t,i){
+    var k = "b:"+i, on = n.traits.indexOf(k) > -1;
+    return '<button class="chip" data-trait="'+k+'" aria-pressed="'+on+'">'+esc(t[n.g==="f"&&t[1]?1:0])+'</button>';
+  }).join("");
+  var custom = n.traits.filter(function(k){ return k.indexOf("c:")===0; }).map(function(k){
+    return '<button class="chip" data-trait="'+esc(k)+'" aria-pressed="true" title="Quitar">'+esc(k.slice(2))+' ×</button>';
+  }).join("");
+  panel.innerHTML =
+    '<h2>'+esc(displayName(n))+'</h2><p class="sub">'+(me ? "Tú eres el centro del árbol." : "Para ti es: <b>"+esc(rel)+"</b>")+'</p>'
+    + '<div class="row"><div><label for="fName">Nombre</label><input id="fName" value="'+esc(n.name)+'" placeholder="'+(me?"Tu nombre":"Nombre")+'" autocomplete="off"></div>'
+    + '<div><label for="fAge">Edad</label><input id="fAge" type="number" min="0" max="120" value="'+esc(n.age)+'"></div></div>'
+    + '<div class="seg" role="group" aria-label="Género"><button data-g="m" aria-pressed="'+(n.g==="m")+'">Masculino</button><button data-g="f" aria-pressed="'+(n.g==="f")+'">Femenino</button></div>'
+    + '<h3>Añadir familiar de '+esc(displayName(n))+'</h3><div class="addgrid">'
+    + btn("padre","Padre", pCount>=2) + btn("madre","Madre", pCount>=2)
+    + btn("hermano","Hermano") + btn("hermana","Hermana")
+    + btn("hijo","Hijo") + btn("hija","Hija")
+    + btn("esposo","Esposo", !!(n.partner&&N(n.partner))) + btn("esposa","Esposa", !!(n.partner&&N(n.partner)))
+    + '</div>'
+    + '<h3>El letrero</h3><p class="hint" style="margin-top:0">¿Cómo '+(me?"eres":"es")+'? Elige rasgos. La forma cambia con el género.</p>'
+    + '<div class="chips" id="chips">'+chips+custom+'</div>'
+    + '<div class="inline"><input id="fCustom" placeholder="Otro rasgo: optimista, fuerte…" autocomplete="off"><button id="addCustom">Añadir</button></div>'
+    + '<label for="fDesc">Descripción</label><textarea id="fDesc" placeholder="'+(me?"Me gusta… Vivo en…":"Le gusta… Vive en… Es profesora…")+'">'+esc(n.desc)+'</textarea>'
+    + '<p class="hint">Así se lee el letrero:</p><div class="preview" id="preview">'+esc(signText(n)||"—")+'</div>'
+    + (me ? "" : '<button class="danger" id="del">Borrar a esta persona</button>')
+    + '<button style="margin-top:10px;width:100%" id="close">Ver misiones</button>';
+
+  function btn(k,t,dis){ return '<button data-add="'+k+'"'+(dis?" disabled":"")+'>+ '+t+'</button>'; }
+
+  var refresh = function(){ save(); render(); document.getElementById("preview").textContent = signText(n) || "—"; };
+  document.getElementById("fName").oninput = function(e){ n.name = e.target.value; refresh(); panel.querySelector("h2").textContent = displayName(n); };
+  document.getElementById("fAge").oninput = function(e){ n.age = e.target.value.replace(/[^0-9]/g,"").slice(0,3); refresh(); };
+  document.getElementById("fDesc").oninput = function(e){ n.desc = e.target.value.slice(0,220); refresh(); };
+  Array.prototype.forEach.call(panel.querySelectorAll("[data-g]"), function(b){
+    b.onclick = function(){ n.g = b.getAttribute("data-g"); save(); render(); renderPanel(); };
+  });
+  Array.prototype.forEach.call(panel.querySelectorAll("[data-add]"), function(b){
+    b.onclick = function(){ addRel(n.id, b.getAttribute("data-add")); };
+  });
+  Array.prototype.forEach.call(panel.querySelectorAll("[data-trait]"), function(b){
+    b.onclick = function(){
+      var k = b.getAttribute("data-trait"), i = n.traits.indexOf(k);
+      if(i > -1) n.traits.splice(i,1); else n.traits.push(k);
+      save(); render(); renderPanel();
+    };
+  });
+  var addC = function(){
+    var v = document.getElementById("fCustom").value.trim().toLowerCase().slice(0,24);
+    if(v && n.traits.indexOf("c:"+v) === -1){ n.traits.push("c:"+v); save(); render(); renderPanel(); }
+  };
+  document.getElementById("addCustom").onclick = addC;
+  document.getElementById("fCustom").onkeydown = function(e){ if(e.key==="Enter") addC(); };
+  var del = document.getElementById("del"); if(del) del.onclick = function(){ removeNode(n.id); };
+  document.getElementById("close").onclick = function(){ sel = null; render(); renderPanel(); };
+}
+
+/* ---------- panel: quiz ---------- */
+function eligible(){
+  return all().filter(function(n){
+    if(n.id === S.me || !n.name.trim()) return false;
+    var k = relKey(n.id); return k !== null && !!LAB[k];
+  });
+}
+function newQuestion(){
+  var pool = eligible();
+  quiz.marks = {};
+  if(pool.length < 3){ quiz.q = null; return; }
+  var types = ["mc","mc","find"];
+  var signed = pool.filter(function(n){ return n.traits.length >= 2; });
+  if(signed.length >= 2) types.push("sign");
+  var type = pick(types), t, tries = 0;
+  do{ t = pick(type==="sign" ? signed : pool); tries++; } while(t.id === quiz.last && tries < 10);
+  quiz.last = t.id;
+  var who = meRef(), word = relWord(t.id);
+  var q = {type:type, target:t.id, word:word, answered:false};
+  if(type === "mc"){
+    var g = gi(t), opts = [word];
+    shuffle(CORE.slice()).forEach(function(k){ var w = LAB[k][g]; if(opts.length < 4 && opts.indexOf(w) === -1) opts.push(w); });
+    q.opts = shuffle(opts);
+    var art = t.g === "f" ? "la" : "el";
+    q.text = who ? esc(t.name)+" es "+art+" ______ de "+esc(who)+"." : esc(t.name)+" es tu ______.";
+    quiz.marks[t.id] = "target";
+  } else if(type === "find"){
+    q.text = "Haz clic en " + (who ? (t.g==="f"?"la ":"el ")+esc(word)+" de "+esc(who) : "tu "+esc(word)) + ".";
+  } else {
+    var two = shuffle(t.traits.slice()).slice(0,2);
+    q.traits = two;
+    q.text = "Lee los letreros. Haz clic en la persona que es " + esc(listES(two.map(function(k){ return traitWord(k,t); }))) + ".";
+  }
+  quiz.q = q;
+}
+function answerCorrect(id){
+  var q = quiz.q, n = N(id);
+  if(q.type === "find") return id !== S.me && relWord(id) === q.word;
+  return id !== S.me && q.traits.every(function(k){ return n.traits.indexOf(k) > -1; });
+}
+function finish(ok, msg){
+  var q = quiz.q; q.answered = true; quiz.total++;
+  if(ok){ quiz.score++; quiz.streak++; quiz.best = Math.max(quiz.best, quiz.streak); } else quiz.streak = 0;
+  q.fb = {ok:ok, msg:msg};
+  render(); renderQuiz();
+}
+function renderQuiz(){
+  if(!quiz){ quiz = {score:0,total:0,streak:0,best:0,marks:{},last:null,q:null}; newQuestion(); render(); }
+  var q = quiz.q;
+  var head = '<h2>Reto</h2><div class="score"><span>Aciertos: '+quiz.score+' de '+quiz.total+'</span><span>Racha: '+quiz.streak+'</span><span>Mejor: '+quiz.best+'</span></div>';
+  if(!q){
+    panel.innerHTML = head + '<p>Para jugar necesitas al menos 3 familiares con nombre, conectados con <b>Yo</b>.</p><button class="primary" id="exBtn" style="width:100%;margin-bottom:10px">Cargar la familia Morales</button><button id="backBtn" style="width:100%">Volver a construir</button>';
+    document.getElementById("exBtn").onclick = function(){ loadExample(true); };
+    document.getElementById("backBtn").onclick = function(){ setMode("build"); };
+    return;
+  }
+  var body = '<p class="q">'+q.text+'</p>';
+  if(q.type === "mc"){
+    body += '<div class="opts">' + q.opts.map(function(o){
+      var cls = "";
+      if(q.answered){ if(o === q.word) cls = "ok"; else if(o === q.picked) cls = "no"; }
+      return '<button data-opt="'+esc(o)+'" class="'+cls+'"'+(q.answered?" disabled":"")+'>'+esc(o)+'</button>';
+    }).join("") + '</div>';
+  } else if(!q.answered){
+    body += '<p class="hint">Haz clic en una tarjeta del árbol.</p>';
+  }
+  if(q.fb) body += '<div class="fb'+(q.fb.ok?" good":"")+'">'+q.fb.msg+'</div>';
+  if(q.answered) body += '<button class="primary" id="nextQ" style="width:100%">Siguiente pregunta</button>';
+  body += '<button id="skipQ" style="width:100%;margin-top:10px">'+(q.answered?"Terminar el reto":"Saltar")+'</button>';
+  panel.innerHTML = head + body;
+  Array.prototype.forEach.call(panel.querySelectorAll("[data-opt]"), function(b){
+    b.onclick = function(){
+      var o = b.getAttribute("data-opt"), t = N(q.target); q.picked = o;
+      var ok = o === q.word, sent = esc(t.name)+" es "+(meRef() ? (t.g==="f"?"la ":"el ")+esc(q.word)+" de "+esc(meRef()) : "tu "+esc(q.word))+".";
+      quiz.marks[q.target] = ok ? "right" : "target";
+      finish(ok, ok ? "¡Correcto! "+sent : "No. "+sent);
+    };
+  });
+  var nx = document.getElementById("nextQ"); if(nx) nx.onclick = function(){ newQuestion(); render(); renderQuiz(); };
+  document.getElementById("skipQ").onclick = function(){
+    if(q.answered){ setMode("build"); return; }
+    newQuestion(); render(); renderQuiz();
+  };
+  var f = document.getElementById("nextQ") || panel.querySelector("[data-opt]"); if(f) f.focus({preventScroll:true});
+}
+function quizClick(id){
+  var q = quiz && quiz.q; if(!q || q.answered || q.type === "mc") return;
+  var ok = answerCorrect(id), n = N(id);
+  quiz.marks = {};
+  all().forEach(function(m){ if(answerCorrect(m.id)) quiz.marks[m.id] = "right"; });
+  if(!ok) quiz.marks[id] = "wrong";
+  var msg;
+  if(q.type === "find"){
+    msg = ok ? "¡Correcto! "+esc(displayName(n))+" es "+esc(relText(id))+"."
+             : "No. "+esc(displayName(n))+" es "+esc(relText(id))+". Mira la tarjeta negra.";
+  } else {
+    msg = ok ? "¡Correcto! "+esc(displayName(n))+": "+esc(signText(n))
+             : "No. Lee otra vez los letreros. La respuesta está en negro.";
+  }
+  finish(ok, msg);
+}
+function setMode(m){
+  mode = m;
+  document.getElementById("tabBuild").setAttribute("aria-pressed", m==="build");
+  document.getElementById("tabQuiz").setAttribute("aria-pressed", m==="quiz");
+  document.body.classList.toggle("quiz", m==="quiz");
+  if(m === "build"){ quiz = null; }
+  render(); renderPanel();
+}
+
+/* ---------- dragging & clicks ---------- */
+var drag = null;
+nodesEl.addEventListener("pointerdown", function(e){
+  var el = e.target.closest(".node"); if(!el || e.button > 0) return;
+  var id = +el.getAttribute("data-id"), n = N(id);
+  drag = {id:id, el:el, sx:e.clientX, sy:e.clientY, ox:n.x, oy:n.y, moved:false, sign: !!e.target.closest("[data-sign]")};
+  el.setPointerCapture(e.pointerId);
+});
+nodesEl.addEventListener("pointermove", function(e){
+  if(!drag) return;
+  var dx = (e.clientX - drag.sx)/scale, dy = (e.clientY - drag.sy)/scale;
+  if(!drag.moved && Math.abs(dx)+Math.abs(dy) < 5) return;
+  drag.moved = true; drag.el.classList.add("dragging");
+  var n = N(drag.id); n.x = Math.max(0, Math.round(drag.ox + dx)); n.y = Math.max(0, Math.round(drag.oy + dy));
+  drag.el.style.left = n.x + "px"; drag.el.style.top = n.y + "px";
+  drawLines();
+});
+function endDrag(){
+  if(!drag) return;
+  var d = drag; drag = null;
+  if(d.moved){ save(); render(); return; }
+  activate(d.id, d.sign);
+}
+nodesEl.addEventListener("pointerup", endDrag);
+nodesEl.addEventListener("pointercancel", function(){ if(drag){ drag = null; render(); } });
+nodesEl.addEventListener("keydown", function(e){
+  if(e.key !== "Enter" && e.key !== " ") return;
+  var el = e.target.closest(".node"); if(!el) return;
+  e.preventDefault(); activate(+el.getAttribute("data-id"), false);
+});
+function activate(id, toSign){
+  if(mode === "quiz"){ quizClick(id); return; }
+  sel = id; render(); renderPanel();
+  if(toSign){ var c = document.getElementById("fDesc"); if(c) c.focus(); }
+}
+
+/* ---------- zoom ---------- */
+function setScale(s, cx, cy){
+  s = Math.max(0.3, Math.min(1.6, s));
+  cx = cx == null ? vp.clientWidth/2 : cx; cy = cy == null ? vp.clientHeight/2 : cy;
+  var wx = (vp.scrollLeft + cx)/scale, wy = (vp.scrollTop + cy)/scale;
+  scale = s; render();
+  vp.scrollLeft = wx*scale - cx; vp.scrollTop = wy*scale - cy;
+}
+function fit(){
+  var ns = all(), minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
+  ns.forEach(function(n){ minX=Math.min(minX,n.x); minY=Math.min(minY,n.y); maxX=Math.max(maxX,n.x+W); maxY=Math.max(maxY,n.y+BOXH); });
+  var s = Math.min((vp.clientWidth-60)/(maxX-minX), (vp.clientHeight-60)/(maxY-minY), 1.1);
+  scale = Math.max(0.3, s); render();
+  vp.scrollLeft = minX*scale - (vp.clientWidth - (maxX-minX)*scale)/2;
+  vp.scrollTop = minY*scale - (vp.clientHeight - (maxY-minY)*scale)/2;
+}
+document.getElementById("zIn").onclick = function(){ setScale(scale*1.2); };
+document.getElementById("zOut").onclick = function(){ setScale(scale/1.2); };
+document.getElementById("zFit").onclick = fit;
+
+/* ---------- example: familia Morales (Yo = Ana) ---------- */
+function loadExample(skipConfirm){
+  if(!skipConfirm && Object.keys(S.nodes).length > 1 && !confirm("El ejemplo reemplaza tu árbol actual. ¿Continuar? (Guarda tu árbol antes si lo quieres conservar.)")) return;
+  var rows = [
+    // id, name, g, age, x, y, parents, partner, sib, traits, desc
+    [1,"José","m","80",700,60,[],2,101,[5,20],"Vive en Puebla."],
+    [2,"Carmen","f","78",900,60,[],1,102,[6,11],"Cocina mole los domingos."],
+    [3,"Luis","m","50",240,340,[],4,103,[1],"Es mecánico."],
+    [4,"Rosa","f","52",440,340,[1,2],3,104,[14,9],"Es pintora."],
+    [5,"Ricardo","m","56",1160,340,[1,2],6,104,[13,8],"Es profesor de historia."],
+    [6,"Elena","f","54",1360,340,[],5,105,[15,4],"Es enfermera."],
+    [7,"Camila","f","16",340,620,[3,4],null,106,[16,11],"Juega voleibol."],
+    [8,"Andrés","m","30",560,620,[],9,107,[20],"Es músico."],
+    [9,"Sofía","f","27",760,620,[5,6],8,108,[21,5],"Es doctora."],
+    [10,"Diego","m","25",960,620,[5,6],null,108,[1],"Es ingeniero. Vive en Monterrey."],
+    [11,"Lucía","f","22",1160,620,[5,6],null,108,[9],"Estudia arquitectura."],
+    [12,"Mateo","m","18",1360,620,[5,6],null,108,[2,16],"Es el gemelo de Valentina."],
+    [13,"Valentina","f","18",1560,620,[5,6],null,108,[7],"Toca la guitarra."],
+    [14,"Pablo","m","14",1760,620,[5,6],null,108,[19],"Le encantan los videojuegos."],
+    [15,"Ana","f","9",1960,620,[5,6],null,108,[15,11],"Mi perro se llama Chispa."],
+    [16,"Tomás","m","3",660,900,[9,8],null,109,[19,5],"Le gusta jugar con sus tíos."]
+  ];
+  var nodes = {};
+  rows.forEach(function(r){
+    var n = mk(r[0],r[1],r[2],r[4],r[5],r[8]);
+    n.age = r[3]; n.parents = r[6]; n.partner = r[7];
+    n.traits = r[9].map(function(i){ return "b:"+i; }); n.desc = r[10];
+    nodes[r[0]] = n;
+  });
+  S = {v:1, me:15, next:17, nextSib:110, nodes:nodes};
+  sel = null; quiz = null; save();
+  render(); renderPanel();
+  fit();
+  toast("Familia Morales cargada. Yo = Ana.");
+}
+
+/* ---------- file save / open ---------- */
+function toast(t){
+  var el = document.getElementById("toast"); el.textContent = t; el.classList.add("show");
+  clearTimeout(toast._t); toast._t = setTimeout(function(){ el.classList.remove("show"); }, 2400);
+}
+document.getElementById("btnSave").onclick = function(){
+  var me = N(S.me), base = (me.name.trim() || "mi-familia").toLowerCase().replace(/[^a-z0-9áéíóúñü]+/gi,"-");
+  var blob = new Blob([JSON.stringify(S,null,1)], {type:"application/json"});
+  var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "arbol-" + base + ".json";
+  document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  toast("Árbol guardado en un archivo.");
+};
+document.getElementById("btnOpen").onclick = function(){ document.getElementById("fileIn").click(); };
+document.getElementById("fileIn").onchange = function(e){
+  var f = e.target.files[0]; if(!f) return;
+  var r = new FileReader();
+  r.onload = function(){
+    try{ var o = JSON.parse(r.result); if(!valid(o)) throw 0; S = o; sel = null; quiz = null; save(); render(); renderPanel(); fit(); toast("Árbol abierto."); }
+    catch(err){ toast("Ese archivo no es un árbol de este juego."); }
+  };
+  r.readAsText(f); e.target.value = "";
+};
+document.getElementById("btnNew").onclick = function(){
+  if(!confirm("¿Empezar un árbol nuevo? El árbol actual se borra. (Guárdalo antes si lo quieres conservar.)")) return;
+  S = fresh(); sel = S.me; quiz = null; save(); setMode("build"); centerMe();
+};
+document.getElementById("btnExample").onclick = function(){ loadExample(false); };
+document.getElementById("btnPrint").onclick = function(){ fit(); setTimeout(function(){ window.print(); }, 100); };
+document.getElementById("tabBuild").onclick = function(){ setMode("build"); };
+document.getElementById("tabQuiz").onclick = function(){ setMode("quiz"); };
+
+function centerMe(){
+  var m = N(S.me);
+  vp.scrollLeft = (m.x + W/2)*scale - vp.clientWidth/2;
+  vp.scrollTop = (m.y + 60)*scale - vp.clientHeight/2;
+}
+
+/* ---------- start ---------- */
+S = load() || fresh();
+render(); renderPanel();
+if(Object.keys(S.nodes).length > 1) fit(); else centerMe();
+})();
+</script>
+</body>
+</html>
