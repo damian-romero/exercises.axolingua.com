@@ -104,9 +104,17 @@ aside h3{font-family:var(--serif);font-size:21px;margin:26px 0 10px;padding-top:
 .toast.show{opacity:1}
 #fileIn{display:none}
 @media (max-width:900px){
-  main{grid-template-columns:1fr;grid-template-rows:60vh auto}
-  aside{border-left:0;border-top:2px solid var(--ink)}
-  .tools{margin-left:0}
+  /* phones/tablets: stacked layout, so the page must scroll instead of being one screen tall */
+  html,body{height:auto}
+  body{min-height:100%;grid-template-columns:minmax(0,1fr)}
+  body>header:not(.axl-nav){padding:10px 16px;gap:10px}
+  h1{font-size:24px}
+  .tools{margin-left:0;width:100%;min-width:0;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+  .tools button{flex:none;white-space:nowrap}
+  #btnPrint{display:none}
+  main{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto}
+  .canvas-wrap{height:50vh;height:50svh;min-height:280px;scroll-margin-top:60px}
+  aside{border-left:0;border-top:2px solid var(--ink);overflow:visible;padding-bottom:calc(48px + env(safe-area-inset-bottom));scroll-margin-top:60px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 @media print{
@@ -644,12 +652,13 @@ function renderQuiz(){
       var ok = o === q.word, sent = esc(t.name)+" es "+(meRef() ? (t.g==="f"?"la ":"el ")+esc(q.word)+" de "+esc(meRef()) : "tu "+esc(q.word))+".";
       quiz.marks[q.target] = ok ? "right" : "target";
       finish(ok, ok ? "¡Correcto! "+sent : "No. "+sent);
+      mobileScroll(panel);
     };
   });
-  var nx = document.getElementById("nextQ"); if(nx) nx.onclick = function(){ newQuestion(); render(); renderQuiz(); };
+  var nx = document.getElementById("nextQ"); if(nx) nx.onclick = function(){ newQuestion(); render(); renderQuiz(); quizFocus(); };
   document.getElementById("skipQ").onclick = function(){
     if(q.answered){ setMode("build"); return; }
-    newQuestion(); render(); renderQuiz();
+    newQuestion(); render(); renderQuiz(); quizFocus();
   };
   var f = document.getElementById("nextQ") || panel.querySelector("[data-opt]"); if(f) f.focus({preventScroll:true});
 }
@@ -708,9 +717,23 @@ nodesEl.addEventListener("keydown", function(e){
   var el = e.target.closest(".node"); if(!el) return;
   e.preventDefault(); activate(+el.getAttribute("data-id"), false);
 });
+/* phones: the panel sits below the tree, so bring it (or the tree) into view after a tap */
+var MQ = window.matchMedia ? window.matchMedia("(max-width:900px)") : null;
+function mobileScroll(el){
+  if(!MQ || !MQ.matches || !el) return;
+  el.scrollIntoView({block:"start"}); // instant: smooth scrolling is unreliable across embedded/mobile browsers
+}
+function quizFocus(){
+  var q = quiz && quiz.q;
+  if(q && !q.answered && q.type !== "mc") mobileScroll(document.querySelector(".canvas-wrap"));
+  else mobileScroll(panel);
+}
 function activate(id, toSign){
-  if(mode === "quiz"){ quizClick(id); return; }
-  sel = id; render(); renderPanel();
+  if(mode === "quiz"){
+    var q = quiz && quiz.q, live = q && !q.answered && q.type !== "mc";
+    quizClick(id); if(live) mobileScroll(panel); return;
+  }
+  sel = id; render(); renderPanel(); mobileScroll(panel);
   if(toSign){ var c = document.getElementById("fDesc"); if(c) c.focus(); }
 }
 
@@ -799,7 +822,7 @@ document.getElementById("btnNew").onclick = function(){
 document.getElementById("btnExample").onclick = function(){ loadExample(false); };
 document.getElementById("btnPrint").onclick = function(){ fit(); setTimeout(function(){ window.print(); }, 100); };
 document.getElementById("tabBuild").onclick = function(){ setMode("build"); };
-document.getElementById("tabQuiz").onclick = function(){ setMode("quiz"); };
+document.getElementById("tabQuiz").onclick = function(){ setMode("quiz"); quizFocus(); };
 
 function centerMe(){
   var m = N(S.me);
