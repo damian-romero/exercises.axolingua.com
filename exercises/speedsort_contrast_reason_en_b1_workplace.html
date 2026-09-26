@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F7F3EE">
+<title>The Root Cause Game — Axolingua</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,600&family=Outfit:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#F7F3EE; --cream:#F0EAE1; --sand:#E6DDCF; --linen:#D8CFBF; --feather:#FAF7F3;
+    --pink-deep:#B8524A; --pink-mid:#D0736C; --pink-soft:#E49E99; --pink-pale:#F2CECC; --pink-wash:#FBF0EF;
+    --jade-deep:#2A6B5F; --jade-mid:#3D8876; --jade-soft:#6AADA0; --jade-pale:#B5D9D3; --jade-wash:#EAF4F2;
+    --ochre-deep:#9E6B35; --ochre-mid:#BC8A52; --ochre-soft:#D4AE84; --ochre-pale:#ECDBC4; --ochre-wash:#F9F1E6;
+    --charcoal:#2C2A27; --slate:#5A5652; --stone:#8A847E; --pebble:#BEB8B2; --paper:#FFFFFF;
+    --display:'Fraunces',Georgia,serif; --ui:'Outfit',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; --mono:'DM Mono',monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  html{-webkit-text-size-adjust:100%; text-size-adjust:100%;}
+  body{
+    background:var(--ivory); color:var(--charcoal); font-family:var(--ui);
+    min-height:100vh; min-height:100dvh; display:flex; flex-direction:column;
+  }
+  main{flex:1; display:flex; align-items:flex-start; justify-content:center; padding:36px 20px 60px;}
+  .wrap{width:100%; max-width:760px;}
+
+  .eyebrow{font-family:var(--mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--jade-deep); margin:0 0 6px;}
+  h1{font-family:var(--display); font-weight:700; font-size:2rem; margin:0 0 6px; color:var(--charcoal);}
+  .sub{font-size:.98rem; color:var(--slate); margin:0 0 28px; max-width:56ch;}
+
+  /* ---- top bar: progress + score ---- */
+  .hud{display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:18px;}
+  .progress{flex:1; height:8px; background:var(--sand); border-radius:5px; overflow:hidden;}
+  .progress__fill{height:100%; background:var(--jade-mid); width:0%; transition:width .35s ease;}
+  .score{font-family:var(--mono); font-size:.82rem; letter-spacing:.04em; color:var(--slate); white-space:nowrap;}
+  .score b{color:var(--charcoal); font-size:1rem;}
+
+  /* ---- case card ---- */
+  .case{background:var(--paper); border-radius:18px; padding:26px 28px 28px; box-shadow:0 14px 34px -18px rgba(44,42,39,.28); border:1px solid var(--linen);}
+  .case__label{font-family:var(--mono); font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ochre-deep); margin-bottom:14px;}
+  .fact{display:flex; gap:12px; align-items:flex-start; padding:13px 14px; border-radius:12px; background:var(--feather); margin-bottom:10px; border:1px solid var(--linen);}
+  .fact__tag{font-family:var(--mono); font-size:.7rem; font-weight:500; color:var(--stone); background:var(--cream); border-radius:6px; padding:3px 7px; flex-shrink:0; margin-top:2px;}
+  .fact__text{font-family:var(--display); font-style:italic; font-size:1.06rem; line-height:1.4; color:var(--charcoal);}
+
+  .call-row{display:flex; gap:12px; margin:20px 0 4px;}
+  .call-btn{
+    flex:1; padding:16px 10px; border-radius:12px; border:2px solid var(--linen); background:var(--feather);
+    font-family:var(--ui); font-weight:600; font-size:.95rem; letter-spacing:.01em; color:var(--charcoal);
+    cursor:pointer; transition:border-color .15s, background .15s, transform .1s;
+  }
+  .call-btn:not(:disabled):active{transform:scale(.98);}
+  .call-btn.contrast{border-color:var(--pink-pale);}
+  .call-btn.reason{border-color:var(--ochre-pale);}
+  .call-btn.chosen-correct{border-color:var(--jade-mid); background:var(--jade-wash);}
+  .call-btn.chosen-wrong{border-color:var(--pink-deep); background:var(--pink-wash);}
+  .call-btn:disabled{cursor:default; opacity:.55;}
+
+  .connector-step{margin-top:18px; display:none;}
+  .connector-step.show{display:block; animation:fadein .25s ease;}
+  @keyframes fadein{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);}}
+  .connector-label{font-size:.85rem; color:var(--slate); margin-bottom:10px;}
+  .connector-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  @media (max-width:520px){.connector-grid{grid-template-columns:1fr;}}
+  .conn-btn{
+    padding:11px 14px; border-radius:10px; border:1.5px solid var(--linen); background:var(--paper);
+    font-family:var(--display); font-style:italic; font-size:1rem; color:var(--charcoal);
+    cursor:pointer; text-align:left; transition:border-color .15s, background .15s;
+  }
+  .conn-btn.chosen-correct{border-color:var(--jade-mid); background:var(--jade-wash); font-weight:600;}
+  .conn-btn.chosen-wrong{border-color:var(--pink-deep); background:var(--pink-wash);}
+  .conn-btn.reveal-correct{border-color:var(--jade-mid); background:var(--jade-wash);}
+  .conn-btn:disabled{cursor:default;}
+
+  .selftype{margin-top:18px; display:none;}
+  .selftype.show{display:block;}
+  .selftype label{font-size:.85rem; color:var(--slate); display:block; margin-bottom:8px;}
+  .selftype textarea{
+    width:100%; min-height:64px; border-radius:10px; border:1.5px solid var(--linen); background:var(--feather);
+    font-family:var(--ui); font-size:max(16px,.95rem); color:var(--charcoal); padding:11px 13px; resize:vertical;
+  }
+  .selftype textarea:focus{outline:none; border-color:var(--jade-soft);}
+
+  .feedback{margin-top:20px; padding:18px 20px; border-radius:14px; background:var(--jade-wash); border:1px solid var(--jade-pale); display:none;}
+  .feedback.show{display:block; animation:fadein .3s ease;}
+  .feedback__verdict{font-family:var(--ui); font-weight:600; font-size:.92rem; margin-bottom:8px;}
+  .feedback__verdict.mixed{color:var(--ochre-deep);}
+  .feedback__verdict.full{color:var(--jade-deep);}
+  .feedback__verdict.miss{color:var(--pink-deep);}
+  .feedback__model{font-family:var(--display); font-style:italic; font-size:1.08rem; line-height:1.5; color:var(--charcoal); margin-bottom:8px;}
+  .feedback__note{font-size:.87rem; color:var(--slate); line-height:1.5;}
+  .feedback__also{font-size:.82rem; color:var(--stone); margin-top:8px; font-style:italic;}
+
+  .next-row{margin-top:20px; display:none; justify-content:flex-end;}
+  .next-row.show{display:flex;}
+  .btn-primary{
+    font-family:var(--ui); font-weight:600; font-size:.9rem; letter-spacing:.02em; color:var(--paper);
+    background:var(--jade-deep); border:none; border-radius:9px; padding:12px 22px; cursor:pointer;
+    transition:background .15s;
+  }
+
+  /* ---- end screen ---- */
+  .end{display:none; text-align:center; padding:20px 10px 10px;}
+  .end.show{display:block; animation:fadein .3s ease;}
+  .end__badge{font-family:var(--mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ochre-deep); margin-bottom:10px;}
+  .end__score{font-family:var(--display); font-weight:700; font-size:3rem; color:var(--charcoal); margin:0 0 6px;}
+  .end__title{font-family:var(--display); font-style:italic; font-size:1.3rem; color:var(--jade-deep); margin:0 0 14px;}
+  .end__msg{font-size:.95rem; color:var(--slate); max-width:46ch; margin:0 auto 26px; line-height:1.55;}
+  .end__actions{display:flex; gap:12px; justify-content:center;}
+  .btn-ghost{
+    font-family:var(--ui); font-weight:600; font-size:.9rem; color:var(--charcoal);
+    background:transparent; border:1.5px solid var(--linen); border-radius:9px; padding:12px 22px; cursor:pointer;
+  }
+
+  .game-area.done .case, .game-area.done .hud{display:none;}
+
+  /* ---- mobile / touch ---- */
+  .call-btn,.conn-btn,.btn-primary,.btn-ghost{touch-action:manipulation; -webkit-tap-highlight-color:transparent;}
+  .conn-btn,.btn-primary,.btn-ghost{min-height:44px;}
+  .call-btn:focus-visible,.conn-btn:focus-visible,.btn-primary:focus-visible,.btn-ghost:focus-visible,.selftype textarea:focus-visible{outline:2px solid var(--jade-mid); outline-offset:2px;}
+  .case,.connector-step,.feedback,.end{scroll-margin-top:76px;}
+  /* hover only where a real pointer exists, and never over the answer-state colors */
+  @media (hover:hover){
+    .call-btn:not(:disabled):hover{border-color:var(--jade-soft); background:var(--jade-wash);}
+    .call-btn.contrast:not(:disabled):hover{border-color:var(--pink-mid); background:var(--pink-wash);}
+    .call-btn.reason:not(:disabled):hover{border-color:var(--ochre-mid); background:var(--ochre-wash);}
+    .conn-btn:not(:disabled):hover{border-color:var(--jade-soft);}
+    .btn-primary:hover{background:var(--jade-mid);}
+    .btn-ghost:hover{border-color:var(--stone);}
+  }
+  @media (max-width:560px){
+    main{padding:22px max(16px,env(safe-area-inset-right)) calc(40px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));}
+    h1{font-size:1.65rem;}
+    .sub{font-size:.94rem; margin-bottom:20px;}
+    .hud{gap:12px; margin-bottom:14px;}
+    .case{padding:18px 16px 20px; border-radius:14px;}
+    .fact{padding:11px 12px; gap:10px;}
+    .fact__text{font-size:1rem;}
+    .feedback{padding:16px;}
+    .next-row .btn-primary{width:100%;}
+    .end__score{font-size:2.5rem;}
+  }
+  @media (max-width:480px){
+    .call-row{flex-direction:column; gap:10px; margin-top:16px;}
+    .call-btn{padding:14px 12px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none !important; transition:none !important;}
+  }
+</style>
+</head>
+<body data-timed="0">
+
+<!-- AXOLINGUA: exercise nav bar v2 — brand mark + catalog link + instructions button, styled like the site nav. Hidden automatically inside the catalog iframe preview. -->
+<header class="axl-nav" id="axlNav">
+  <div class="axl-nav__inner">
+    <div class="axl-nav__left">
+      <a class="axl-nav__brand" href="/en/">
+        <img src="/assets/img/mark-nav.png" alt="Axolingua">
+        <span class="axl-wordmark"><em>axo</em>lingua</span>
+      </a>
+      <a class="axl-nav__link" href="/en/ejercicios/">All exercises</a>
+    </div>
+    <button type="button" class="axl-nav__instr-btn" id="axlInstrBtn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2 1.8-2 3.5"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Instructions
+    </button>
+  </div>
+</header>
+<div class="axl-instr-overlay" id="axlInstrOverlay">
+  <div class="axl-instr-card">
+    <button class="axl-instr-close" id="axlInstrClose" aria-label="Close">✕</button>
+    <h4>How to play</h4>
+    <ol>
+      <li>Each round shows two facts from a workplace case file.</li>
+      <li>Decide fast: do the facts <b>clash</b> (contrast) or does one <b>cause</b> the other (reason)?</li>
+      <li>Then pick the connector that fits best.</li>
+      <li>Try typing the full sentence yourself before you reveal the model answer underneath.</li>
+      <li>Score points for the right call and the right connector. Ten rounds, then your result.</li>
+    </ol>
+  </div>
+</div>
+<style>
+  .axl-nav{display:none;position:sticky;top:0;z-index:9999;background:#FAF7F3;border-bottom:1px solid #D8CFBF;font-family:'Outfit',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .axl-nav__inner{max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;height:60px;padding:0 20px;box-sizing:border-box}
+  .axl-nav__left{display:flex;align-items:center;gap:22px;min-width:0}
+  .axl-nav__brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+  .axl-nav__brand img{height:26px;width:auto;display:block}
+  .axl-wordmark{font-family:'Fraunces',Georgia,serif;font-weight:300;font-size:1.1rem;letter-spacing:-.01em;color:#2C2A27}
+  .axl-wordmark em{font-style:italic;color:#D0736C}
+  .axl-nav__link{font-size:.85rem;color:#5A5652;text-decoration:none;letter-spacing:.01em;padding-bottom:2px;border-bottom:1.5px solid transparent;white-space:nowrap;text-transform:none;box-shadow:none;transition:color .2s,border-color .2s}
+  .axl-nav__link:hover{color:#2C2A27;border-bottom-color:#D0736C}
+  .axl-nav__instr-btn{display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:.78rem;font-weight:500;letter-spacing:.01em;text-transform:none;text-align:left;color:#D0736C;background:transparent;border:1.5px solid #D0736C;border-radius:4px;padding:7px 14px;cursor:pointer;white-space:nowrap;box-shadow:none;flex-shrink:0;transition:background .2s,color .2s}
+  .axl-nav__instr-btn:hover{background:#FBF0EF;color:#B8524A}
+  @media (max-width:560px){
+    .axl-wordmark{display:none}
+    .axl-nav__inner{padding:0 12px;gap:10px}
+    .axl-nav__left{gap:14px}
+    .axl-nav__link,.axl-nav__instr-btn{font-size:.74rem}
+  }
+  .axl-instr-overlay{position:fixed;inset:0;background:rgba(20,18,16,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:100000}
+  .axl-instr-overlay.is-open{display:flex}
+  .axl-instr-card{background:#FAF7F3;border-radius:16px;max-width:380px;width:100%;padding:22px 24px;box-shadow:0 20px 44px -16px rgba(0,0,0,.4);position:relative;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#2C2A27}
+  .axl-instr-card h4{font-size:1.05rem;margin:0 0 12px;color:#2A6B5F;font-family:Georgia,serif;font-weight:400}
+  .axl-instr-card ol{margin:0;padding-left:20px;font-size:.88rem;line-height:1.55}
+  .axl-instr-card li{margin-bottom:8px}
+  .axl-instr-card li:last-child{margin-bottom:0}
+  .axl-instr-close{position:absolute;top:10px;right:12px;background:none;border:none;font-size:1.15rem;line-height:1;text-transform:none;letter-spacing:normal;box-shadow:none;cursor:pointer;color:#8A847E;padding:4px}
+  .axl-instr-close:hover{color:#2C2A27}
+</style>
+<script>
+(function () {
+  if (window.self !== window.top) return; // stay hidden inside the /ejercicios/ catalog preview
+  var bar = document.getElementById('axlNav');
+  bar.style.display = 'block';
+  var overlay = document.getElementById('axlInstrOverlay');
+  document.getElementById('axlInstrBtn').addEventListener('click', function () { overlay.classList.add('is-open'); });
+  document.getElementById('axlInstrClose').addEventListener('click', function () { overlay.classList.remove('is-open'); });
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.classList.remove('is-open'); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') overlay.classList.remove('is-open'); });
+})();
+</script>
+
+<main>
+<div class="wrap">
+
+  <p class="eyebrow">Axolingua &middot; English for Professionals</p>
+  <h1>The Root Cause Game</h1>
+  <p class="sub">Ten workplace case files. Call it CONTRAST or REASON, pick the connector that fits, then check your sentence against the model.</p>
+
+  <div class="game-area" id="gameArea">
+    <div class="hud">
+      <div class="progress"><div class="progress__fill" id="progressFill"></div></div>
+      <div class="score">Score <b id="scoreNum">0</b> / <span id="scoreMax">20</span></div>
+    </div>
+
+    <div class="case">
+      <div class="case__label" id="caseLabel">CASE FILE 1 / 10</div>
+
+      <div class="fact"><span class="fact__tag">FACT A</span><span class="fact__text" id="factA"></span></div>
+      <div class="fact"><span class="fact__tag">FACT B</span><span class="fact__text" id="factB"></span></div>
+
+      <div class="call-row">
+        <button class="call-btn contrast" id="btnContrast">⚖️ CONTRAST — they clash</button>
+        <button class="call-btn reason" id="btnReason">🔗 REASON — one causes the other</button>
+      </div>
+
+      <div class="connector-step" id="connectorStep">
+        <p class="connector-label">Now pick the connector that fits best:</p>
+        <div class="connector-grid" id="connectorGrid"></div>
+      </div>
+
+      <div class="selftype" id="selftype">
+        <label for="selftypeInput">Optional: type your full sentence before you look below.</label>
+        <textarea id="selftypeInput" placeholder="Type your sentence here…" rows="2" autocomplete="off" autocorrect="off" autocapitalize="sentences" spellcheck="false"></textarea>
+      </div>
+
+      <div class="feedback" id="feedback" aria-live="polite">
+        <div class="feedback__verdict" id="feedbackVerdict"></div>
+        <div class="feedback__model" id="feedbackModel"></div>
+        <div class="feedback__note" id="feedbackNote"></div>
+        <div class="feedback__also" id="feedbackAlso"></div>
+      </div>
+
+      <div class="next-row" id="nextRow">
+        <button class="btn-primary" id="nextBtn">Next case file →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="end" id="endScreen">
+    <p class="end__badge">Investigation complete</p>
+    <p class="end__score" id="endScore">0/20</p>
+    <p class="end__title" id="endTitle"></p>
+    <p class="end__msg" id="endMsg"></p>
+    <div class="end__actions">
+      <button class="btn-primary" id="replayBtn">Play again</button>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<script>
+(function () {
+  var ROUNDS = [
+    {
+      a: "The freezer log stayed steady all week.",
+      b: "One reading still spiked for 20 minutes on Tuesday.",
+      category: "contrast",
+      connector: "although",
+      options: ["although", "because", "since", "despite"],
+      model: "Although the freezer log stayed steady all week, one reading still spiked for 20 minutes on Tuesday.",
+      note: "\u201cDespite\u201d carries the same idea, but it needs a noun (\u201cdespite one 20-minute spike\u201d), not a full clause.",
+      also: []
+    },
+    {
+      a: "Both labs are ISO-certified.",
+      b: "Only Kaveri followed the updated SOP version.",
+      category: "contrast",
+      connector: "whereas",
+      options: ["whereas", "because", "as", "despite"],
+      model: "Both labs are ISO-certified, whereas only Kaveri followed the updated SOP version.",
+      note: "\u201cWhereas\u201d sets two different facts side by side \u2014 there\u2019s no surprise here, just a difference.",
+      also: []
+    },
+    {
+      a: "The technician was newly trained.",
+      b: "A dilution error occurred.",
+      category: "reason",
+      connector: "because",
+      options: ["because", "although", "whereas", "despite"],
+      model: "A dilution error occurred because the technician was newly trained.",
+      note: "\u201cBecause\u201d links the cause directly to the result \u2014 exactly what happened here.",
+      also: ["since", "as"]
+    },
+    {
+      a: "Kaveri's equipment was serviced last month.",
+      b: "London's was serviced two years ago.",
+      category: "contrast",
+      connector: "whereas",
+      options: ["whereas", "since", "because of", "as"],
+      model: "Kaveri's equipment was serviced last month, whereas London's was serviced two years ago.",
+      note: "Two facts placed side by side for comparison \u2014 the classic \u201cwhereas\u201d job.",
+      also: ["while"]
+    },
+    {
+      a: "The courier delayed the shipment by six hours.",
+      b: "The samples were still within the validated time window.",
+      category: "contrast",
+      connector: "although",
+      options: ["although", "because", "since", "because of"],
+      model: "Although the courier delayed the shipment by six hours, the samples were still within the validated time window.",
+      note: "A genuinely surprising clash \u2014 \u201calthough\u201d or \u201ceven though\u201d both work well.",
+      also: ["even though"]
+    },
+    {
+      a: "The reagent lot was unvalidated.",
+      b: "The readings were inconsistent.",
+      category: "reason",
+      connector: "since",
+      options: ["since", "whereas", "even though", "despite"],
+      model: "Since the reagent lot was unvalidated, the readings were inconsistent.",
+      note: "\u201cSince\u201d works well clause-first here, and sounds a little more formal than \u201cbecause.\u201d",
+      also: ["because", "as"]
+    },
+    {
+      a: "The SOP requires double-testing.",
+      b: "Kaveri tested once, due to time pressure.",
+      category: "reason",
+      connector: "because of",
+      options: ["because of", "because", "whereas", "although"],
+      model: "Kaveri tested once because of time pressure.",
+      note: "\u201cTime pressure\u201d is a noun phrase, so it needs \u201cbecause of,\u201d not \u201cbecause\u201d alone.",
+      also: []
+    },
+    {
+      a: "Amanda requested a same-day summary.",
+      b: "The team needs 48 hours to confirm the cause.",
+      category: "contrast",
+      connector: "although",
+      options: ["although", "because", "since", "as"],
+      model: "Although Amanda requested a same-day summary, the team needs 48 hours to confirm the cause.",
+      note: "Two things pulling in different directions \u2014 a clean contrast.",
+      also: ["whereas", "even though"]
+    },
+    {
+      a: "The pH meter hadn't been recalibrated this quarter.",
+      b: "Several pH readings looked drifted.",
+      category: "reason",
+      connector: "as",
+      options: ["as", "although", "whereas", "despite"],
+      model: "As the pH meter hadn't been recalibrated this quarter, several readings looked drifted.",
+      note: "\u201cAs\u201d works exactly like \u201csince\u201d or \u201cbecause\u201d here \u2014 a formal, clause-first reason.",
+      also: ["since", "because"]
+    },
+    {
+      a: "The final report will include both labs' data.",
+      b: "Only one lab's data will carry the \u201cvalidated\u201d label until retested.",
+      category: "contrast",
+      connector: "even though",
+      options: ["even though", "because", "since", "because of"],
+      model: "Even though the final report will include both labs' data, only one lab's data will carry the \u201cvalidated\u201d label until retested.",
+      note: "A strong, slightly emphatic contrast \u2014 \u201ceven though\u201d fits better than a plain \u201calthough\u201d here.",
+      also: ["although"]
+    }
+  ];
+
+  var order = [];
+  var idx = 0;
+  var score = 0;
+  var maxScore = ROUNDS.length * 2;
+  var categoryLocked = false;
+  var connectorLocked = false;
+  var categoryCorrectThisRound = false;
+
+  var els = {
+    progressFill: document.getElementById('progressFill'),
+    scoreNum: document.getElementById('scoreNum'),
+    scoreMax: document.getElementById('scoreMax'),
+    caseLabel: document.getElementById('caseLabel'),
+    factA: document.getElementById('factA'),
+    factB: document.getElementById('factB'),
+    btnContrast: document.getElementById('btnContrast'),
+    btnReason: document.getElementById('btnReason'),
+    connectorStep: document.getElementById('connectorStep'),
+    connectorGrid: document.getElementById('connectorGrid'),
+    selftype: document.getElementById('selftype'),
+    selftypeInput: document.getElementById('selftypeInput'),
+    feedback: document.getElementById('feedback'),
+    feedbackVerdict: document.getElementById('feedbackVerdict'),
+    feedbackModel: document.getElementById('feedbackModel'),
+    feedbackNote: document.getElementById('feedbackNote'),
+    feedbackAlso: document.getElementById('feedbackAlso'),
+    nextRow: document.getElementById('nextRow'),
+    nextBtn: document.getElementById('nextBtn'),
+    gameArea: document.getElementById('gameArea'),
+    endScreen: document.getElementById('endScreen'),
+    endScore: document.getElementById('endScore'),
+    endTitle: document.getElementById('endTitle'),
+    endMsg: document.getElementById('endMsg'),
+    replayBtn: document.getElementById('replayBtn')
+  };
+
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function reveal(el, always, endEl) {
+    // Keeps el (through endEl, if given) on screen. Only scrolls when it's partly off-screen,
+    // so desktop users see no jump; if the block is taller than the viewport, its top wins.
+    requestAnimationFrame(function () {
+      var top = el.getBoundingClientRect().top;
+      var bottom = (endEl || el).getBoundingClientRect().bottom;
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      if (!always && top >= 70 && bottom <= vh) return;
+      var fitsBelowNav = (bottom - top) <= vh - 90;
+      var target = (always || !fitsBelowNav) ? el : (endEl || el);
+      target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: (always || !fitsBelowNav) ? 'start' : 'nearest' });
+    });
+  }
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function startGame() {
+    order = shuffle(ROUNDS.map(function (_, i) { return i; }));
+    idx = 0; score = 0;
+    els.scoreMax.textContent = maxScore;
+    els.gameArea.classList.remove('done');
+    els.endScreen.classList.remove('show');
+    els.gameArea.style.display = '';
+    updateScore();
+    loadRound();
+  }
+
+  function updateScore() {
+    els.scoreNum.textContent = score;
+    els.progressFill.style.width = Math.round((idx / ROUNDS.length) * 100) + '%';
+  }
+
+  function loadRound() {
+    if (idx >= ROUNDS.length) { finishGame(); return; }
+    var r = ROUNDS[order[idx]];
+    categoryLocked = false; connectorLocked = false; categoryCorrectThisRound = false;
+
+    els.caseLabel.textContent = 'CASE FILE ' + (idx + 1) + ' / ' + ROUNDS.length;
+    els.factA.textContent = r.a;
+    els.factB.textContent = r.b;
+
+    els.btnContrast.disabled = false; els.btnReason.disabled = false;
+    els.btnContrast.className = 'call-btn contrast';
+    els.btnReason.className = 'call-btn reason';
+
+    els.connectorStep.classList.remove('show');
+    els.connectorGrid.innerHTML = '';
+    els.selftype.classList.remove('show');
+    els.selftypeInput.value = '';
+    els.feedback.classList.remove('show');
+    els.nextRow.classList.remove('show');
+
+    var opts = shuffle(r.options);
+    opts.forEach(function (opt) {
+      var b = document.createElement('button');
+      b.className = 'conn-btn';
+      b.type = 'button';
+      b.textContent = opt;
+      b.addEventListener('click', function () { chooseConnector(opt, b); });
+      els.connectorGrid.appendChild(b);
+    });
+  }
+
+  function chooseCategory(picked, r) {
+    if (categoryLocked) return;
+    categoryLocked = true;
+    var correct = picked === r.category;
+    categoryCorrectThisRound = correct;
+    (picked === 'contrast' ? els.btnContrast : els.btnReason)
+      .classList.add(correct ? 'chosen-correct' : 'chosen-wrong');
+    if (!correct) {
+      (r.category === 'contrast' ? els.btnContrast : els.btnReason).classList.add('chosen-correct');
+    }
+    els.btnContrast.disabled = true; els.btnReason.disabled = true;
+    if (correct) score += 1;
+    updateScore();
+    els.connectorStep.classList.add('show');
+    els.selftype.classList.add('show');
+    reveal(els.connectorStep);
+  }
+
+  function chooseConnector(picked, btnEl) {
+    if (connectorLocked) return;
+    connectorLocked = true;
+    var r = ROUNDS[order[idx]];
+    var correct = picked === r.connector;
+    Array.prototype.forEach.call(els.connectorGrid.children, function (btn) {
+      btn.disabled = true;
+      if (btn === btnEl) btn.classList.add(correct ? 'chosen-correct' : 'chosen-wrong');
+      if (!correct && btn.textContent === r.connector) btn.classList.add('reveal-correct');
+    });
+    if (correct) score += 1;
+    updateScore();
+    showFeedback(r, categoryCorrectThisRound, correct);
+  }
+
+  function showFeedback(r, catCorrect, connCorrect) {
+    var verdictEl = els.feedbackVerdict;
+    var bothRight = catCorrect && connCorrect;
+    var bothWrong = !catCorrect && !connCorrect;
+    verdictEl.className = 'feedback__verdict ' + (bothRight ? 'full' : bothWrong ? 'miss' : 'mixed');
+    verdictEl.textContent = bothRight
+      ? 'Nailed it \u2014 right call, right connector.'
+      : bothWrong
+        ? 'Missed this one \u2014 here\u2019s the model.'
+        : 'Close \u2014 one part right, one to review.';
+    els.feedbackModel.textContent = r.model;
+    els.feedbackNote.textContent = r.note;
+    if (r.also && r.also.length) {
+      els.feedbackAlso.textContent = 'Also acceptable: ' + r.also.join(', ') + '.';
+    } else {
+      els.feedbackAlso.textContent = '';
+    }
+    els.feedback.classList.add('show');
+    els.nextRow.classList.add('show');
+    reveal(els.feedback, false, els.nextRow);
+  }
+
+  function finishGame() {
+    els.gameArea.classList.add('done');
+    els.gameArea.style.display = 'none';
+    els.endScreen.classList.add('show');
+    els.endScore.textContent = score + '/' + maxScore;
+    var pct = score / maxScore;
+    if (pct >= 0.8) {
+      els.endTitle.textContent = 'Root Cause Investigator';
+      els.endMsg.textContent = 'Sharp eye for contrast and reason \u2014 and for because vs. because of, which trips up almost everyone.';
+    } else if (pct >= 0.5) {
+      els.endTitle.textContent = 'Solid casework';
+      els.endMsg.textContent = 'You\u2019ve got the categories down. Play again and watch the connectors you missed.';
+    } else {
+      els.endTitle.textContent = 'Case reopened';
+      els.endMsg.textContent = 'A rough first pass is normal. Replay \u2014 the same ten case files repeat until they stick.';
+    }
+  }
+
+  els.btnContrast.addEventListener('click', function () { chooseCategory('contrast', ROUNDS[order[idx]]); });
+  els.btnReason.addEventListener('click', function () { chooseCategory('reason', ROUNDS[order[idx]]); });
+  els.nextBtn.addEventListener('click', function () {
+    idx += 1; updateScore(); loadRound();
+    var card = idx >= ROUNDS.length ? els.endScreen : document.querySelector('.case');
+    if (card.getBoundingClientRect().top < 0) reveal(card, true);
+  });
+  els.replayBtn.addEventListener('click', startGame);
+
+  startGame();
+})();
+</script>
+
+</body>
+</html>

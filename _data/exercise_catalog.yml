@@ -244,3 +244,17 @@
   description:
     es: "Construye tu propio árbol: añade padres, hermanos, tíos y primos, y el árbol te dice el parentesco desde ti. Escribe un letrero para cada persona con su edad y sus rasgos, cumple 12 misiones y ponte a prueba en el Reto. Incluye una familia de ejemplo con 16 personas."
     en: "Build your own tree: add parents, siblings, aunts, uncles and cousins, and it names each relationship from your point of view. Write a sign for each person with their age and traits, complete 12 missions, then test yourself in the Challenge. Includes a 16-person example family."
+
+- slug: speedsort-contrast-reason-en-b1-workplace
+  file: speedsort_contrast_reason_en_b1_workplace.html
+  skill: speedsort
+  grammar: contrast_reason
+  target_lang: en
+  level: b1
+  theme: workplace
+  title:
+    es: "El juego de la causa raíz — Conectores de contraste y causa"
+    en: "The Root Cause Game — Contrast and Reason Connectors"
+  description:
+    es: "Diez expedientes de un laboratorio: decide si dos hechos se contraponen o si uno causa el otro, elige el conector en inglés que mejor encaja (although, whereas, because, because of…) y compara tu oración con el modelo."
+    en: "Ten lab case files: decide whether two facts clash or one causes the other, pick the connector that fits best (although, whereas, because, because of…), and check your sentence against the model."
