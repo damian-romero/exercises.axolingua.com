@@ -1,0 +1,378 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#F7F3EE;color:#2C2A27}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!-- AXOLINGUA: exercise nav bar v2 — brand mark + catalog link + instructions button, styled like the site nav. Hidden automatically inside the catalog iframe preview. -->
+<header class="axl-nav" id="axlNav">
+  <div class="axl-nav__inner">
+    <div class="axl-nav__left">
+      <a class="axl-nav__brand" href="/">
+        <img src="/assets/img/mark-nav.png" alt="Axolingua">
+        <span class="axl-wordmark"><em>axo</em>lingua</span>
+      </a>
+      <a class="axl-nav__link" href="/ejercicios/">Todos los ejercicios</a>
+    </div>
+    <button type="button" class="axl-nav__instr-btn" id="axlInstrBtn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2 1.8-2 3.5"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Instrucciones
+    </button>
+  </div>
+</header>
+<div class="axl-instr-overlay" id="axlInstrOverlay">
+  <div class="axl-instr-card">
+    <button class="axl-instr-close" id="axlInstrClose" aria-label="Cerrar">✕</button>
+    <h4>Cómo se juega</h4>
+    <ol>
+      <li>Elige una parada del mapa, o pulsa «Parada sorpresa».</li>
+      <li>Lee el reto en voz alta. Si lo necesitas, usa las frases de «Para empezar».</li>
+      <li>Pulsa «Empezar» y responde mientras corre el tiempo.</li>
+      <li>La profesora da los puntos: 1 si respondes con ideas sueltas, 2 si usas frases completas, 3 si añades detalles y conectores (porque, pero, después). Luego le toca al otro jugador.</li>
+    </ol>
+  </div>
+</div>
+<style>
+  .axl-nav{display:none;position:sticky;top:0;z-index:9999;margin:-32px -20px 32px;background:#FAF7F3;border-bottom:1px solid #D8CFBF;font-family:'Outfit',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .axl-nav__inner{max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;height:60px;padding:0 20px;box-sizing:border-box}
+  .axl-nav__left{display:flex;align-items:center;gap:22px;min-width:0}
+  .axl-nav__brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+  .axl-nav__brand img{height:26px;width:auto;display:block}
+  .axl-wordmark{font-family:'Fraunces',Georgia,serif;font-weight:300;font-size:1.1rem;letter-spacing:-.01em;color:#2C2A27}
+  .axl-wordmark em{font-style:italic;color:#D0736C}
+  .axl-nav__link{font-size:.85rem;color:#5A5652;text-decoration:none;letter-spacing:.01em;padding-bottom:2px;border-bottom:1.5px solid transparent;white-space:nowrap;text-transform:none;box-shadow:none;transition:color .2s,border-color .2s}
+  .axl-nav__link:hover{color:#2C2A27;border-bottom-color:#D0736C}
+  .axl-nav__instr-btn{display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:.78rem;font-weight:500;letter-spacing:.01em;text-transform:none;text-align:left;color:#D0736C;background:transparent;border:1.5px solid #D0736C;border-radius:4px;padding:7px 14px;cursor:pointer;white-space:nowrap;box-shadow:none;flex-shrink:0;transition:background .2s,color .2s}
+  .axl-nav__instr-btn:hover{background:#FBF0EF;color:#B8524A}
+  @media (max-width:560px){
+    .axl-wordmark{display:none}
+    .axl-nav__inner{padding:0 12px;gap:10px}
+    .axl-nav__left{gap:14px}
+    .axl-nav__link,.axl-nav__instr-btn{font-size:.74rem}
+  }
+  .axl-instr-overlay{position:fixed;inset:0;background:rgba(20,18,16,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:100000}
+  .axl-instr-overlay.is-open{display:flex}
+  .axl-instr-card{background:#FAF7F3;border-radius:16px;max-width:380px;width:100%;padding:22px 24px;box-shadow:0 20px 44px -16px rgba(0,0,0,.4);position:relative;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#2C2A27}
+  .axl-instr-card h4{font-size:1.05rem;margin:0 0 12px;color:#2A6B5F;font-family:Georgia,serif;font-weight:400}
+  .axl-instr-card ol{margin:0;padding-left:20px;font-size:.88rem;line-height:1.55}
+  .axl-instr-card li{margin-bottom:8px}
+  .axl-instr-card li:last-child{margin-bottom:0}
+  .axl-instr-close{position:absolute;top:10px;right:12px;background:none;border:none;font-size:1.15rem;line-height:1;text-transform:none;letter-spacing:normal;box-shadow:none;cursor:pointer;color:#8A847E;padding:4px}
+  .axl-instr-close:hover{color:#2C2A27}
+</style>
+<script>
+(function () {
+  if (window.self !== window.top) return; // stay hidden inside the /ejercicios/ catalog preview
+  var bar = document.getElementById('axlNav');
+  bar.style.display = 'block';
+  var overlay = document.getElementById('axlInstrOverlay');
+  document.getElementById('axlInstrBtn').addEventListener('click', function () { overlay.classList.add('is-open'); });
+  document.getElementById('axlInstrClose').addEventListener('click', function () { overlay.classList.remove('is-open'); });
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.classList.remove('is-open'); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') overlay.classList.remove('is-open'); });
+})();
+</script>
+
+<title>Paseo por Bellas Artes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700&family=Outfit:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: 8-stop route board on top, active speaking card below, scoreboard and timer in a side column on wide screens. Black and white, one gray, no color accents. */
+:root {
+  --bg: #F7F3EE;
+  --surface: #F0EAE1;
+  --ink: #2C2A27;
+  --muted: #5A5652;
+  --line: #D8CFBF;
+  --invert-bg: #2C2A27;
+  --invert-fg: #F7F3EE;
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Outfit', system-ui, sans-serif;
+  --font-mono: 'DM Mono', 'Courier New', monospace;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5; padding-inline: 20px; padding-block: 32px 56px; }
+.wrap { max-width: 1040px; margin-inline: auto; display: flex; flex-direction: column; gap: 28px; }
+header { display: flex; flex-direction: column; gap: 6px; }
+.eyebrow { font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+h1 { font-family: var(--font-display); font-size: clamp(32px, 6vw, 52px); line-height: 1.08; margin: 0; text-wrap: balance; }
+.sub { color: var(--muted); max-width: 62ch; margin: 0; }
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 28px; align-items: start; }
+@media (max-width: 860px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+.main { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.board { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 620px) { .board { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.stop { text-align: left; font: inherit; color: var(--ink); background: var(--surface); border: 1.5px solid var(--line); border-radius: 10px; padding: 12px 12px 14px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; min-height: 104px; transition: border-color .15s, transform .15s; }
+.stop:hover { border-color: var(--ink); }
+.stop:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.stop .n { font-family: var(--font-display); font-size: 22px; font-weight: 700; }
+.stop .t { font-weight: 700; line-height: 1.2; }
+.stop .k { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: auto; }
+.stop.active { background: var(--invert-bg); color: var(--invert-fg); border-color: var(--invert-bg); }
+.stop.active .k { color: var(--invert-fg); opacity: 0.75; }
+.stop.done { border-style: dashed; }
+.stop.done .t { text-decoration: line-through; text-decoration-thickness: 1.5px; }
+.card { border: 1.5px solid var(--ink); border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.card.empty { border-color: var(--line); color: var(--muted); }
+.card .meta { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: baseline; }
+.badge { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; border: 1.5px solid var(--ink); border-radius: 999px; padding: 2px 10px; }
+.place { font-family: var(--font-display); font-size: 26px; font-weight: 700; margin: 0; }
+.prompt { font-size: 21px; line-height: 1.4; margin: 0; max-width: 60ch; text-wrap: pretty; }
+.starters { display: flex; flex-wrap: wrap; gap: 8px; }
+.starters span { background: var(--surface); border-radius: 8px; padding: 6px 12px; font-weight: 600; }
+.label { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin: 0 0 6px; }
+.teacher { background: var(--surface); border-radius: 10px; padding: 14px 16px; font-size: 15px; }
+.teacher p { margin: 0 0 6px; }
+.speaker { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+.speaker .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--ink); }
+button.btn { font: inherit; font-weight: 700; background: transparent; color: var(--ink); border: 1.5px solid var(--ink); border-radius: 10px; padding: 10px 16px; cursor: pointer; min-height: 44px; }
+button.btn:hover { background: var(--ink); color: var(--bg); }
+button.btn.solid { background: var(--ink); color: var(--bg); }
+button.btn.solid:hover { opacity: 0.85; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; }
+aside.side { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.panel { border: 1.5px solid var(--line); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+.team { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; }
+.team input { font: inherit; font-weight: 700; background: transparent; color: var(--ink); border: none; border-bottom: 1.5px solid var(--line); padding: 4px 0; min-width: 0; width: 100%; }
+.score { font-family: var(--font-display); font-size: 40px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; }
+.team.turn input { border-bottom-color: var(--ink); }
+.timer { font-family: var(--font-display); font-size: 56px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; }
+.timer.low { text-decoration: underline; text-decoration-thickness: 4px; }
+.bar { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
+.bar > div { height: 100%; width: 100%; background: var(--ink); transform-origin: left; }
+.rubric { font-size: 14px; color: var(--muted); margin: 0; }
+.rubric b { color: var(--ink); }
+.toggle { display: flex; align-items: center; gap: 10px; font-weight: 600; cursor: pointer; }
+.toggle input { width: 20px; height: 20px; accent-color: var(--ink); }
+.end { text-align: center; padding: 8px 0 0; }
+
+/* Palacio theme: marble ivory, gold dome (ochre), pink and jade accents. Token colors only. */
+:root {
+  --pink-deep: #B8524A; --pink-mid: #D0736C; --pink-pale: #F2CECC; --pink-wash: #FBF0EF;
+  --jade-deep: #2A6B5F; --jade-mid: #3D8876; --jade-pale: #B5D9D3; --jade-wash: #EAF4F2;
+  --ochre-deep: #9E6B35; --ochre-mid: #BC8A52; --ochre-soft: #D4AE84; --ochre-pale: #ECDBC4; --ochre-wash: #F9F1E6;
+  --feather: #FAF7F3;
+}
+[data-c="0"] { --cd: var(--pink-deep); --cm: var(--pink-mid); --cp: var(--pink-pale); --cw: var(--pink-wash); }
+[data-c="1"] { --cd: var(--ochre-deep); --cm: var(--ochre-mid); --cp: var(--ochre-pale); --cw: var(--ochre-wash); }
+[data-c="2"] { --cd: var(--jade-deep); --cm: var(--jade-mid); --cp: var(--jade-pale); --cw: var(--jade-wash); }
+.wrap > header { position: relative; padding: 28px 190px 26px 28px; background: linear-gradient(180deg, var(--ochre-wash), var(--bg)); border: 1.5px solid var(--ochre-pale); border-bottom: 4px double var(--ochre-mid); border-radius: 14px 14px 0 0; }
+.wrap > header .eyebrow { color: var(--ochre-deep); }
+.wrap > header .dome { position: absolute; right: 24px; bottom: 0; width: 132px; height: auto; }
+@media (max-width: 620px) { .wrap > header { padding-right: 20px; } .wrap > header .dome { display: none; } }
+.stop { background: var(--cw); border-color: var(--cp); }
+.stop .n, .stop .k { color: var(--cd); }
+.stop:hover { border-color: var(--cm); }
+.stop.active { background: var(--cd); border-color: var(--cd); color: var(--feather); }
+.stop.active .n, .stop.active .k { color: var(--feather); }
+.stop.done { background: var(--bg); border-color: var(--line); }
+.stop.done .n, .stop.done .k { color: var(--muted); }
+.card { background: var(--feather); border: 2px solid var(--cd); border-top-width: 8px; }
+.card.empty { border: 2px dashed var(--ochre-soft); background: var(--ochre-wash); color: var(--muted); }
+.card .badge { background: var(--cd); border-color: var(--cd); color: var(--feather); }
+.card .place { color: var(--cd); }
+.speaker .dot { background: var(--cd); }
+.starters span { background: var(--cp); }
+.teacher { background: var(--ochre-wash); border-left: 4px solid var(--ochre-mid); border-radius: 4px 10px 10px 4px; }
+.panel { background: var(--feather); border-color: var(--ochre-pale); }
+.panel .label { color: var(--ochre-deep); }
+#t0 .score { color: var(--pink-deep); } #t1 .score { color: var(--jade-deep); }
+#t0.turn input { border-bottom-color: var(--pink-deep); } #t1.turn input { border-bottom-color: var(--jade-deep); }
+.timer { color: var(--jade-deep); } .timer.low { color: var(--pink-deep); }
+.bar { background: var(--ochre-pale); } .bar > div { background: var(--ochre-mid); }
+button.btn.solid { background: var(--pink-deep); border-color: var(--pink-deep); color: var(--feather); }
+button.btn.solid:hover { background: var(--pink-mid); border-color: var(--pink-mid); opacity: 1; }
+#random { color: var(--ochre-deep); border-color: var(--ochre-deep); }
+#random:hover { background: var(--ochre-deep); color: var(--feather); }
+button.btn[data-pts] { color: var(--jade-deep); border-color: var(--jade-deep); }
+button.btn[data-pts]:hover { background: var(--jade-deep); color: var(--feather); }
+button.btn[data-pts="0"] { color: var(--muted); border-color: #8A847E; }
+button.btn[data-pts="0"]:hover { background: var(--muted); color: var(--feather); }
+.toggle input { accent-color: var(--pink-deep); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <svg class="dome" viewBox="0 0 120 84" aria-hidden="true">
+      <defs><clipPath id="domeclip"><path d="M10 72A50 50 0 0 1 110 72Z"/></clipPath></defs>
+      <g clip-path="url(#domeclip)">
+        <rect x="10" y="20" width="10" height="52" fill="#BC8A52"/><rect x="20" y="20" width="10" height="52" fill="#ECDBC4"/>
+        <rect x="30" y="20" width="10" height="52" fill="#BC8A52"/><rect x="40" y="20" width="10" height="52" fill="#3D8876"/>
+        <rect x="50" y="20" width="10" height="52" fill="#D4AE84"/><rect x="60" y="20" width="10" height="52" fill="#BC8A52"/>
+        <rect x="70" y="20" width="10" height="52" fill="#ECDBC4"/><rect x="80" y="20" width="10" height="52" fill="#3D8876"/>
+        <rect x="90" y="20" width="10" height="52" fill="#BC8A52"/><rect x="100" y="20" width="10" height="52" fill="#ECDBC4"/>
+      </g>
+      <path d="M10 72A50 50 0 0 1 110 72" fill="none" stroke="#9E6B35" stroke-width="2"/>
+      <rect x="56" y="11" width="8" height="12" fill="#9E6B35"/><circle cx="60" cy="8" r="3.5" fill="#B8524A"/>
+      <rect x="4" y="72" width="112" height="8" fill="#9E6B35"/><rect x="12" y="80" width="96" height="4" fill="#D4AE84"/>
+    </svg>
+  <div class="eyebrow">Clase de español · Ciudad de México</div>
+    <h1>Paseo por Bellas Artes</h1>
+    <p class="sub">Ocho paradas, ocho retos para hablar. Elige una parada, lee el reto en voz alta y responde mientras corre el tiempo. La profesora da los puntos.</p>
+  </header>
+
+  <div class="layout">
+    <div class="main">
+      <div class="board" id="board" role="list"></div>
+      <div id="stage"></div>
+    </div>
+
+    <aside class="side">
+      <div class="panel">
+        <p class="label">Marcador</p>
+        <div class="team" id="t0"><input id="name0" value="Jugador A" aria-label="Nombre del jugador A"><div class="score" id="s0">0</div></div>
+        <div class="team" id="t1"><input id="name1" value="Jugador B" aria-label="Nombre del jugador B"><div class="score" id="s1">0</div></div>
+        <button class="btn" id="random">Parada sorpresa</button>
+      </div>
+      <div class="panel">
+        <p class="label">Tiempo para hablar</p>
+        <div class="timer" id="clock">0:60</div>
+        <div class="bar"><div id="barfill"></div></div>
+        <div class="row">
+          <button class="btn solid" id="start">Empezar</button>
+          <button class="btn" id="reset">Reiniciar</button>
+        </div>
+        <label class="toggle" for="secs60"><input type="checkbox" id="secs60" checked> 60 segundos (si no, 90)</label>
+      </div>
+      <div class="panel">
+        <p class="label">Puntos</p>
+        <p class="rubric"><b>1</b> responde con ideas sueltas<br><b>2</b> usa frases completas<br><b>3</b> añade detalles y conectores (porque, pero, después)</p>
+        <label class="toggle" for="tmode"><input type="checkbox" id="tmode"> Notas de la profesora</label>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+var STOPS = [
+  { place: "Metro Bellas Artes", kind: "Direcciones",
+    prompt: "Un turista sale del metro y quiere llegar a la Alameda Central. Explícale el camino paso a paso.",
+    starters: ["Sigue derecho…", "Gira a la derecha…", "Cruza la calle…", "Está al lado de…"],
+    note: "Práctica de imperativo (tú) y preposiciones de lugar. Acepta cualquier ruta lógica. Si se traban, pídeles añadir un punto de referencia." },
+  { place: "Palacio de Bellas Artes", kind: "Describe",
+    prompt: "Imagina que hablas con alguien que no conoce el edificio. Descríbeselo. ¿Cómo es por fuera? ¿Qué hay adentro?",
+    starters: ["Es muy…", "Tiene…", "Adentro hay…", "Me parece…"],
+    note: "Ser, tener, hay. Vocabulario posible: mármol, cúpula, murales, teatro, museo, escaleras. Pide al menos tres adjetivos." },
+  { place: "Alameda Central", kind: "Recomienda",
+    prompt: "Tu compañero visita la Alameda por primera vez. Recomiéndale tres actividades para hacer en el parque.",
+    starters: ["Puedes…", "Te recomiendo…", "Vas a ver…", "Si tienes tiempo…"],
+    note: "Verbos de recomendación con infinitivo. Subir nivel: el compañero reacciona y pide más detalles." },
+  { place: "Torre Latinoamericana", kind: "Opina",
+    prompt: "Imagina que subes a la torre. ¿Prefieres ver la ciudad desde arriba o caminar por las calles? Explica por qué.",
+    starters: ["Prefiero… porque…", "Quiero…", "Para mí…", "En cambio…"],
+    note: "Preferencias con justificación en presente. Busca porque, pero, en cambio." },
+  { place: "Casa de los Azulejos", kind: "Rol",
+    prompt: "Imagina que estás en un café. Uno es el mesero y el otro es el cliente. El cliente pide una bebida, algo de comer y la cuenta.",
+    starters: ["¿Qué desea?", "Quiero…", "¿Me trae…?", "La cuenta, por favor."],
+    note: "Role play de 4 a 6 turnos. Cortesía en presente: quiero, ¿me trae…?, por favor. Cambian de papel si sobra tiempo." },
+  { place: "Calle Madero", kind: "Pregunta",
+    prompt: "Imagina que caminas por una calle peatonal llena de tiendas y gente. Haz tres preguntas a tu compañero sobre sus paseos y compras.",
+    starters: ["¿Qué…?", "¿Dónde…?", "¿Con quién…?", "¿Con qué frecuencia…?"],
+    note: "Formación de preguntas. El compañero responde con una frase completa, no con una sola palabra." },
+  { place: "Museo de arte", kind: "Pasado",
+    prompt: "Cuenta una visita a un museo: ¿a cuál fuiste?, ¿con quién?, ¿qué viste?, ¿qué te gustó más?",
+    starters: ["Fui a…", "Vi…", "Lo mejor fue…", "Después…"],
+    note: "Pretérito. Puede ser real o inventado. Corrige irregulares (fui, vi, hice) al final, no durante el turno." },
+  { place: "Mi sábado en Bellas Artes", kind: "Plan",
+    prompt: "Planea un sábado perfecto en la zona: ¿qué vas a hacer?, ¿a qué hora?, ¿con quién vas a ir?",
+    starters: ["Voy a…", "Primero…", "Luego…", "Al final…"],
+    note: "Ir a + infinitivo y marcadores de orden. Reto: incluyen una hora y un lugar de las paradas anteriores." }
+];
+
+var state = { active: -1, done: {}, scores: [0, 0], turn: 0, total: 60, left: 60, timerId: null };
+var $ = function (id) { return document.getElementById(id); };
+
+function mmss(s) { return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }
+
+function renderBoard() {
+  var html = "";
+  STOPS.forEach(function (s, i) {
+    var cls = "stop" + (state.active === i ? " active" : "") + (state.done[i] ? " done" : "");
+    html += '<button class="' + cls + '" data-i="' + i + '" data-c="' + (i % 3) + '" role="listitem"><span class="n">' + (i + 1) +
+      '</span><span class="t">' + s.place + '</span><span class="k">' + s.kind + '</span></button>';
+  });
+  $("board").innerHTML = html;
+}
+
+function renderStage() {
+  var st = $("stage");
+  if (state.active < 0) {
+    var left = STOPS.length - Object.keys(state.done).length;
+    st.innerHTML = '<div class="card empty"><p class="prompt">' +
+      (left === 0 ? "Terminaron el paseo. Miren el marcador." : "Elige una parada del mapa para empezar.") + '</p></div>';
+    return;
+  }
+  var s = STOPS[state.active];
+  var who = $("name" + state.turn).value || ("Jugador " + (state.turn ? "B" : "A"));
+  var h = '<div class="card" data-c="' + (state.active % 3) + '">' +
+    '<div class="meta"><span class="badge">' + s.kind + '</span><h2 class="place">' + s.place + '</h2></div>' +
+    '<div class="speaker"><span class="dot"></span>Habla: ' + who.replace(/</g, "&lt;") + '</div>' +
+    '<p class="prompt">' + s.prompt + '</p>' +
+    '<div><p class="label">Para empezar</p><div class="starters">' +
+    s.starters.map(function (x) { return "<span>" + x + "</span>"; }).join("") + '</div></div>';
+  if ($("tmode").checked) {
+    h += '<div class="teacher"><p class="label">Nota de la profesora</p><p>' + s.note + '</p></div>';
+  }
+  h += '<div class="row"><span class="label" style="align-self:center;margin:0">Dar puntos:</span>' +
+    '<button class="btn" data-pts="1">+1</button><button class="btn" data-pts="2">+2</button><button class="btn" data-pts="3">+3</button>' +
+    '<button class="btn" data-pts="0">Pasar sin puntos</button></div></div>';
+  st.innerHTML = h;
+}
+
+function renderScores() {
+  $("s0").textContent = state.scores[0];
+  $("s1").textContent = state.scores[1];
+  $("t0").classList.toggle("turn", state.turn === 0);
+  $("t1").classList.toggle("turn", state.turn === 1);
+}
+
+function renderClock() {
+  $("clock").textContent = mmss(state.left);
+  $("clock").classList.toggle("low", state.left <= 10 && state.left > 0);
+  $("barfill").style.transform = "scaleX(" + (state.left / state.total) + ")";
+}
+
+function stopTimer() { if (state.timerId) { clearInterval(state.timerId); state.timerId = null; } $("start").textContent = "Empezar"; }
+function resetTimer() { stopTimer(); state.total = $("secs60").checked ? 60 : 90; state.left = state.total; renderClock(); }
+function startTimer() {
+  if (state.timerId) { stopTimer(); return; }
+  if (state.left <= 0) resetTimer();
+  $("start").textContent = "Pausa";
+  state.timerId = setInterval(function () {
+    state.left -= 1; renderClock();
+    if (state.left <= 0) { stopTimer(); }
+  }, 1000);
+}
+
+function pick(i) { state.active = i; resetTimer(); renderBoard(); renderStage(); }
+
+function award(pts) {
+  state.scores[state.turn] += pts;
+  state.done[state.active] = true;
+  state.turn = 1 - state.turn;
+  state.active = -1;
+  stopTimer(); resetTimer();
+  renderBoard(); renderStage(); renderScores();
+}
+
+function randomStop() {
+  var open = [];
+  STOPS.forEach(function (s, i) { if (!state.done[i]) open.push(i); });
+  if (open.length) pick(open[Math.floor(Math.random() * open.length)]);
+}
+
+$("board").addEventListener("click", function (e) {
+  var b = e.target.closest(".stop"); if (!b) return; pick(Number(b.getAttribute("data-i")));
+});
+$("stage").addEventListener("click", function (e) {
+  var b = e.target.closest("[data-pts]"); if (!b) return; award(Number(b.getAttribute("data-pts")));
+});
+$("random").addEventListener("click", randomStop);
+$("start").addEventListener("click", startTimer);
+$("reset").addEventListener("click", resetTimer);
+$("secs60").addEventListener("change", resetTimer);
+$("tmode").addEventListener("change", renderStage);
+$("name0").addEventListener("input", renderStage);
+$("name1").addEventListener("input", renderStage);
+
+renderBoard(); renderStage(); renderScores(); resetTimer();
+</script>
+
+</body></html>
