@@ -258,3 +258,17 @@
   description:
     es: "Diez expedientes de un laboratorio: decide si dos hechos se contraponen o si uno causa el otro, elige el conector en inglés que mejor encaja (although, whereas, because, because of…) y compara tu oración con el modelo."
     en: "Ten lab case files: decide whether two facts clash or one causes the other, pick the connector that fits best (although, whereas, because, because of…), and check your sentence against the model."
+
+- slug: board-repaso-general-a2-ciudad
+  file: board_repaso_general_es_a2_ciudad.html
+  skill: board
+  grammar: repaso_general
+  target_lang: es
+  level: a2
+  theme: ciudad
+  title:
+    es: "Paseo por Bellas Artes — Repaso oral"
+    en: "A Walk Through Bellas Artes — Speaking Review"
+  description:
+    es: "Recorre 8 paradas del centro de la Ciudad de México y responde a un reto oral en cada una: direcciones, descripciones, recomendaciones, pasado y planes. Con cronómetro y marcador para dos jugadores."
+    en: "Visit 8 stops around downtown Mexico City and answer a speaking challenge at each: directions, descriptions, recommendations, past events and plans. Includes a timer and a two-player scoreboard."
