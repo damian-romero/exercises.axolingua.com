@@ -19,6 +19,7 @@ skills:
   dialogo: { es: "Diálogo interactivo", en: "Interactive dialogue" }
   arbol: { es: "Árbol genealógico", en: "Family tree" }
   speedsort: { es: "Clasificación rápida", en: "Speed sort" }
+  roulette: { es: "Ruleta", en: "Roulette" }
 
 grammar:
   presente: { es: "Presente", en: "Present tense" }
@@ -29,6 +30,7 @@ grammar:
   repaso_general: { es: "Repaso general", en: "General review" }
   por_para: { es: "Por y para", en: "Por and para" }
   contrast_reason: { es: "Conectores de contraste y causa", en: "Contrast and reason connectors" }
+  purpose_result: { es: "Cláusulas de propósito y resultado", en: "Purpose and result clauses" }
 
 levels:
   a1: { es: "A1 · Principiante", en: "A1 · Beginner" }
@@ -45,6 +47,7 @@ themes:
   restaurante: { es: "Restaurante", en: "Restaurant" }
   familia: { es: "Familia", en: "Family" }
   workplace: { es: "Trabajo", en: "Workplace" }
+  pitch: { es: "Presentaciones y pitch", en: "Pitching" }
 
 # target_langs — labels for the language being PRACTICED, used by the
 # language filter pill group on /ejercicios/.

@@ -272,3 +272,17 @@
   description:
     es: "Recorre 8 paradas del centro de la Ciudad de México y responde a un reto oral en cada una: direcciones, descripciones, recomendaciones, pasado y planes. Con cronómetro y marcador para dos jugadores."
     en: "Visit 8 stops around downtown Mexico City and answer a speaking challenge at each: directions, descriptions, recommendations, past events and plans. Includes a timer and a two-player scoreboard."
+
+- slug: roulette-purpose-result-b1-pitch
+  file: roulette_purpose_result_en_b1_pitch.html
+  skill: roulette
+  grammar: purpose_result
+  target_lang: en
+  level: b1
+  theme: pitch
+  title:
+    es: "La Sala de Pitch — Cláusulas de propósito y resultado"
+    en: "The Pitch Room — Purpose and Result Clauses"
+  description:
+    es: "Tira dos dados, inventa un producto y defiéndelo: 60 segundos de pitch y 12 preguntas de un panel con temporizador."
+    en: "Roll two dice, invent a product and defend it: a 60-second pitch plus 12 panel questions, with timers."

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Pitch Room — Purpose and Result Clauses</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Outfit:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#F7F3EE; --cream:#F0EAE1; --sand:#E6DDCF; --linen:#D8CFBF; --feather:#FAF7F3; --paper:#FFFFFF;
+    --pink-deep:#B8524A; --pink:#D0736C; --pink-soft:#E49E99; --pink-pale:#F2CECC; --pink-wash:#FBF0EF;
+    --jade-deep:#2A6B5F; --jade:#3D8876; --jade-soft:#6AADA0; --jade-pale:#B5D9D3; --jade-wash:#EAF4F2;
+    --ochre-deep:#9E6B35; --ochre:#BC8A52; --ochre-soft:#D4AE84; --ochre-pale:#ECDBC4; --ochre-wash:#F9F1E6;
+    --charcoal:#2C2A27; --slate:#5A5652; --stone:#8A847E; --pebble:#BEB8B2;
+    --display:'Fraunces',Georgia,serif; --ui:'Outfit',system-ui,sans-serif; --mono:'DM Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--ivory);color:var(--charcoal);font-family:var(--ui);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:820px;margin:0 auto;padding:28px 20px 60px}
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--pink-deep)}
+  h1{font-family:var(--display);font-weight:600;font-size:clamp(2rem,6vw,2.9rem);line-height:1.08;margin:.25em 0 .1em;letter-spacing:-.01em}
+  .sub{font-family:var(--display);font-style:italic;color:var(--slate);font-size:1.1rem;margin:0 0 22px}
+  h2{font-family:var(--display);font-weight:600;font-size:1.5rem;margin:0 0 4px}
+  .lead{color:var(--slate);margin:0 0 18px}
+
+  /* stepper */
+  .stepper{list-style:none;display:flex;gap:6px;margin:0 0 20px;padding:0}
+  .stepper li{flex:1;text-align:center;font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--stone);padding:9px 4px;border-radius:999px;background:var(--cream);border:1px solid var(--linen);transition:all .2s}
+  .stepper li.done{background:var(--jade-wash);border-color:var(--jade-pale);color:var(--jade-deep)}
+  .stepper li.on{background:var(--pink-deep);border-color:var(--pink-deep);color:#fff}
+  @media(max-width:560px){.stepper li{font-size:.58rem;padding:8px 2px;letter-spacing:.03em}}
+
+  .stage{display:none;background:var(--paper);border:1px solid var(--linen);border-radius:20px;padding:26px 24px;box-shadow:0 14px 34px -22px rgba(44,42,39,.35)}
+  .stage.on{display:block;animation:rise .35s ease}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .btn{font-family:var(--ui);font-weight:600;font-size:.95rem;border:1.5px solid var(--linen);background:var(--feather);color:var(--charcoal);border-radius:999px;padding:10px 20px;cursor:pointer;transition:all .15s}
+  .btn:hover{border-color:var(--pink);color:var(--pink-deep)}
+  .btn.primary{background:var(--pink-deep);border-color:var(--pink-deep);color:#fff}
+  .btn.primary:hover{background:#A2443D;border-color:#A2443D;color:#fff}
+  .btn.jade{background:var(--jade-deep);border-color:var(--jade-deep);color:#fff}
+  .btn.jade:hover{background:#235a50;color:#fff}
+  .btn[disabled]{opacity:.45;cursor:not-allowed}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .row.center{justify-content:center}
+  .spacer{height:18px}
+
+  /* dice */
+  .dice{display:flex;gap:22px;justify-content:center;margin:10px 0 22px}
+  .dieWrap{text-align:center}
+  .dieLabel{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;margin-top:8px}
+  .die{width:84px;height:84px;border-radius:18px;display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:12px;gap:2px;box-shadow:0 8px 18px -10px rgba(44,42,39,.5),inset 0 -3px 0 rgba(0,0,0,.08)}
+  .die.p{background:var(--jade-pale)} .die.c{background:var(--ochre-pale)}
+  .die i{display:block;width:15px;height:15px;border-radius:50%;margin:auto;opacity:0}
+  .die.p i{background:var(--jade-deep)} .die.c i{background:var(--ochre-deep)}
+  .die i.on{opacity:1}
+  .die.rolling{animation:wob .22s infinite}
+  @keyframes wob{0%{transform:rotate(-7deg) translateY(0)}50%{transform:rotate(6deg) translateY(-6px)}100%{transform:rotate(-7deg) translateY(0)}}
+
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+  @media(max-width:560px){.cards{grid-template-columns:1fr}}
+  .card{border-radius:16px;padding:16px 18px;min-height:96px}
+  .card .tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+  .card .tag b{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;color:#fff;font-family:var(--ui);font-size:.75rem}
+  .card p{font-family:var(--display);font-size:1.2rem;font-weight:600;margin:8px 0 0;line-height:1.25}
+  .card.p{background:var(--jade-wash);border:1px solid var(--jade-pale)} .card.p .tag{color:var(--jade-deep)} .card.p b{background:var(--jade-deep)}
+  .card.c{background:var(--ochre-wash);border:1px solid var(--ochre-pale)} .card.c .tag{color:var(--ochre-deep)} .card.c b{background:var(--ochre-deep)}
+  .card.empty p{color:var(--pebble);font-weight:400;font-style:italic}
+
+  label.fld{display:block;font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--slate);margin:0 0 6px}
+  input[type=text]{width:100%;font-family:var(--display);font-size:1.15rem;padding:12px 14px;border:1.5px solid var(--linen);border-radius:12px;background:var(--feather);color:var(--charcoal)}
+  input[type=text]:focus{outline:none;border-color:var(--pink)}
+
+  /* frames */
+  .frames{display:grid;gap:8px;margin:0 0 20px;padding:0;list-style:none;counter-reset:f}
+  .frames li{counter-increment:f;background:var(--pink-wash);border:1px solid var(--pink-pale);border-radius:12px;padding:10px 14px 10px 46px;position:relative;font-size:1rem}
+  .frames li::before{content:counter(f);position:absolute;left:12px;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;background:var(--pink-deep);color:#fff;display:grid;place-items:center;font-size:.8rem;font-weight:600}
+  .frames b{color:var(--pink-deep)} .frames .g{color:var(--jade-deep)} .frames .o{color:var(--ochre-deep)}
+  details.help{margin:0 0 18px;border:1px dashed var(--linen);border-radius:12px;padding:10px 14px;background:var(--feather)}
+  details.help summary{cursor:pointer;font-weight:600;color:var(--jade-deep)}
+  details.help .frames{margin:12px 0 4px}
+
+  .recap{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 18px}
+  .pill{font-size:.88rem;border-radius:999px;padding:6px 14px;border:1px solid}
+  .pill.n{background:var(--pink-wash);border-color:var(--pink-pale);color:var(--pink-deep);font-family:var(--display);font-weight:600}
+  .pill.p{background:var(--jade-wash);border-color:var(--jade-pale);color:var(--jade-deep)}
+  .pill.c{background:var(--ochre-wash);border-color:var(--ochre-pale);color:var(--ochre-deep)}
+
+  /* timer */
+  .timerBox{display:flex;flex-direction:column;align-items:center;gap:14px;margin:6px 0 18px}
+  .timer{position:relative;width:170px;height:170px}
+  .timer svg{width:100%;height:100%;transform:rotate(-90deg)}
+  .timer circle{fill:none;stroke-width:9;stroke-linecap:round}
+  .timer .bg{stroke:var(--sand)} .timer .fg{stroke:var(--jade);transition:stroke .3s}
+  .timer.warn .fg{stroke:var(--pink-deep)}
+  .timer .tt{position:absolute;inset:0;display:grid;place-items:center}
+  .timer .tm{font-family:var(--display);font-size:2.6rem;font-weight:600}
+  .timer.warn .tm{color:var(--pink-deep)}
+  .tdone{font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--jade-deep);min-height:1.2em}
+
+  /* panel */
+  .qCard{border-radius:18px;padding:20px;display:flex;gap:16px;align-items:flex-start;margin-bottom:14px;border:1px solid}
+  .av{flex:0 0 54px;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;color:#fff;font-family:var(--display);font-weight:700;font-size:1.4rem}
+  .qCard .who{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase}
+  .qCard .q{font-family:var(--display);font-size:1.35rem;font-weight:600;line-height:1.25;margin:4px 0 10px}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{font-family:var(--mono);font-size:.7rem;letter-spacing:.05em;border-radius:999px;padding:4px 10px;background:var(--paper);border:1px solid var(--linen);color:var(--slate)}
+  .hint{margin-top:10px;font-size:.92rem;color:var(--slate);font-style:italic;display:none}
+  .hint.on{display:block}
+  .who-a{background:var(--pink-wash);border-color:var(--pink-pale)} .who-a .av{background:var(--pink-deep)} .who-a .who{color:var(--pink-deep)}
+  .who-p{background:var(--jade-wash);border-color:var(--jade-pale)} .who-p .av{background:var(--jade-deep)} .who-p .who{color:var(--jade-deep)}
+  .who-r{background:var(--ochre-wash);border-color:var(--ochre-pale)} .who-r .av{background:var(--ochre-deep)} .who-r .who{color:var(--ochre-deep)}
+  .count{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;color:var(--stone);text-transform:uppercase}
+
+  /* checklist */
+  .checks{display:grid;gap:8px;margin:0 0 18px}
+  .chk{display:flex;gap:12px;align-items:center;border:1.5px solid var(--linen);background:var(--feather);border-radius:12px;padding:11px 14px;cursor:pointer;transition:all .15s;user-select:none}
+  .chk:hover{border-color:var(--jade-soft)}
+  .chk input{width:20px;height:20px;accent-color:var(--jade-deep);flex:0 0 auto}
+  .chk .t{font-weight:600} .chk .e{display:block;font-size:.85rem;color:var(--slate);font-weight:400}
+  .chk.on{background:var(--jade-wash);border-color:var(--jade)}
+  .bar{height:12px;border-radius:999px;background:var(--sand);overflow:hidden;margin:6px 0 8px}
+  .bar span{display:block;height:100%;width:0;background:var(--jade);border-radius:999px;transition:width .4s}
+  .msg{font-family:var(--display);font-size:1.25rem;font-weight:600;margin:0 0 16px}
+
+  .mute{background:none;border:none;font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--stone);cursor:pointer;padding:4px 0}
+  .mute:hover{color:var(--pink-deep)}
+
+  /* intro overlay */
+  .ov{position:fixed;inset:0;background:rgba(44,42,39,.55);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50000}
+  .ov.off{display:none}
+  .ovCard{background:var(--feather);border-radius:20px;max-width:440px;width:100%;padding:26px 26px 22px;box-shadow:0 24px 50px -20px rgba(0,0,0,.45)}
+  .ovCard h3{font-family:var(--display);font-weight:600;font-size:1.5rem;margin:0 0 12px;color:var(--jade-deep)}
+  .ovCard ol{margin:0 0 18px;padding-left:20px;line-height:1.55}
+  .ovCard li{margin-bottom:8px}
+</style>
+</head>
+<body>
+<!-- AXOLINGUA: exercise nav bar v2 — brand mark + catalog link + instructions button, styled like the site nav. Hidden automatically inside the catalog iframe preview. -->
+<header class="axl-nav" id="axlNav">
+  <div class="axl-nav__inner">
+    <div class="axl-nav__left">
+      <a class="axl-nav__brand" href="/en/">
+        <img src="/assets/img/mark-nav.png" alt="Axolingua">
+        <span class="axl-wordmark"><em>axo</em>lingua</span>
+      </a>
+      <a class="axl-nav__link" href="/en/ejercicios/">All exercises</a>
+    </div>
+    <button type="button" class="axl-nav__instr-btn" id="axlInstrBtn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2 1.8-2 3.5"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Instructions
+    </button>
+  </div>
+</header>
+<div class="axl-instr-overlay" id="axlInstrOverlay">
+  <div class="axl-instr-card">
+    <button class="axl-instr-close" id="axlInstrClose" aria-label="Close">✕</button>
+    <h4>How to play</h4>
+    <ol>
+      <li>Roll the two dice to get a problem and a constraint. Name your invention.</li>
+      <li>Prepare for 2 minutes. Write keywords, not full sentences.</li>
+      <li>Pitch for 60 seconds without stopping. Use to, in order to, so that, so … that, such … that.</li>
+      <li>Answer the panel's questions (about 45 seconds each). Keep talking; fix grammar later.</li>
+      <li>Tick the structures you used. Roll again and beat your score.</li>
+    </ol>
+  </div>
+</div>
+<style>
+  .axl-nav{display:none;position:sticky;top:0;z-index:9999;background:#FAF7F3;border-bottom:1px solid #D8CFBF;font-family:'Outfit',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .axl-nav__inner{max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;height:60px;padding:0 20px;box-sizing:border-box}
+  .axl-nav__left{display:flex;align-items:center;gap:22px;min-width:0}
+  .axl-nav__brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+  .axl-nav__brand img{height:26px;width:auto;display:block}
+  .axl-wordmark{font-family:'Fraunces',Georgia,serif;font-weight:300;font-size:1.1rem;letter-spacing:-.01em;color:#2C2A27}
+  .axl-wordmark em{font-style:italic;color:#D0736C}
+  .axl-nav__link{font-size:.85rem;color:#5A5652;text-decoration:none;letter-spacing:.01em;padding-bottom:2px;border-bottom:1.5px solid transparent;white-space:nowrap;text-transform:none;box-shadow:none;transition:color .2s,border-color .2s}
+  .axl-nav__link:hover{color:#2C2A27;border-bottom-color:#D0736C}
+  .axl-nav__instr-btn{display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:.78rem;font-weight:500;letter-spacing:.01em;text-transform:none;text-align:left;color:#D0736C;background:transparent;border:1.5px solid #D0736C;border-radius:4px;padding:7px 14px;cursor:pointer;white-space:nowrap;box-shadow:none;flex-shrink:0;transition:background .2s,color .2s}
+  .axl-nav__instr-btn:hover{background:#FBF0EF;color:#B8524A}
+  @media (max-width:560px){
+    .axl-wordmark{display:none}
+    .axl-nav__inner{padding:0 12px;gap:10px}
+    .axl-nav__left{gap:14px}
+    .axl-nav__link,.axl-nav__instr-btn{font-size:.74rem}
+  }
+  .axl-instr-overlay{position:fixed;inset:0;background:rgba(20,18,16,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:100000}
+  .axl-instr-overlay.is-open{display:flex}
+  .axl-instr-card{background:#FAF7F3;border-radius:16px;max-width:380px;width:100%;padding:22px 24px;box-shadow:0 20px 44px -16px rgba(0,0,0,.4);position:relative;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#2C2A27}
+  .axl-instr-card h4{font-size:1.05rem;margin:0 0 12px;color:#2A6B5F;font-family:Georgia,serif;font-weight:400}
+  .axl-instr-card ol{margin:0;padding-left:20px;font-size:.88rem;line-height:1.55}
+  .axl-instr-card li{margin-bottom:8px}
+  .axl-instr-card li:last-child{margin-bottom:0}
+  .axl-instr-close{position:absolute;top:10px;right:12px;background:none;border:none;font-size:1.15rem;line-height:1;text-transform:none;letter-spacing:normal;box-shadow:none;cursor:pointer;color:#8A847E;padding:4px}
+  .axl-instr-close:hover{color:#2C2A27}
+</style>
+<script>
+(function () {
+  if (window.self !== window.top) return; // stay hidden inside the /ejercicios/ catalog preview
+  var bar = document.getElementById('axlNav');
+  bar.style.display = 'block';
+  var overlay = document.getElementById('axlInstrOverlay');
+  document.getElementById('axlInstrBtn').addEventListener('click', function () { overlay.classList.add('is-open'); });
+  document.getElementById('axlInstrClose').addEventListener('click', function () { overlay.classList.remove('is-open'); });
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.classList.remove('is-open'); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') overlay.classList.remove('is-open'); });
+})();
+</script>
+
+<main class="wrap">
+  <div class="eyebrow">English · Purpose &amp; result clauses</div>
+  <h1>The Pitch Room</h1>
+  <p class="sub">Roll. Invent. Pitch. Defend.</p>
+
+  <ol class="stepper" id="stepper">
+    <li>Roll</li><li>Prepare</li><li>Pitch</li><li>Panel</li><li>Score</li>
+  </ol>
+
+  <!-- 0 ROLL -->
+  <section class="stage on" id="s0">
+    <h2>Invention Roulette</h2>
+    <p class="lead">Roll the dice to get a problem and a constraint. Then invent a product.</p>
+    <div class="dice">
+      <div class="dieWrap"><div class="die p" id="die1"></div><div class="dieLabel" style="color:var(--jade-deep)">Problem</div></div>
+      <div class="dieWrap"><div class="die c" id="die2"></div><div class="dieLabel" style="color:var(--ochre-deep)">Constraint</div></div>
+    </div>
+    <div class="cards">
+      <div class="card p empty" id="probCard"><div class="tag"><b id="pn">?</b> The problem</div><p id="pt">Roll to find out…</p></div>
+      <div class="card c empty" id="conCard"><div class="tag"><b id="cn">?</b> The constraint</div><p id="ct">Roll to find out…</p></div>
+    </div>
+    <div class="row center"><button class="btn primary" id="rollBtn">🎲 Roll the dice</button></div>
+    <div class="spacer"></div>
+    <div id="nameBlock" style="display:none">
+      <label class="fld" for="pname">Name your invention</label>
+      <input type="text" id="pname" maxlength="40" placeholder="e.g. The SnapLabel, PocketPace…" autocomplete="off">
+      <div class="spacer"></div>
+      <div class="row center"><button class="btn jade" id="toPrep">Prepare my pitch →</button></div>
+    </div>
+  </section>
+
+  <!-- 1 PREPARE -->
+  <section class="stage" id="s1">
+    <h2>Prepare your pitch</h2>
+    <p class="lead">You have 2 minutes. Write keywords, not full sentences.</p>
+    <div class="recap" id="recap1"></div>
+    <ol class="frames" id="frames1"></ol>
+    <div class="timerBox" id="prepTimer"></div>
+    <div class="row center"><button class="btn primary" id="toPitch">I'm ready — start the pitch →</button></div>
+  </section>
+
+  <!-- 2 PITCH -->
+  <section class="stage" id="s2">
+    <h2>The 60-second pitch</h2>
+    <p class="lead">Keep talking. Don't stop to fix grammar.</p>
+    <div class="recap" id="recap2"></div>
+    <details class="help"><summary>Need a sentence frame?</summary><ol class="frames" id="frames2"></ol></details>
+    <div class="timerBox" id="pitchTimer"></div>
+    <div class="row center"><button class="btn primary" id="toPanel">Meet the panel →</button></div>
+  </section>
+
+  <!-- 3 PANEL -->
+  <section class="stage" id="s3">
+    <h2>The panel has questions</h2>
+    <p class="lead">Answer in full sentences. About 45 seconds each. Defend your product.</p>
+    <div class="count" id="qCount">Question 1</div>
+    <div class="qCard who-a" id="qCard">
+      <div class="av" id="qAv">A</div>
+      <div>
+        <div class="who" id="qWho">Amanda · London HQ Director</div>
+        <div class="q" id="qText">…</div>
+        <div class="chips" id="qChips"></div>
+        <div class="hint" id="qHint"></div>
+      </div>
+    </div>
+    <div class="row" style="margin-bottom:10px"><button class="btn" id="hintBtn">Show a hint</button><button class="btn" id="nextQ">Next question ↻</button></div>
+    <div class="timerBox" id="ansTimer"></div>
+    <div class="row center"><button class="btn jade" id="toScore">Finish — score my pitch →</button></div>
+  </section>
+
+  <!-- 4 SCORE -->
+  <section class="stage" id="s4">
+    <h2>How did you do?</h2>
+    <p class="lead">Tick every structure you used out loud. Be honest.</p>
+    <div class="checks" id="checks"></div>
+    <div class="bar"><span id="barFill"></span></div>
+    <p class="msg" id="scoreMsg">0 of 6 structures</p>
+    <div class="row center"><button class="btn primary" id="again">🎲 New round</button></div>
+  </section>
+
+  <div style="text-align:center;margin-top:22px"><button class="mute" id="muteBtn">Sound: on</button></div>
+</main>
+
+<div class="ov" id="intro">
+  <div class="ovCard">
+    <h3>How to play</h3>
+    <ol>
+      <li>Roll the two dice to get a problem and a constraint. Name your invention.</li>
+      <li>Prepare for 2 minutes. Write keywords, not full sentences.</li>
+      <li>Pitch for 60 seconds without stopping. Use to, in order to, so that, so … that, such … that.</li>
+      <li>Answer the panel's questions (about 45 seconds each). Keep talking; fix grammar later.</li>
+      <li>Tick the structures you used. Roll again and beat your score.</li>
+    </ol>
+    <div class="row center"><button class="btn primary" id="introGo">Let's go</button></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var PROBLEMS = ["People forget water bottles at the gym","Samples get mixed up in the lab","Emails from London arrive while you sleep","Nobody finds parking near the office","Hyrox athletes lose track of their pace","Meetings start late and run long"];
+  var CONSTRAINTS = ["It must fit in a pocket","It costs under 200 pesos","It works without electricity","It is usable in 10 seconds","It must be eco-friendly","It has to be a little funny"];
+  var PANEL = {
+    a:{name:"Amanda",role:"London HQ Director",cls:"who-a",qs:[
+      {q:"Why do we need this product at all?",t:["so that","to"],h:"Try: “We need it so that …” or “It's designed to …”"},
+      {q:"What is the main purpose of the design?",t:["in order to","to"],h:"Try: “It was designed in order to …”"},
+      {q:"Why should we invest in your idea?",t:["because","so that"],h:"Try: “You should invest because …, so that …”"},
+      {q:"Who is it for, and why will they use it?",t:["so that"],h:"Try: “People will use it so that they can …”"}]},
+    p:{name:"Priya",role:"Pilot-Project Coordinator",cls:"who-p",qs:[
+      {q:"How does it actually work, step by step?",t:["to","so that"],h:"Try: “First you …, then you … so that …”"},
+      {q:"How quickly can a new user learn it?",t:["so … that","such … that"],h:"Try: “It's so simple that …”"},
+      {q:"What changes for the user after the first week?",t:["so … that"],h:"Try: “It saves so much time that …”"},
+      {q:"How would we test it in a pilot?",t:["in order to"],h:"Try: “We would run a pilot in order to …”"}]},
+    r:{name:"Rohan",role:"Technical Lead, Pune",cls:"who-r",qs:[
+      {q:"Isn't it too expensive for what it does?",t:["although"],h:"Try: “Although it costs …, it …”"},
+      {q:"What could go wrong?",t:["although","because"],h:"Try: “Although the risk is small, … because …”"},
+      {q:"Why will it be better than what people use now?",t:["such … that"],h:"Try: “It's such a … idea that …”"},
+      {q:"What is the biggest weakness of your product?",t:["although"],h:"Try: “Although it isn't perfect, …”"}]}
+  };
+  var STRUCT = [
+    ["to + verb","It's designed to keep tubes in order."],
+    ["in order to + verb","We added a test in order to check the data."],
+    ["so that + clause","I send it early so that everyone can prepare."],
+    ["so … that","It's so light that you forget it's there."],
+    ["such (a) … that","It's such a simple idea that anyone can use it."],
+    ["although / because","Although it costs more, it's worth it because …"]
+  ];
+
+  var $ = function(id){return document.getElementById(id)};
+  var sound = true, actx = null;
+  function beep(f,d,v){
+    if(!sound) return;
+    try{
+      actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+      var o=actx.createOscillator(), g=actx.createGain();
+      o.type='sine'; o.frequency.value=f; g.gain.value=v||0.05;
+      o.connect(g); g.connect(actx.destination);
+      g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime+d);
+      o.start(); o.stop(actx.currentTime+d);
+    }catch(e){}
+  }
+  $('muteBtn').onclick = function(){ sound=!sound; this.textContent='Sound: '+(sound?'on':'off'); };
+
+  /* ---------- timer ---------- */
+  var CIRC = 2*Math.PI*52;
+  function Timer(mount, secs, onDone, label){
+    var total=secs, remaining=secs*1000, end=0, iv=null, lastShown=-1, running=false;
+    mount.innerHTML =
+      '<div class="timer"><svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="52"/><circle class="fg" cx="60" cy="60" r="52" stroke-dasharray="'+CIRC+'" stroke-dashoffset="0"/></svg><div class="tt"><span class="tm"></span></div></div>'+
+      '<div class="tdone"></div>'+
+      '<div class="row center"><button class="btn primary go">Start</button><button class="btn reset">Reset</button></div>';
+    var box=mount.querySelector('.timer'), fg=mount.querySelector('.fg'), tm=mount.querySelector('.tm'),
+        done=mount.querySelector('.tdone'), go=mount.querySelector('.go'), reset=mount.querySelector('.reset');
+    function fmt(s){var m=Math.floor(s/60), r=s%60; return m+':'+(r<10?'0':'')+r;}
+    function draw(){
+      var s=Math.ceil(remaining/1000);
+      tm.textContent=fmt(s);
+      fg.setAttribute('stroke-dashoffset', CIRC*(1-remaining/(total*1000)));
+      box.classList.toggle('warn', s<=10 && s>0 && (running||remaining<total*1000));
+    }
+    function tick(){
+      remaining=Math.max(0,end-Date.now());
+      var s=Math.ceil(remaining/1000);
+      if(s!==lastShown){ lastShown=s; if(s<=3&&s>0) beep(660,.12); }
+      draw();
+      if(remaining<=0){ stop(); done.textContent="Time's up!"; beep(523,.25,.07); setTimeout(function(){beep(392,.35,.07)},220); box.classList.remove('warn'); if(onDone) onDone(); }
+    }
+    function stop(){ clearInterval(iv); iv=null; running=false; go.textContent='Start'; }
+    go.onclick=function(){
+      if(running){ stop(); remaining=Math.max(0,end-Date.now()); go.textContent='Resume'; return; }
+      if(remaining<=0) remaining=total*1000;
+      done.textContent=''; running=true; end=Date.now()+remaining; go.textContent='Pause';
+      beep(440,.1); iv=setInterval(tick,200); tick();
+    };
+    reset.onclick=function(){ stop(); remaining=total*1000; lastShown=-1; done.textContent=''; box.classList.remove('warn'); draw(); };
+    draw();
+    return { reset:function(){reset.onclick()}, stop:stop };
+  }
+
+  /* ---------- dice ---------- */
+  var PIPS = {1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
+  function buildDie(el){ el.innerHTML=''; for(var i=0;i<9;i++){ el.appendChild(document.createElement('i')); } }
+  function setDie(el,n){ var cells=el.children; for(var i=0;i<9;i++){ cells[i].className = PIPS[n].indexOf(i)>-1 ? 'on' : ''; } }
+  buildDie($('die1')); buildDie($('die2')); setDie($('die1'),1); setDie($('die2'),1);
+
+  var state = {step:0, p:0, c:0, name:'', rolled:false, rolling:false, seen:[], qi:0};
+
+  function rnd(n){return 1+Math.floor(Math.random()*n)}
+  $('rollBtn').onclick = function(){
+    if(state.rolling) return;
+    state.rolling=true; $('rollBtn').disabled=true;
+    $('die1').classList.add('rolling'); $('die2').classList.add('rolling');
+    var n=0, iv=setInterval(function(){
+      setDie($('die1'),rnd(6)); setDie($('die2'),rnd(6)); beep(300+Math.random()*200,.04,.025);
+      if(++n>=11){
+        clearInterval(iv);
+        var a=rnd(6), b=rnd(6); state.p=a; state.c=b;
+        setDie($('die1'),a); setDie($('die2'),b);
+        $('die1').classList.remove('rolling'); $('die2').classList.remove('rolling');
+        $('pn').textContent=a; $('cn').textContent=b;
+        $('pt').textContent=PROBLEMS[a-1]; $('ct').textContent=CONSTRAINTS[b-1];
+        $('probCard').classList.remove('empty'); $('conCard').classList.remove('empty');
+        $('nameBlock').style.display='block';
+        $('rollBtn').textContent='🎲 Roll again'; $('rollBtn').disabled=false;
+        state.rolling=false; state.rolled=true; beep(523,.15,.05);
+      }
+    },85);
+  };
+
+  /* ---------- steps ---------- */
+  var stepLis = $('stepper').children;
+  function go(n){
+    state.step=n;
+    for(var i=0;i<5;i++){
+      $('s'+i).classList.toggle('on', i===n);
+      stepLis[i].className = i<n?'done':(i===n?'on':'');
+    }
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function pname(){ return state.name || 'your invention'; }
+  function esc(s){ return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]}); }
+  function recap(el){
+    el.innerHTML='<span class="pill n">'+esc(pname())+'</span><span class="pill p">'+esc(PROBLEMS[state.p-1])+'</span><span class="pill c">'+esc(CONSTRAINTS[state.c-1])+'</span>';
+  }
+  function frames(el){
+    var n = state.name ? esc(state.name) : '____';
+    el.innerHTML =
+      '<li>Meet <b>'+n+'</b>. It\'s designed <b>to</b> ____.</li>'+
+      '<li>It helps you ____ <b>so that</b> ____.</li>'+
+      '<li>It\'s <b>so</b> ____ <b>that</b> ____.  /  It\'s <b>such a</b> ____ <b>that</b> ____.</li>'+
+      '<li><b class="g">Although</b> it costs ____, it\'s worth it <b class="g">because</b> ____.</li>';
+  }
+
+  var prepT = Timer($('prepTimer'),120);
+  var pitchT = Timer($('pitchTimer'),60);
+  var ansT = Timer($('ansTimer'),45);
+
+  $('toPrep').onclick=function(){
+    state.name=$('pname').value.trim();
+    recap($('recap1')); frames($('frames1')); prepT.reset(); go(1);
+  };
+  $('toPitch').onclick=function(){
+    prepT.stop(); recap($('recap2')); frames($('frames2')); pitchT.reset(); go(2);
+  };
+  $('toPanel').onclick=function(){
+    pitchT.stop(); state.seen=[]; state.qi=0; nextQuestion(); go(3);
+  };
+
+  /* ---------- panel ---------- */
+  var order = ['a','p','r'];
+  function allQs(){ var out=[]; order.forEach(function(k){ PANEL[k].qs.forEach(function(q,i){ out.push({k:k,i:i}); }); }); return out; }
+  function nextQuestion(){
+    var all = allQs();
+    var pool = all.filter(function(x){ return state.seen.indexOf(x.k+x.i)<0; });
+    if(!pool.length){ state.seen=[]; pool=all; }
+    // rotate panelists: prefer the next panelist in order
+    var want = order[state.qi % 3];
+    var pref = pool.filter(function(x){return x.k===want});
+    var pick = (pref.length?pref:pool)[Math.floor(Math.random()*(pref.length?pref.length:pool.length))];
+    state.seen.push(pick.k+pick.i); state.qi++;
+    var P=PANEL[pick.k], Q=P.qs[pick.i];
+    $('qCard').className='qCard '+P.cls;
+    $('qAv').textContent=P.name.charAt(0);
+    $('qWho').textContent=P.name+' · '+P.role;
+    $('qText').textContent=Q.q;
+    $('qChips').innerHTML=Q.t.map(function(t){return '<span class="chip">try: '+esc(t)+'</span>'}).join('');
+    $('qHint').textContent=Q.h; $('qHint').classList.remove('on'); $('hintBtn').textContent='Show a hint';
+    $('qCount').textContent='Question '+state.qi;
+    ansT.reset();
+  }
+  $('nextQ').onclick=nextQuestion;
+  $('hintBtn').onclick=function(){
+    var on=$('qHint').classList.toggle('on'); this.textContent = on?'Hide hint':'Show a hint';
+  };
+  $('toScore').onclick=function(){ ansT.stop(); buildChecks(); go(4); };
+
+  /* ---------- score ---------- */
+  function buildChecks(){
+    var box=$('checks'); box.innerHTML='';
+    STRUCT.forEach(function(s,i){
+      var l=document.createElement('label'); l.className='chk';
+      l.innerHTML='<input type="checkbox"><span><span class="t">'+esc(s[0])+'</span><span class="e">'+esc(s[1])+'</span></span>';
+      l.querySelector('input').onchange=function(){ l.classList.toggle('on',this.checked); updateScore(); };
+      box.appendChild(l);
+    });
+    updateScore();
+  }
+  function updateScore(){
+    var n=document.querySelectorAll('#checks input:checked').length;
+    $('barFill').style.width=(n/6*100)+'%';
+    var m = n<=2 ? 'Good start — try the sentence frames next time.' : n<=4 ? 'Nice range! One or two more and you own the room.' : n===5 ? 'So close — one more structure for a perfect pitch.' : 'Pitch Room champion! All six structures.';
+    $('scoreMsg').textContent=n+' of 6 structures — '+m;
+    if(n===6) beep(784,.3,.06);
+  }
+  $('again').onclick=function(){
+    state.rolled=false; state.name=''; $('pname').value='';
+    $('pn').textContent='?'; $('cn').textContent='?';
+    $('pt').textContent='Roll to find out…'; $('ct').textContent='Roll to find out…';
+    $('probCard').classList.add('empty'); $('conCard').classList.add('empty');
+    $('nameBlock').style.display='none'; $('rollBtn').textContent='🎲 Roll the dice';
+    setDie($('die1'),1); setDie($('die2'),1);
+    prepT.reset(); pitchT.reset(); ansT.reset();
+    go(0);
+  };
+
+  $('introGo').onclick=function(){ $('intro').classList.add('off'); beep(440,.1); };
+})();
+</script>
+</body>
+</html>
