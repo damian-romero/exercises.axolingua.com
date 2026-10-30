@@ -20,6 +20,7 @@ skills:
   arbol: { es: "Árbol genealógico", en: "Family tree" }
   speedsort: { es: "Clasificación rápida", en: "Speed sort" }
   roulette: { es: "Ruleta", en: "Roulette" }
+  reveal: { es: "Revela la imagen", en: "Photo reveal" }
 
 grammar:
   presente: { es: "Presente", en: "Present tense" }
@@ -48,6 +49,7 @@ themes:
   familia: { es: "Familia", en: "Family" }
   workplace: { es: "Trabajo", en: "Workplace" }
   pitch: { es: "Presentaciones y pitch", en: "Pitching" }
+  dia_de_muertos: { es: "Día de Muertos", en: "Day of the Dead" }
 
 # target_langs — labels for the language being PRACTICED, used by the
 # language filter pill group on /ejercicios/.

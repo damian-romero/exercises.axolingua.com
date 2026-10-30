@@ -286,3 +286,17 @@
   description:
     es: "Tira dos dados, inventa un producto y defiéndelo: 60 segundos de pitch y 12 preguntas de un panel con temporizador."
     en: "Roll two dice, invent a product and defend it: a 60-second pitch plus 12 panel questions, with timers."
+
+- slug: reveal-tiempos-simples-a2-dia-de-muertos
+  file: reveal_tiempos_simples_es_a2_dia_de_muertos.html
+  skill: reveal
+  grammar: tiempos_simples
+  target_lang: es
+  level: a2
+  theme: dia_de_muertos
+  title:
+    es: "Arma tu ofrenda — Tiempos simples"
+    en: "Build Your Ofrenda — Simple Tenses"
+  description:
+    es: "Escribe una oración propia para cada una de 24 consignas (presente, pretérito, imperfecto, futuro y ser/estar) y revela, a color, una foto de una ofrenda de Día de Muertos. El juego revisa el verbo y te da ayuda y pistas."
+    en: "Write your own sentence for each of 24 prompts (present, preterite, imperfect, future and ser/estar) and reveal a photo of a Día de Muertos ofrenda in colour. The game checks your verb and gives help and hints."
