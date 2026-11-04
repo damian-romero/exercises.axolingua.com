@@ -300,3 +300,17 @@
   description:
     es: "Escribe una oración propia para cada una de 24 consignas (presente, pretérito, imperfecto, futuro y ser/estar) y revela, a color, una foto de una ofrenda de Día de Muertos. El juego revisa el verbo y te da ayuda y pistas."
     en: "Write your own sentence for each of 24 prompts (present, preterite, imperfect, future and ser/estar) and reveal a photo of a Día de Muertos ofrenda in colour. The game checks your verb and gives help and hints."
+
+- slug: reveal-repaso-general-b2-dia-de-muertos
+  file: reveal_repaso_general_en_b2_dia_de_muertos.html
+  skill: reveal
+  grammar: repaso_general
+  target_lang: en
+  level: b2
+  theme: dia_de_muertos
+  title:
+    es: "Colorea tu ofrenda — Repaso de gramática en inglés"
+    en: "Color Your Ofrenda — English Grammar Review"
+  description:
+    es: "Reescribe 18 oraciones en inglés con la estructura que pide cada consigna (pasado perfecto, condicionales, voz pasiva, estilo indirecto y más) y colorea, pieza por pieza, una ofrenda de Día de Muertos. Tres niveles, pistas y un cuaderno para copiar tus oraciones."
+    en: "Rewrite 18 sentences with the structure each task asks for (past perfect, conditionals, passive, reported speech and more) and color an ofrenda piece by piece. Three levels, hints and a notebook to copy your sentences."

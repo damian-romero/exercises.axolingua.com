@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Color your ofrenda · English grammar review · B2 · Axolingua</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,400&family=Outfit:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ivory: #F7F3EE; --cream: #F0EAE1; --sand: #E6DDCF; --linen: #D8CFBF; --feather: #FAF7F3; --paper: #FFFFFF;
+    --pink-deep: #B8524A; --pink-mid: #D0736C; --pink-soft: #E49E99; --pink-pale: #F2CECC; --pink-wash: #FBF0EF;
+    --jade-deep: #2A6B5F; --jade-mid: #3D8876; --jade-soft: #6AADA0; --jade-pale: #B5D9D3; --jade-wash: #EAF4F2;
+    --ochre-deep: #9E6B35; --ochre-mid: #BC8A52; --ochre-soft: #D4AE84; --ochre-pale: #ECDBC4; --ochre-wash: #F9F1E6;
+    --charcoal: #2C2A27; --slate: #5A5652; --stone: #8A847E; --pebble: #BEB8B2;
+    --display: 'Fraunces', Georgia, serif; --ui: 'Outfit', system-ui, sans-serif; --mono: 'DM Mono', ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--ivory); color: var(--charcoal); font-family: var(--ui); font-size: 18px; line-height: 1.4; }
+  h1, h2, h3 { font-family: var(--display); margin: 0; }
+  header.top { padding: 22px 24px 2px; max-width: 1280px; margin: 0 auto; }
+  header.top .kicker { color: var(--ochre-deep); letter-spacing: 2px; font-size: 12px; text-transform: uppercase; font-family: var(--mono); }
+  header.top h1 { font-size: 36px; font-weight: 400; }
+  header.top h1 em { color: var(--pink-deep); }
+  header.top p { margin: 4px 0 0; color: var(--slate); font-size: 16px; }
+  main { display: grid; grid-template-columns: minmax(340px, 1.15fr) minmax(320px, 1fr); gap: 22px; max-width: 1280px; margin: 0 auto; padding: 12px 24px 32px; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+
+  .altar { background: var(--paper); border: 1px solid var(--linen); border-radius: 18px; padding: 14px; align-self: start; }
+  .count { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+  .count b { font-size: 26px; color: var(--pink-deep); font-family: var(--display); font-weight: 400; }
+  .count span { color: var(--slate); font-size: 14px; }
+  #svgHost svg { width: 100%; height: auto; display: block; border-radius: 12px; }
+  .pop { animation: popSvg .7s ease-out; transform-box: fill-box; transform-origin: 50% 100%; }
+  @keyframes popSvg { 0% { transform: scale(.86); } 55% { transform: scale(1.08); } 100% { transform: scale(1); } }
+  .legend { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 10px; }
+  .legend .col h4 { margin: 0 0 4px; font-family: var(--mono); font-weight: 500; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--ochre-deep); }
+  .legend ul { list-style: none; margin: 0; padding: 0; }
+  .legend li { font-size: 13px; color: var(--pebble); padding: 2px 0; }
+  .legend li.on { color: var(--charcoal); }
+  @media (max-width: 560px) { .legend { grid-template-columns: 1fr; } }
+
+  .panel { background: var(--paper); border: 1px solid var(--linen); color: var(--charcoal); border-radius: 18px; padding: 20px 24px 24px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .chip { display: inline-block; font-size: 13px; padding: 2px 12px; border-radius: 99px; color: var(--feather); background: var(--jade-deep); }
+  .chip.pink { background: var(--pink-mid); }
+  .chip.gold { background: var(--ochre-pale); color: var(--ochre-deep); }
+  .src { margin: 12px 0 8px; background: var(--cream); border-radius: 12px; padding: 12px 14px; }
+  .src .lbl { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--slate); font-family: var(--mono); }
+  .src .txt { font-family: var(--display); font-size: 21px; margin-top: 2px; }
+  .task { font-size: 18px; margin: 6px 0 10px; }
+  .task b { color: var(--jade-deep); }
+  textarea { width: 100%; min-height: 84px; border: 2px solid var(--linen); border-radius: 12px; padding: 10px 12px; font: inherit; font-size: 19px; color: var(--charcoal); resize: vertical; background: var(--feather); }
+  textarea:focus { outline: none; border-color: var(--jade-mid); }
+  .btn { background: var(--jade-deep); color: var(--feather); border: 0; border-radius: 99px; padding: 9px 22px; font: inherit; font-size: 17px; cursor: pointer; }
+  .btn.pink { background: var(--pink-mid); }
+  .btn.pink:hover:not(:disabled) { background: var(--pink-deep); filter: none; }
+  .btn.ghost { background: transparent; color: var(--jade-deep); border: 2px solid var(--jade-deep); }
+  .btn.small { padding: 4px 14px; font-size: 14px; }
+  .btn:hover:not(:disabled) { filter: brightness(1.12); }
+  .btn:disabled { opacity: .45; cursor: default; }
+  .feedback { margin-top: 14px; padding: 12px 14px; border-radius: 12px; background: var(--cream); font-size: 17px; min-height: 52px; }
+  .feedback.ok { background: var(--jade-wash); }
+  .feedback.bad { background: var(--pink-wash); }
+  .feedback ul { margin: 6px 0 0 20px; padding: 0; }
+  .feedback .model { font-family: var(--display); font-style: italic; }
+  .feedback .fact { display: block; margin-top: 6px; font-size: 15px; color: var(--slate); }
+  .hint { margin-top: 10px; padding: 10px 14px; background: var(--ochre-wash); border-radius: 12px; font-size: 16px; }
+  .hidden { display: none !important; }
+  .notebook { margin-top: 18px; border-top: 2px solid var(--sand); padding-top: 12px; }
+  .notebook h3 { font-size: 18px; font-weight: 400; color: var(--charcoal); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .notebook ol { margin: 8px 0 0 20px; padding: 0; font-size: 16px; }
+  .notebook li { margin-bottom: 4px; }
+  .empty { color: var(--stone); font-size: 15px; margin-top: 6px; }
+  .progress { height: 8px; border-radius: 99px; background: var(--sand); overflow: hidden; margin: 8px 0 4px; }
+  .progress i { display: block; height: 100%; width: 0; background: var(--pink-mid); transition: width .3s; }
+  .levelrow { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+  .lv { font-size: 14px; padding: 3px 12px; border-radius: 99px; border: 2px solid var(--linen); color: var(--slate); }
+  .lv.cur { border-color: var(--pink-deep); color: var(--pink-deep); font-weight: 600; }
+  .lv.done { background: var(--jade-deep); border-color: var(--jade-deep); color: var(--feather); }
+
+  .modal { position: fixed; inset: 0; background: rgba(44,42,39,.6); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 10; }
+  .modal .box { background: var(--feather); color: var(--charcoal); border-radius: 18px; padding: 24px 28px; max-width: 560px; max-height: 90vh; overflow: auto; }
+  .modal h2 { color: var(--jade-deep); font-size: 26px; font-weight: 400; margin-bottom: 8px; }
+  .modal ol { padding-left: 22px; }
+  .modal li { margin-bottom: 6px; }
+</style>
+</head>
+<body>
+<!-- AXOLINGUA: exercise nav bar v2 — brand mark + catalog link + instructions button, styled like the site nav. Hidden automatically inside the catalog iframe preview. -->
+<header class="axl-nav" id="axlNav">
+  <div class="axl-nav__inner">
+    <div class="axl-nav__left">
+      <a class="axl-nav__brand" href="/en/">
+        <img src="/assets/img/mark-nav.png" alt="Axolingua">
+        <span class="axl-wordmark"><em>axo</em>lingua</span>
+      </a>
+      <a class="axl-nav__link" href="/en/ejercicios/">All exercises</a>
+    </div>
+    <button type="button" class="axl-nav__instr-btn" id="axlInstrBtn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2 1.8-2 3.5"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Instructions
+    </button>
+  </div>
+</header>
+<div class="axl-instr-overlay" id="axlInstrOverlay">
+  <div class="axl-instr-card">
+    <button class="axl-instr-close" id="axlInstrClose" aria-label="Close">✕</button>
+    <h4>How to play</h4>
+    <ol>
+      <li>Read the <b>original sentence</b> and the <b>task</b>. The task names the grammar you need.</li>
+      <li>Write one complete sentence. Keep the meaning of the original.</li>
+      <li>Press <b>Check</b>. A correct sentence colors one part of the ofrenda. If it is not correct, read the feedback and try again.</li>
+      <li>Stuck? Use <b>Hint</b> or <b>Skip</b>. Skipped sentences come back later.</li>
+      <li>Three levels: <b>La tierra</b> (the earth), <b>La memoria</b> (memory) and <b>El cielo</b> (the sky, with six famous Mexican icons).</li>
+    </ol>
+  </div>
+</div>
+<style>
+  .axl-nav{display:none;position:sticky;top:0;z-index:9999;background:#FAF7F3;border-bottom:1px solid #D8CFBF;font-family:'Outfit',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .axl-nav__inner{max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;height:60px;padding:0 20px;box-sizing:border-box}
+  .axl-nav__left{display:flex;align-items:center;gap:22px;min-width:0}
+  .axl-nav__brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+  .axl-nav__brand img{height:26px;width:auto;display:block}
+  .axl-wordmark{font-family:'Fraunces',Georgia,serif;font-weight:300;font-size:1.1rem;letter-spacing:-.01em;color:#2C2A27}
+  .axl-wordmark em{font-style:italic;color:#D0736C}
+  .axl-nav__link{font-size:.85rem;color:#5A5652;text-decoration:none;letter-spacing:.01em;padding-bottom:2px;border-bottom:1.5px solid transparent;white-space:nowrap;text-transform:none;box-shadow:none;transition:color .2s,border-color .2s}
+  .axl-nav__link:hover{color:#2C2A27;border-bottom-color:#D0736C}
+  .axl-nav__instr-btn{display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:.78rem;font-weight:500;letter-spacing:.01em;text-transform:none;text-align:left;color:#D0736C;background:transparent;border:1.5px solid #D0736C;border-radius:4px;padding:7px 14px;cursor:pointer;white-space:nowrap;box-shadow:none;flex-shrink:0;transition:background .2s,color .2s}
+  .axl-nav__instr-btn:hover{background:#FBF0EF;color:#B8524A}
+  @media (max-width:560px){
+    .axl-wordmark{display:none}
+    .axl-nav__inner{padding:0 12px;gap:10px}
+    .axl-nav__left{gap:14px}
+    .axl-nav__link,.axl-nav__instr-btn{font-size:.74rem}
+  }
+  .axl-instr-overlay{position:fixed;inset:0;background:rgba(20,18,16,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:100000}
+  .axl-instr-overlay.is-open{display:flex}
+  .axl-instr-card{background:#FAF7F3;border-radius:16px;max-width:380px;width:100%;padding:22px 24px;box-shadow:0 20px 44px -16px rgba(0,0,0,.4);position:relative;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#2C2A27}
+  .axl-instr-card h4{font-size:1.05rem;margin:0 0 12px;color:#2A6B5F;font-family:Georgia,serif;font-weight:400}
+  .axl-instr-card ol{margin:0;padding-left:20px;font-size:.88rem;line-height:1.55}
+  .axl-instr-card li{margin-bottom:8px}
+  .axl-instr-card li:last-child{margin-bottom:0}
+  .axl-instr-close{position:absolute;top:10px;right:12px;background:none;border:none;font-size:1.15rem;line-height:1;text-transform:none;letter-spacing:normal;box-shadow:none;cursor:pointer;color:#8A847E;padding:4px}
+  .axl-instr-close:hover{color:#2C2A27}
+</style>
+<script>
+(function () {
+  if (window.self !== window.top) return; // stay hidden inside the /ejercicios/ catalog preview
+  var bar = document.getElementById('axlNav');
+  bar.style.display = 'block';
+  var overlay = document.getElementById('axlInstrOverlay');
+  document.getElementById('axlInstrBtn').addEventListener('click', function () { overlay.classList.add('is-open'); });
+  document.getElementById('axlInstrClose').addEventListener('click', function () { overlay.classList.remove('is-open'); });
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.classList.remove('is-open'); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') overlay.classList.remove('is-open'); });
+})();
+</script>
+
+
+<header class="top">
+  <div class="kicker">English · B2 · Grammar review · Día de Muertos</div>
+  <h1>Color your <em>ofrenda</em></h1>
+  <p>Every correct sentence brings one part of the altar to life. 18 parts, three levels.</p>
+</header>
+
+<main>
+  <section class="altar" aria-label="Your ofrenda">
+    <div class="count"><b><span id="cnt">0</span> / 18</b><span>parts colored</span></div>
+    <div id="svgHost"></div>
+    <div class="legend" id="legend"></div>
+  </section>
+
+  <section class="panel" id="panel" aria-live="polite">
+    <div id="play">
+      <div class="levelrow" id="levelrow"></div>
+      <div class="progress"><i id="bar"></i></div>
+      <div class="row" style="margin-top:8px">
+        <span class="chip" id="levelChip"></span>
+        <span class="chip pink" id="tagChip"></span>
+        <span class="chip gold hidden" id="useChip"></span>
+      </div>
+      <div class="src"><div class="lbl">Original</div><div class="txt" id="srcTxt"></div></div>
+      <div class="task" id="task"></div>
+      <textarea id="ans" aria-label="Your sentence" placeholder="Write your sentence here…" spellcheck="false"></textarea>
+      <div class="row" style="margin-top:10px">
+        <button class="btn pink" id="checkBtn">Check</button>
+        <button class="btn ghost" id="hintBtn">Hint</button>
+        <button class="btn ghost" id="skipBtn">Skip</button>
+        <button class="btn ghost small hidden" id="starterBtn">Insert the starter</button>
+        <button class="btn small hidden" id="nextBtn">Next →</button>
+      </div>
+      <div class="hint hidden" id="hint"></div>
+      <div class="feedback" id="fb">Each correct sentence colors one part of the ofrenda. Let’s begin!</div>
+    </div>
+
+    <div id="done" class="hidden">
+      <span class="chip gold">Complete</span>
+      <h2 style="margin:8px 0">Your ofrenda is complete 🎉</h2>
+      <p>You wrote 18 correct sentences and honored six Mexican icons. Copy your notebook below and send it to your teacher, or read it aloud as a short presentation of the ofrenda.</p>
+    </div>
+
+    <div class="notebook">
+      <h3><span>My notebook (<span id="nbCount">0</span>)</span><button class="btn ghost small" id="copyBtn">Copy my notebook</button></h3>
+      <div class="empty" id="nbEmpty">Your correct sentences appear here.</div>
+      <ol id="nbList"></ol>
+    </div>
+  </section>
+</main>
+
+<div class="modal" id="modal">
+  <div class="box">
+    <h2>How to play</h2>
+    <ol>
+      <li>Read the <b>original sentence</b> and the <b>task</b>. The task names the grammar you need.</li>
+      <li>Write one complete sentence. Keep the meaning of the original.</li>
+      <li>Press <b>Check</b>. A correct sentence colors one part of the ofrenda. If it is not correct, read the feedback and try again.</li>
+      <li>Stuck? Use <b>Hint</b> or <b>Skip</b>. Skipped sentences come back later.</li>
+      <li>Three levels: <b>La tierra</b> (the earth), <b>La memoria</b> (memory) and <b>El cielo</b> (the sky, with six famous Mexican icons).</li>
+    </ol>
+    <p style="color:#5A5652;font-size:15px">Tip: the checker looks for the target structure and the key content words. It is strict about the structure and flexible about everything else.</p>
+    <button class="btn pink" id="startBtn">Start</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  // ---------- optional photos ----------
+  // To use real photos in the six icon frames, paste image URLs (only images you have the rights to use).
+  // Leave a value empty to keep the drawn emblem.
+  var ICON_PHOTOS = { kahlo: '', rivera: '', infante: '', cantinflas: '', josealfredo: '', felix: '' };
+
+  // ---------- helpers ----------
+  function norm(s) {
+    return s.toLowerCase().replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, ' ').trim();
+  }
+  var ADV = "(?:\\w+ly\\s+|often\\s+|also\\s+|usually\\s+|always\\s+)*";
+
+  var LEVELS = [
+    { name: 'La tierra · The earth', tag: 'Level 1 · Foundations' },
+    { name: 'La memoria · Memory', tag: 'Level 2 · Stories and opinions' },
+    { name: 'El cielo · The icons', tag: 'Level 3 · Mexican icons' }
+  ];
+
+  // ---------- prompts ----------
+  var P = [
+    // ===== LEVEL 1 =====
+    { lv: 0, el: 'fruit', em: '🍊', item: 'Fruit', tag: 'Past perfect',
+      src: 'The family bought the oranges. Then they arranged them in a basket.',
+      task: 'Join the sentences. Use the <b>past perfect</b> for the action that happened first.',
+      need: [
+        { re: /\bhad\s+(?:already\s+)?bought\b/, msg: 'Past perfect for the first action: had bought.' },
+        { re: /\b(before|after|when|by the time)\b/, msg: 'Connect the two actions with before / after / when.' },
+        { re: /\boranges\b/, msg: 'Keep “the oranges”.' },
+        { re: /\bbasket\b/, msg: 'Keep “in a basket”.' }
+      ],
+      hint: 'The family ___ ___ the oranges before they arranged them in a basket.',
+      model: 'The family had bought the oranges before they arranged them in a basket.',
+      fact: 'Seasonal fruit, such as oranges and tangerines, is part of many offerings.' },
+
+    { lv: 0, el: 'water', em: '💧', item: 'Water', tag: 'Relative clause',
+      src: 'A glass of water stands on the altar. The spirits drink it after their long trip.',
+      task: 'Join with a <b>relative clause</b> (which / that).',
+      need: [
+        { re: /\b(which|that)\b/, msg: 'Use a relative clause with which / that.' },
+        { re: /\bspirits\b/, msg: 'Keep “the spirits”.' },
+        { re: /\bdrink\b/, msg: 'Keep “drink”.' },
+        { re: /\btrip\b/, msg: 'Keep “after their long trip”.' },
+        { re: /\bwater\b/, msg: 'Keep “a glass of water”.' }
+      ],
+      ban: [{ re: /\bdrink it\b/, msg: 'Remove “it”: the relative pronoun already replaces it.' }],
+      hint: 'A glass of water, which the spirits ___ after their long trip, stands on the altar.',
+      model: 'A glass of water, which the spirits drink after their long trip, stands on the altar.',
+      fact: 'A glass of water is left for the tired spirits.' },
+
+    { lv: 0, el: 'cempasuchil', em: '🌼', item: 'Cempasúchil', tag: 'Relative clause · whose',
+      src: 'Cempasúchil is a flower. Its bright color reminds people of the sun.',
+      task: 'Join the sentences with <b>whose</b>.',
+      useChip: 'whose',
+      need: [
+        { re: /\bwhose\b/, msg: 'Use “whose” instead of “its”.' },
+        { re: /\bcolou?r\b/, msg: 'Keep “bright color”.' },
+        { re: /\bsun\b/, msg: 'Keep “reminds people of the sun”.' },
+        { re: /\bflower\b/, msg: 'Keep “a flower”.' }
+      ],
+      ban: [{ re: /\bits\b/, msg: '“Whose” replaces “its”. Do not use both.' }],
+      hint: 'Cempasúchil is a flower whose ___ reminds people of the sun.',
+      model: 'Cempasúchil is a flower whose bright color reminds people of the sun.',
+      fact: 'Cempasúchil, the Mexican marigold, is the flower of the holiday. Its name is often translated as “twenty flowers”.' },
+
+    { lv: 0, el: 'petals', em: '🌺', item: 'Petal path', tag: 'Purpose · so that',
+      src: 'Families make a path of petals. The spirits can find the altar.',
+      task: 'Join the sentences with <b>“so that”</b>.',
+      useChip: 'so that',
+      need: [
+        { re: /\bso that\b/, msg: 'Use “so that” + a full clause.' },
+        { re: /\bpath\b/, msg: 'Keep “a path”.' },
+        { re: /\bpetals\b/, msg: 'Keep “of petals”.' },
+        { re: /\bspirits\b/, msg: 'Keep “the spirits”.' },
+        { re: /\bfind\b/, msg: 'Keep “can find the altar”.' }
+      ],
+      hint: 'Families make a path of petals so that the spirits ___ ___ the altar.',
+      model: 'Families make a path of petals so that the spirits can find the altar.',
+      fact: 'A path of petals guides the spirits from the street to the altar.' },
+
+    { lv: 0, el: 'pan', em: '🍞', item: 'Pan de muerto', tag: 'Phrasal verbs',
+      src: 'On November 1st the family arranged the pan de muerto on the altar.',
+      task: 'Replace <b>“arranged”</b> with a <b>phrasal verb</b> with “out” (set out / lay out).',
+      need: [
+        { re: /\b(set|sets|laid|lay|put|puts)\b(?:\s+\w+){0,5}?\s+out\b/, msg: 'Use a phrasal verb with “out”: set out, lay out…' },
+        { re: /\bpan de muerto\b/, msg: 'Keep “the pan de muerto”.' },
+        { re: /\baltar\b/, msg: 'Keep “on the altar”.' }
+      ],
+      ban: [{ re: /\barranged\b/, msg: 'Replace “arranged” with the phrasal verb.' }],
+      hint: 'On November 1st the family ___ ___ the pan de muerto on the altar.',
+      model: 'On November 1st the family set out the pan de muerto on the altar.',
+      fact: 'Pan de muerto is a sweet bread decorated with bone shapes.' },
+
+    { lv: 0, el: 'mole', em: '🍲', item: 'Mole', tag: 'Second conditional',
+      src: 'The market isn’t open today, so we can’t buy fresh chilies for the mole.',
+      task: 'Imagine the opposite. Write a <b>second conditional</b> (If + past simple, would / could).',
+      need: [
+        { re: /\bif\b/, msg: 'Start the condition with “if”.' },
+        { re: /\b(were|was)\b/, msg: 'Second conditional: If + past simple (the market were open).' },
+        { re: /\b(would|could|might)\b/, msg: 'Result clause: would / could + verb.' },
+        { re: /\bmarket\b/, msg: 'Keep “the market”.' },
+        { re: /\bchil(?:i|ies|es|is)\b/, msg: 'Keep “fresh chilies”.' },
+        { re: /\bmole\b/, msg: 'Keep “for the mole”.' }
+      ],
+      hint: 'If the market ___ open today, we ___ buy fresh chilies for the mole.',
+      model: 'If the market were open today, we could buy fresh chilies for the mole.',
+      fact: 'Families often cook the favorite dish of the person they remember.' },
+
+    // ===== LEVEL 2 =====
+    { lv: 1, el: 'skulls', em: '💀', item: 'Sugar skulls', tag: 'Third conditional',
+      src: 'The artist didn’t have enough sugar, so she didn’t make more skulls.',
+      task: 'Write a <b>third conditional</b> about the past (If + past perfect, would have + participle).',
+      need: [
+        { re: /\bif\b/, msg: 'Start the condition with “if”.' },
+        { re: /\b(had\s+(?:had|been|bought|brought|found|taken|kept|saved|ordered|prepared|made|run|used|done|got)|hadn't|had not)\b/, msg: 'Third conditional: If + past perfect (had had / hadn’t run out…).' },
+        { re: /\b(would|could|might)\s+have\s+\w+/, msg: 'Result: would have + past participle.' },
+        { re: /\bsugar\b/, msg: 'Keep “sugar”.' },
+        { re: /\bskulls\b/, msg: 'Keep “skulls”.' }
+      ],
+      hint: 'If the artist had ___ enough sugar, she would have ___ more skulls.',
+      model: 'If the artist had had enough sugar, she would have made more skulls.',
+      fact: 'Sugar skulls often have a name written on the forehead.' },
+
+    { lv: 1, el: 'candles', em: '🕯️', item: 'Candles', tag: 'Reported speech', starter: 'Marco said that he',
+      src: 'Marco said, “I lit the candles an hour ago.”',
+      task: 'Report what he said. <b>Begin with “Marco said that he”.</b>',
+      need: [
+        { re: /^marco said (?:that )?he\b/, msg: 'Begin with “Marco said that he”.' },
+        { re: /\bhad\s+(?:lit|lighted)\b/, msg: 'Backshift the verb: lit → had lit.' },
+        { re: /\bcandles\b/, msg: 'Keep “the candles”.' },
+        { re: /\b(?:an|one) hour (?:before|earlier|previously)\b/, msg: 'Shift the time: “an hour ago” → “an hour before”.' }
+      ],
+      ban: [{ re: /\bago\b/, msg: 'In reported speech, “ago” becomes “before” or “earlier”.' }],
+      hint: 'Marco said that he ___ ___ the candles an hour ___.',
+      model: 'Marco said that he had lit the candles an hour before.',
+      fact: 'Candles give light so that the spirits can find their way.' },
+
+    { lv: 1, el: 'papel', em: '🎏', item: 'Papel picado', tag: 'Modals of deduction',
+      src: 'I’m sure someone cut this papel picado by hand, because the patterns are so detailed.',
+      task: 'Rewrite with a <b>modal of deduction</b> (must have + participle).',
+      need: [
+        { re: /\bmust\s+have\s+(?:been\s+)?cut\b/, msg: 'You are sure, so use must have + cut.' },
+        { re: /\bpapel picado\b/, msg: 'Keep “this papel picado”.' },
+        { re: /\bdetailed\b/, msg: 'Keep “so detailed”.' },
+        { re: /\bby hand\b/, msg: 'Keep “by hand”.' }
+      ],
+      ban: [{ re: /\bsure\b/, msg: 'The modal replaces “I’m sure”.' }],
+      hint: 'Someone ___ ___ ___ this papel picado by hand, because the patterns are so detailed.',
+      model: 'Someone must have cut this papel picado by hand, because the patterns are so detailed.',
+      fact: 'Papel picado is paper cut into patterns, often by hand.' },
+
+    { lv: 1, el: 'copal', em: '💨', item: 'Copal', tag: 'Wish · should have',
+      src: 'We didn’t bring enough copal, and now the smoke is gone.',
+      task: 'Express regret with <b>“We wish we had…”</b> or <b>“We should have…”</b>.',
+      need: [
+        { re: /\b(wish(?:es|ed)?\s+(?:that\s+)?we\s+had|should have|shouldn't have|should not have|should've|if only we had)\b/, msg: 'Use “We wish we had + participle” or “We should have + participle”.' },
+        { re: /\bcopal\b/, msg: 'Keep “copal”.' },
+        { re: /\b(enough|more)\b/, msg: 'Keep the idea of “enough” or “more” copal.' }
+      ],
+      hint: 'We wish we had ___ more copal. / We should have ___ enough copal.',
+      model: 'We wish we had brought more copal.',
+      fact: 'Copal is a resin that is burned as incense.' },
+
+    { lv: 1, el: 'atole', em: '☕', item: 'Atole', tag: 'Embedded question', starter: 'Could you tell me',
+      src: 'How much sugar does the atole need?',
+      task: 'Make it polite. <b>Begin with “Could you tell me”.</b>',
+      need: [
+        { re: /^could you tell me how much sugar\b/, msg: 'Begin with “Could you tell me how much sugar”.' },
+        { re: /\batole needs\b/, msg: 'Statement word order: the atole needs.' }
+      ],
+      ban: [{ re: /\bdoes\b|\bdo\b/, msg: 'In an embedded question, do not use do / does.' }],
+      hint: 'Could you tell me how much sugar the atole ___?',
+      model: 'Could you tell me how much sugar the atole needs?',
+      fact: 'Atole is a warm drink made from corn.' },
+
+    { lv: 1, el: 'trompo', em: '🧸', item: 'Spinning top', tag: 'Reason · because of', useChip: 'because of',
+      src: 'Because the boy loved to play, the family put a spinning top on the altar.',
+      task: 'Rewrite with <b>“because of”</b> + a noun phrase.',
+      need: [
+        { re: /\bbecause of\s+(?:the|his|a|an|its)\b/, msg: 'Use “because of” + a noun phrase (because of the boy’s …).' },
+        { re: /\b(spinning top|trompo)\b/, msg: 'Keep “a spinning top”.' },
+        { re: /\bboy\b/, msg: 'Keep “the boy”.' }
+      ],
+      ban: [{ re: /\bbecause\s+(?!of\b)/, msg: 'Use “because of” + noun, not “because” + clause.' }],
+      hint: 'Because of the boy’s ___ of play, the family put a spinning top on the altar.',
+      model: 'Because of the boy’s love of play, the family put a spinning top on the altar.',
+      fact: 'The trompo is a traditional Mexican wooden spinning top.' },
+
+    // ===== LEVEL 3 · ICONS =====
+    { lv: 2, el: 'kahlo', em: '🌺', item: 'Frida Kahlo', tag: 'Relative clause + passive',
+      src: 'Frida Kahlo (1907–1954) was a Mexican painter. People still admire her self-portraits.',
+      task: 'Join into <b>one sentence</b> with <b>whose</b> and a <b>passive</b>.',
+      need: [
+        { re: /\bfrida\b|\bkahlo\b/, msg: 'Keep “Frida Kahlo”.' },
+        { re: /\bwhose\b/, msg: 'Use “whose” instead of “her”.' },
+        { re: /\bare\s+(?:still\s+|widely\s+|greatly\s+|very much\s+)*admired\b/, msg: 'Make “admire” passive: are (still) admired.' },
+        { re: /\bself-portraits\b/, msg: 'Keep “self-portraits”.' },
+        { re: /\bpainter\b/, msg: 'Keep “a Mexican painter”.' }
+      ],
+      ban: [{ re: /\bpeople\b/, msg: 'In the passive you do not need “people”.' }],
+      hint: 'Frida Kahlo was a Mexican painter whose self-portraits ___ still ___.',
+      model: 'Frida Kahlo was a Mexican painter whose self-portraits are still admired today.',
+      fact: 'Frida Kahlo (1907–1954) was a Mexican painter, famous for her self-portraits.' },
+
+    { lv: 2, el: 'rivera', em: '🎨', item: 'Diego Rivera', tag: 'Embedded question', starter: 'I would like to know why',
+      src: 'Why did Diego Rivera paint giant murals?',
+      task: 'Make it an embedded question. <b>Begin with “I would like to know why”.</b>',
+      need: [
+        { re: /^i would like to know why\b/, msg: 'Begin with “I would like to know why”.' },
+        { re: /\brivera\b/, msg: 'Keep “Diego Rivera”.' },
+        { re: /\bpainted\b/, msg: 'Statement order and simple past: Rivera painted.' },
+        { re: /\bmurals\b/, msg: 'Keep “giant murals”.' }
+      ],
+      ban: [{ re: /\bdid\b/, msg: 'In an embedded question, do not use did.' }],
+      hint: 'I would like to know why Diego Rivera ___ giant murals.',
+      model: 'I would like to know why Diego Rivera painted giant murals.',
+      fact: 'Diego Rivera (1886–1957) was a Mexican muralist.' },
+
+    { lv: 2, el: 'infante', em: '🎤', item: 'Pedro Infante', tag: 'Past perfect',
+      src: 'Pedro Infante made more than fifty films. Then he died in 1957.',
+      task: 'Combine the sentences. Use the <b>past perfect</b> for the earlier action.',
+      need: [
+        { re: /\binfante\b/, msg: 'Keep “Pedro Infante”.' },
+        { re: /\bhad\s+(?:already\s+)?(?:made|starred|appeared|acted|recorded)\b/, msg: 'Past perfect: had made.' },
+        { re: /\b(by the time|before|when|after)\b/, msg: 'Connect with by the time / before / when.' },
+        { re: /\b1957\b/, msg: 'Keep “in 1957”.' },
+        { re: /\bfilms\b/, msg: 'Keep “more than fifty films”.' }
+      ],
+      hint: 'By the time he died in 1957, Pedro Infante had ___ more than fifty films.',
+      model: 'By the time he died in 1957, Pedro Infante had made more than fifty films.',
+      fact: 'Pedro Infante (1917–1957) was an actor and singer of the Golden Age of Mexican cinema.' },
+
+    { lv: 2, el: 'cantinflas', em: '🎩', item: 'Cantinflas', tag: 'Passive · simple past',
+      src: 'People created the verb “cantinflear” from the name of the comedian Cantinflas.',
+      task: 'Rewrite in the <b>passive</b> (simple past).',
+      need: [
+        { re: /\bcantinflear\b/, msg: 'Keep the verb “cantinflear”.' },
+        { re: /\bwas\s+(?:\w+ly\s+)?(?:created|formed|coined|derived|invented|made)\b/, msg: 'Use was + created / formed.' },
+        { re: /\bname\b/, msg: 'Keep “from the name of”.' },
+        { re: /\bcantinflas\b/, msg: 'Keep “the comedian Cantinflas”.' }
+      ],
+      ban: [{ re: /\bpeople\s+created\b/, msg: 'That is still active. Start with “The verb …”.' }],
+      hint: 'The verb “cantinflear” ___ ___ from the name of the comedian Cantinflas.',
+      model: 'The verb “cantinflear” was created from the name of the comedian Cantinflas.',
+      fact: 'Cantinflas (1911–1993) was a Mexican comedian and film star.' },
+
+    { lv: 2, el: 'josealfredo', em: '🎸', item: 'José Alfredo Jiménez', tag: 'Contrast',
+      src: 'José Alfredo Jiménez died in 1973. His songs are still sung in Mexican cantinas.',
+      task: 'Combine with a <b>contrast word</b> (although / even though / despite).',
+      need: [
+        { re: /\b(although|even though|though|despite|in spite of|whereas|while)\b/, msg: 'Use a contrast word: although / even though / despite.' },
+        { re: /\b1973\b/, msg: 'Keep “in 1973”.' },
+        { re: /\bsongs\b/, msg: 'Keep “his songs”.' },
+        { re: /\bcantinas\b/, msg: 'Keep “in Mexican cantinas”.' }
+      ],
+      hint: 'Although José Alfredo Jiménez ___ in 1973, his songs ___ still sung in Mexican cantinas.',
+      model: 'Although José Alfredo Jiménez died in 1973, his songs are still sung in Mexican cantinas.',
+      fact: 'José Alfredo Jiménez (1926–1973) was a Mexican singer-songwriter of rancheras.' },
+
+    { lv: 2, el: 'felix', em: '⭐', item: 'María Félix', tag: 'Relative clause + passive',
+      src: 'María Félix was a star of Mexican cinema. People called her “La Doña”.',
+      task: 'Join into <b>one sentence</b> with <b>who</b> and a <b>passive</b> (was known as / was called).',
+      need: [
+        { re: /\bf[eé]lix\b/, msg: 'Keep “María Félix”.' },
+        { re: /\bwho\b/, msg: 'Add a relative clause with who.' },
+        { re: /\bwas\s+(?:\w+ly\s+|also\s+)*(?:known|called|nicknamed)\b/, msg: 'Use the passive: was known as / was called.' },
+        { re: /\bdo[nñ]a\b/, msg: 'Keep the nickname “La Doña”.' }
+      ],
+      ban: [{ re: /\bpeople\b/, msg: 'In the passive you do not need “people”.' }],
+      hint: 'María Félix, who ___ a star of Mexican cinema, ___ ___ as “La Doña”.',
+      model: 'María Félix, who was a star of Mexican cinema, was known as “La Doña”.',
+      fact: 'María Félix (1914–2002) was a star of the Golden Age of Mexican cinema.' }
+  ];
+
+  // ---------- SVG ofrenda ----------
+  var WALL = '#2C2A27';
+  function tier(sx, sy, sw, sh, fx, fy, fw, fh, front, surf) {
+    var s = '<polygon points="' + (sx + 14) + ',' + sy + ' ' + (sx + sw - 14) + ',' + sy + ' ' + (sx + sw) + ',' + (sy + sh) + ' ' + sx + ',' + (sy + sh) + '" fill="' + surf + '"/>';
+    s += '<rect x="' + fx + '" y="' + fy + '" width="' + fw + '" height="' + fh + '" fill="' + front + '"/>';
+    s += '<rect x="' + fx + '" y="' + (fy + 10) + '" width="' + fw + '" height="3" fill="#FAF7F3" opacity=".35"/>';
+    var lace = '';
+    for (var x = fx; x < fx + fw - 16; x += 20) { lace += '<polygon points="' + x + ',' + (fy + fh) + ' ' + (x + 20) + ',' + (fy + fh) + ' ' + (x + 10) + ',' + (fy + fh - 12) + '" fill="#FAF7F3" opacity=".8"/>'; }
+    return s + lace;
+  }
+  function marigold(cx, cy, r) {
+    var s = '';
+    for (var k = 0; k < 10; k++) {
+      var a = k * Math.PI * 2 / 10;
+      s += '<circle cx="' + (cx + Math.cos(a) * r * .62).toFixed(1) + '" cy="' + (cy + Math.sin(a) * r * .62).toFixed(1) + '" r="' + (r * .5).toFixed(1) + '" fill="' + (k % 2 ? '#F59E0B' : '#FBB124') + '"/>';
+    }
+    return s + '<circle cx="' + cx + '" cy="' + cy + '" r="' + (r * .5).toFixed(1) + '" fill="#E8780A"/>';
+  }
+  function skull(cx, b, s, c1, c2) {
+    return '<g transform="translate(' + cx + ' ' + b + ') scale(' + s + ')">' +
+      '<rect x="-14" y="-16" width="28" height="14" rx="5" fill="#FAF7F3" stroke="#d9cbb0"/>' +
+      '<ellipse cx="0" cy="-30" rx="19" ry="20" fill="#FAF7F3" stroke="#d9cbb0" stroke-width="1.5"/>' +
+      '<circle cx="-7" cy="-30" r="6" fill="' + c1 + '"/><circle cx="7" cy="-30" r="6" fill="' + c1 + '"/>' +
+      '<circle cx="-7" cy="-30" r="2.6" fill="#1b1b1b"/><circle cx="7" cy="-30" r="2.6" fill="#1b1b1b"/>' +
+      '<path d="M0 -24 l-3 6 h6z" fill="#e3b8c1"/>' +
+      '<path d="M-8 -11 v7 M-3 -11 v7 M3 -11 v7 M8 -11 v7" stroke="#bfae92" stroke-width="1.2"/>' +
+      '<circle cx="-10" cy="-43" r="2.6" fill="' + c2 + '"/><circle cx="0" cy="-46" r="2.6" fill="' + c1 + '"/><circle cx="10" cy="-43" r="2.6" fill="' + c2 + '"/>' +
+      '</g>';
+  }
+  function candle(cx, b, h) {
+    return '<circle cx="' + cx + '" cy="' + (b - h - 8) + '" r="24" fill="#FFC95A" opacity=".2"/>' +
+      '<ellipse cx="' + cx + '" cy="' + (b - 1) + '" rx="13" ry="4" fill="#BC8A52"/>' +
+      '<rect x="' + (cx - 6) + '" y="' + (b - h) + '" width="12" height="' + h + '" fill="#FAF7F3"/>' +
+      '<path d="M' + cx + ' ' + (b - h - 18) + ' q9 10 0 17 q-9 -7 0 -17z" fill="#F7931E"/>' +
+      '<path d="M' + cx + ' ' + (b - h - 11) + ' q4 5 0 8 q-4 -3 0 -8z" fill="#FFE27A"/>';
+  }
+  function star(cx, cy, R, r) {
+    var pts = [];
+    for (var i = 0; i < 10; i++) { var a = -Math.PI / 2 + i * Math.PI / 5; var rr = i % 2 ? r : R; pts.push((cx + Math.cos(a) * rr).toFixed(1) + ',' + (cy + Math.sin(a) * rr).toFixed(1)); }
+    return pts.join(' ');
+  }
+  function petalPath() {
+    var seed = 7, out = '';
+    function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+    var cols = ['#F59E0B', '#FBB124', '#E8780A', '#FFC94D'];
+    for (var k = 0; k < 120; k++) {
+      var y = 484 + rnd() * 120;
+      var half = 26 + (y - 484) * 0.55;
+      var x = 450 + (rnd() - .5) * 2 * half;
+      out += '<ellipse cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" rx="7" ry="3.6" transform="rotate(' + Math.round(rnd() * 180) + ' ' + x.toFixed(1) + ' ' + y.toFixed(1) + ')" fill="' + cols[k % 4] + '"/>';
+    }
+    return out;
+  }
+  function frame(i, id, inner) {
+    var x = 150 + 104 * i;
+    var content = ICON_PHOTOS[id]
+      ? '<image href="' + ICON_PHOTOS[id] + '" x="7" y="7" width="66" height="90" preserveAspectRatio="xMidYMid slice"/>'
+      : inner;
+    return '<g transform="translate(' + x + ' 150)"><rect width="80" height="104" rx="5" fill="#BC8A52" stroke="#9E6B35" stroke-width="2"/>' +
+      '<rect x="7" y="7" width="66" height="90" rx="2" fill="#FAF7F3"/>' + content + '</g>';
+  }
+
+  var ELEMENTS = {
+    // ---- level 1 (bottom tier, baseline y=414)
+    fruit: '<polygon points="66,414 154,414 166,380 54,380" fill="#a86a32" stroke="#6e4118" stroke-width="2"/>' +
+      '<path d="M60 392 H160 M63 403 H157 M80 380 V414 M100 380 V414 M120 380 V414 M140 380 V414" stroke="#7a4a1f" stroke-width="1.6" opacity=".7"/>' +
+      '<circle cx="80" cy="370" r="14" fill="#F28C28"/><circle cx="108" cy="364" r="15" fill="#F5901E"/><circle cx="138" cy="370" r="14" fill="#F28C28"/>' +
+      '<circle cx="94" cy="352" r="12" fill="#F7A733"/><circle cx="124" cy="352" r="12" fill="#F7A733"/><circle cx="109" cy="341" r="11" fill="#C9D84A"/>' +
+      '<path d="M118 334 q10 -10 22 -4 q-8 10 -22 4z" fill="#3f9b4f"/><circle cx="75" cy="365" r="3" fill="#fff" opacity=".4"/><circle cx="103" cy="359" r="3" fill="#fff" opacity=".4"/>',
+    water: '<polygon points="196,414 234,414 240,352 190,352" fill="#bfe8fa" fill-opacity=".55" stroke="#e6f6ff" stroke-width="2"/>' +
+      '<polygon points="199,414 231,414 235,374 195,374" fill="#52b4e6" fill-opacity=".9"/>' +
+      '<ellipse cx="215" cy="374" rx="20" ry="4" fill="#8fd3f4"/><ellipse cx="215" cy="352" rx="25" ry="5" fill="none" stroke="#e6f6ff" stroke-width="2"/>' +
+      '<path d="M201 360 L204 404" stroke="#fff" stroke-width="3" opacity=".55"/>',
+    cempasuchil: '<path d="M322 414 L362 414 L370 372 L314 372 Z" fill="#c2603a" stroke="#8f3f20" stroke-width="2"/>' +
+      '<path d="M318 384 h48 M320 396 h44" stroke="#f2d3a0" stroke-width="3" opacity=".8"/>' +
+      '<path d="M342 372 V336 M342 372 L318 340 M342 372 L368 342" stroke="#3f9b4f" stroke-width="3"/>' +
+      '<path d="M330 350 q-14 -8 -22 4 q12 8 22 -4z M356 346 q14 -8 22 4 q-12 8 -22 -4z" fill="#3f9b4f"/>' +
+      marigold(316, 336, 18) + marigold(368, 338, 18) + marigold(342, 322, 21) + marigold(330, 348, 15) + marigold(356, 350, 15),
+    petals: petalPath(),
+    pan: '<ellipse cx="560" cy="396" rx="44" ry="22" fill="#d79a4d" stroke="#a8692a" stroke-width="2"/>' +
+      '<path d="M560 378 Q534 384 522 402 M560 378 Q586 384 598 402 M560 378 L560 410" stroke="#f2cf93" stroke-width="7" stroke-linecap="round" fill="none"/>' +
+      '<circle cx="560" cy="376" r="8" fill="#e6b068" stroke="#a8692a"/>' +
+      '<circle cx="534" cy="392" r="1.8" fill="#fff"/><circle cx="586" cy="392" r="1.8" fill="#fff"/><circle cx="545" cy="404" r="1.8" fill="#fff"/><circle cx="576" cy="406" r="1.8" fill="#fff"/><circle cx="566" cy="390" r="1.8" fill="#fff"/>',
+    mole: '<ellipse cx="700" cy="388" rx="40" ry="28" fill="#9c4a2a" stroke="#6e3118" stroke-width="2"/>' +
+      '<ellipse cx="700" cy="362" rx="26" ry="7" fill="#7a3a20"/><ellipse cx="700" cy="362" rx="21" ry="5" fill="#3b1d12"/>' +
+      '<path d="M664 392 l6 -8 l6 8 l6 -8 l6 8 l6 -8 l6 8 l6 -8 l6 8 l6 -8 l6 8" stroke="#f2d3a0" stroke-width="2.5" fill="none"/>' +
+      '<path d="M660 380 q-14 0 -12 12 q2 8 14 6 M740 380 q14 0 12 12 q-2 8 -14 6" stroke="#9c4a2a" stroke-width="5" fill="none"/>' +
+      '<ellipse cx="700" cy="413" rx="22" ry="3" fill="#6e3118"/>',
+    // ---- level 2 (middle tier, baseline y=334)
+    skulls: skull(150, 334, 1.05, '#D0736C', '#BC8A52') + skull(208, 334, 1.2, '#3D8876', '#D0736C') + skull(266, 334, 1.05, '#6AADA0', '#3D8876'),
+    candles: candle(340, 334, 46) + candle(374, 334, 34),
+    papel: (function () {
+      var cols = ['#D0736C', '#BC8A52', '#3D8876', '#6AADA0', '#D0736C', '#BC8A52', '#3D8876', '#6AADA0', '#D0736C', '#BC8A52'];
+      var s = '<line x1="0" y1="14" x2="900" y2="14" stroke="#E6DDCF" stroke-width="2"/>';
+      for (var i = 0; i < 10; i++) {
+        var x = i * 90 + 4, w = 82, pts = x + ',14 ' + (x + w) + ',14 ' + (x + w) + ',82';
+        for (var j = 6; j >= 0; j--) { pts += ' ' + (x + w * j / 6).toFixed(1) + ',' + (j % 2 ? 96 : 82); }
+        s += '<polygon points="' + pts + '" fill="' + cols[i] + '"/>';
+        s += '<circle cx="' + (x + 41) + '" cy="42" r="10" fill="' + WALL + '"/><circle cx="' + (x + 41) + '" cy="42" r="4" fill="' + cols[i] + '"/>' +
+          '<polygon points="' + (x + 16) + ',64 ' + (x + 23) + ',57 ' + (x + 30) + ',64 ' + (x + 23) + ',71" fill="' + WALL + '"/>' +
+          '<polygon points="' + (x + 52) + ',64 ' + (x + 59) + ',57 ' + (x + 66) + ',64 ' + (x + 59) + ',71" fill="' + WALL + '"/>' +
+          '<circle cx="' + (x + 12) + '" cy="30" r="3.5" fill="' + WALL + '"/><circle cx="' + (x + 70) + '" cy="30" r="3.5" fill="' + WALL + '"/>';
+      }
+      return s;
+    })(),
+    copal: '<path d="M440 334 h60 l-8 -24 h-44z" fill="#b4552d" stroke="#8f3f20" stroke-width="2"/>' +
+      '<ellipse cx="470" cy="310" rx="22" ry="5" fill="#3a1a10"/><circle cx="462" cy="309" r="2.4" fill="#ff8a3d"/><circle cx="472" cy="311" r="2.4" fill="#ffb347"/><circle cx="479" cy="309" r="2.2" fill="#ff8a3d"/>' +
+      '<path d="M446 334 v6 M494 334 v6" stroke="#8f3f20" stroke-width="4" stroke-linecap="round"/>' +
+      '<path d="M470 304 C452 290, 490 282, 468 266 M476 304 C494 292, 462 284, 480 270" stroke="#e5eeed" stroke-width="5" stroke-linecap="round" fill="none" opacity=".9"/>',
+    atole: '<path d="M578 334 L582 296 H620 L624 334 Z" fill="#d98a3d" stroke="#a8601f" stroke-width="2"/>' +
+      '<ellipse cx="601" cy="296" rx="19" ry="4.5" fill="#f3e0bd" stroke="#a8601f"/>' +
+      '<path d="M624 306 q20 0 18 15 q-2 10 -18 8" stroke="#d98a3d" stroke-width="6" fill="none"/>' +
+      '<path d="M583 318 l5 -7 l5 7 l5 -7 l5 7 l5 -7 l5 7 l5 -7 l5 7" stroke="#FAF7F3" stroke-width="2.5" fill="none"/>' +
+      '<path d="M594 288 q-5 -8 0 -14 M606 288 q-5 -8 0 -14" stroke="#e5eeed" stroke-width="3" stroke-linecap="round" fill="none" opacity=".8"/>',
+    trompo: '<path d="M700 300 Q720 276 740 300 L723 334 H717 Z" fill="#BC8A52" stroke="#a97a1c" stroke-width="2"/>' +
+      '<path d="M703 306 Q720 292 737 306 L733 315 Q720 305 707 315Z" fill="#D0736C"/>' +
+      '<path d="M709 321 Q720 314 731 321 L727 329 Q720 323 713 329Z" fill="#3D8876"/>' +
+      '<rect x="718" y="276" width="4" height="9" fill="#7a4a1f"/>' +
+      '<path d="M701 301 Q688 292 684 312 Q683 326 696 331" stroke="#f0e0b8" stroke-width="2.5" fill="none"/>',
+    // ---- level 3 (top tier frames)
+    kahlo: frame(0, 'kahlo',
+      (function () {
+        var s = '', cols = ['#D0736C', '#BC8A52', '#3D8876', '#D0736C', '#BC8A52', '#3D8876', '#D0736C', '#BC8A52'];
+        for (var k = 0; k < 8; k++) { var a = k * Math.PI / 4; s += '<circle cx="' + (40 + Math.cos(a) * 24).toFixed(1) + '" cy="' + (52 + Math.sin(a) * 24).toFixed(1) + '" r="9" fill="' + cols[k] + '"/><circle cx="' + (40 + Math.cos(a) * 24).toFixed(1) + '" cy="' + (52 + Math.sin(a) * 24).toFixed(1) + '" r="3" fill="#FAF7F3"/>'; }
+        return '<circle cx="40" cy="52" r="24" fill="none" stroke="#3f9b4f" stroke-width="4"/>' + s + '<text x="40" y="59" text-anchor="middle" font-family="Cambria, Georgia, serif" font-size="20" font-weight="bold" fill="#7a3a5a">FK</text>';
+      })()),
+    rivera: frame(1, 'rivera',
+      '<ellipse cx="36" cy="56" rx="24" ry="18" fill="#d9a066" stroke="#9E6B35" stroke-width="2"/><circle cx="26" cy="62" r="4" fill="#FAF7F3"/>' +
+      '<circle cx="28" cy="48" r="4.5" fill="#D0736C"/><circle cx="40" cy="44" r="4.5" fill="#BC8A52"/><circle cx="51" cy="50" r="4.5" fill="#6AADA0"/><circle cx="49" cy="62" r="4.5" fill="#3D8876"/>' +
+      '<line x1="48" y1="84" x2="64" y2="26" stroke="#7a4a1f" stroke-width="4" stroke-linecap="round"/><path d="M61 30 l4 -14 l5 13z" fill="#2C2A27"/>'),
+    infante: frame(2, 'infante',
+      '<rect x="31" y="20" width="18" height="36" rx="9" fill="#b9c4c9" stroke="#6b7a80" stroke-width="2"/><path d="M33 30 h14 M33 38 h14 M33 46 h14" stroke="#6b7a80" stroke-width="1.5"/>' +
+      '<path d="M22 46 v8 a18 18 0 0 0 36 0 v-8" fill="none" stroke="#6b7a80" stroke-width="3"/><line x1="40" y1="72" x2="40" y2="84" stroke="#6b7a80" stroke-width="3"/><line x1="28" y1="86" x2="52" y2="86" stroke="#6b7a80" stroke-width="4" stroke-linecap="round"/>'),
+    cantinflas: frame(3, 'cantinflas',
+      '<path d="M20 62 a20 26 0 0 1 40 0 z" fill="#2C2A27"/><ellipse cx="40" cy="63" rx="30" ry="7" fill="#1a1a1a"/><path d="M21 58 h38" stroke="#BC8A52" stroke-width="4"/>' +
+      '<path d="M26 78 q14 -8 28 0" stroke="#7a4a1f" stroke-width="3" fill="none"/>'),
+    josealfredo: frame(4, 'josealfredo',
+      '<g transform="rotate(-22 40 54)"><rect x="37.5" y="14" width="5" height="34" fill="#6e4118"/><rect x="35" y="8" width="10" height="9" rx="2" fill="#4a2c10"/>' +
+      '<circle cx="40" cy="48" r="11" fill="#b9722f" stroke="#7a4a1f" stroke-width="2"/><circle cx="40" cy="68" r="15" fill="#b9722f" stroke="#7a4a1f" stroke-width="2"/>' +
+      '<circle cx="40" cy="62" r="5" fill="#3b2410"/><line x1="40" y1="48" x2="40" y2="78" stroke="#f2e2c2" stroke-width="1"/></g>'),
+    felix: frame(5, 'felix',
+      '<circle cx="40" cy="52" r="26" fill="#D0736C" opacity=".25"/><polygon points="' + star(40, 52, 25, 11) + '" fill="#BC8A52" stroke="#a97a1c" stroke-width="2"/>' +
+      '<circle cx="40" cy="52" r="5" fill="#FAF7F3"/>')
+  };
+
+  function buildSvg() {
+    var s = '<svg viewBox="0 0 900 620" role="img" aria-label="An illustrated Mexican ofrenda that is colored in as you answer" xmlns="http://www.w3.org/2000/svg">';
+    s += '<defs><filter id="dim" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0.17 0.17 0.17 0 0.08  0.17 0.17 0.17 0 0.10  0.17 0.17 0.17 0 0.10  0 0 0 0.7 0"/></filter></defs>';
+    s += '<rect width="900" height="620" fill="' + WALL + '"/><rect y="474" width="900" height="146" fill="#2A6B5F"/>';
+    function el(id) { return '<g class="el" id="el-' + id + '" filter="url(#dim)">' + ELEMENTS[id] + '</g>'; }
+    s += el('papel');
+    s += tier(140, 236, 620, 22, 130, 258, 640, 56, '#3D8876', '#6AADA0');
+    ['kahlo', 'rivera', 'infante', 'cantinflas', 'josealfredo', 'felix'].forEach(function (k) { s += el(k); });
+    s += tier(80, 314, 740, 24, 70, 338, 760, 56, '#B8524A', '#D0736C');
+    ['skulls', 'candles', 'copal', 'atole', 'trompo'].forEach(function (k) { s += el(k); });
+    s += tier(20, 394, 860, 24, 10, 418, 880, 56, '#BC8A52', '#D4AE84');
+    s += el('petals');
+    ['fruit', 'water', 'cempasuchil', 'pan', 'mole'].forEach(function (k) { s += el(k); });
+    return s + '</svg>';
+  }
+
+  // ---------- state ----------
+  var level = 0, queue = [], solved = {}, notebook = [], current = -1, tries = 0, locked = false;
+  var $ = function (id) { return document.getElementById(id); };
+
+  function buildLegend() {
+    var h = '';
+    LEVELS.forEach(function (L, lv) {
+      h += '<div class="col"><h4>' + L.name + '</h4><ul>';
+      P.forEach(function (p, i) { if (p.lv === lv) { h += '<li id="lg' + i + '">' + (solved[i] ? p.em + ' ' + p.item : '? ? ?') + '</li>'; } });
+      h += '</ul></div>';
+    });
+    $('legend').innerHTML = h;
+  }
+  function reveal(i) {
+    var g = $('el-' + P[i].el);
+    g.removeAttribute('filter');
+    g.classList.remove('pop'); void g.getBoundingClientRect(); g.classList.add('pop');
+    var li = $('lg' + i);
+    li.textContent = P[i].em + ' ' + P[i].item;
+    li.classList.add('on');
+  }
+
+  function levelIdx(lv) { return P.map(function (p, i) { return p.lv === lv ? i : -1; }).filter(function (i) { return i >= 0; }); }
+  function renderLevels() {
+    var h = '';
+    LEVELS.forEach(function (L, i) {
+      var done = levelIdx(i).every(function (k) { return solved[k]; });
+      h += '<span class="lv ' + (done ? 'done' : (i === level ? 'cur' : '')) + '">' + (i + 1) + ' · ' + L.name + '</span>';
+    });
+    $('levelrow').innerHTML = h;
+  }
+  function startLevel(lv) {
+    level = lv;
+    queue = levelIdx(lv).filter(function (i) { return !solved[i]; });
+    renderLevels();
+    nextPrompt();
+  }
+  function nextPrompt() {
+    if (!queue.length) {
+      if (level < 2) {
+        renderLevels();
+        $('fb').className = 'feedback ok';
+        $('fb').innerHTML = '<b>Level ' + (level + 1) + ' complete!</b> On to level ' + (level + 2) + ': ' + LEVELS[level + 1].name + '.';
+        $('nextBtn').classList.remove('hidden');
+        $('nextBtn').onclick = function () { startLevel(level + 1); };
+        $('checkBtn').disabled = true;
+        return;
+      }
+      $('play').classList.add('hidden');
+      $('done').classList.remove('hidden');
+      renderLevels();
+      return;
+    }
+    current = queue[0];
+    tries = 0; locked = false;
+    var p = P[current];
+    $('levelChip').textContent = LEVELS[level].tag;
+    $('tagChip').textContent = p.tag;
+    if (p.useChip) { $('useChip').textContent = 'Use: ' + p.useChip; $('useChip').classList.remove('hidden'); } else { $('useChip').classList.add('hidden'); }
+    $('srcTxt').textContent = p.src;
+    $('task').innerHTML = p.task;
+    $('ans').value = ''; $('ans').disabled = false;
+    $('hint').classList.add('hidden');
+    $('fb').className = 'feedback';
+    $('fb').textContent = 'Write your sentence, then press Check.';
+    $('checkBtn').disabled = false; $('skipBtn').disabled = false; $('hintBtn').disabled = false;
+    $('nextBtn').classList.add('hidden');
+    if (p.starter) { $('starterBtn').classList.remove('hidden'); } else { $('starterBtn').classList.add('hidden'); }
+    var n = Object.keys(solved).length;
+    $('cnt').textContent = n;
+    $('bar').style.width = (n / P.length * 100) + '%';
+    $('ans').focus();
+  }
+
+  function check(i, text) {
+    var p = P[i];
+    var t = norm(text.trim());
+    var errs = [];
+    var words = t.split(/\s+/).filter(Boolean).length;
+    var minW = p.minWords || 5;
+    if (words < minW) { return ['Write a complete sentence (at least ' + minW + ' words).']; }
+    if (t.replace(/[.!?]+$/, '') === norm(p.src).replace(/[.!?]+$/, '')) { return ['That is the original sentence. Change the structure.']; }
+    p.need.forEach(function (r) { if (!r.re.test(t)) errs.push(r.msg); });
+    (p.ban || []).forEach(function (r) { if (r.re.test(t)) errs.push(r.msg); });
+    return errs;
+  }
+
+  function onCheck() {
+    if (locked) return;
+    var p = P[current];
+    var errs = check(current, $('ans').value);
+    var fb = $('fb');
+    if (!errs.length) {
+      locked = true;
+      solved[current] = true;
+      notebook.push({ i: current, text: $('ans').value.trim() });
+      reveal(current);
+      queue.shift();
+      var n = Object.keys(solved).length;
+      $('cnt').textContent = n;
+      $('bar').style.width = (n / P.length * 100) + '%';
+      fb.className = 'feedback ok';
+      fb.innerHTML = '<b>✔ Correct!</b> You colored: ' + p.em + ' ' + p.item + '.<br><span class="model">Model: ' + p.model + '</span><span class="fact">' + p.fact + '</span>';
+      renderNotebook();
+      renderLevels();
+      $('ans').disabled = true; $('checkBtn').disabled = true; $('skipBtn').disabled = true; $('hintBtn').disabled = true;
+      $('nextBtn').classList.remove('hidden');
+      $('nextBtn').onclick = nextPrompt;
+      $('nextBtn').focus();
+    } else {
+      tries++;
+      fb.className = 'feedback bad';
+      var h = '<b>Not yet.</b> Check:<ul>' + errs.slice(0, 3).map(function (e) { return '<li>' + e + '</li>'; }).join('') + '</ul>';
+      if (tries >= 3) { h += '<div style="margin-top:8px">Still stuck? Study this model, then write your own version or skip:<br><span class="model">' + p.model + '</span></div>'; }
+      fb.innerHTML = h;
+    }
+  }
+
+  function onSkip() {
+    if (queue.length > 1) { queue.push(queue.shift()); nextPrompt(); }
+    else { $('fb').className = 'feedback'; $('fb').textContent = 'This is the last one in this level. Try it, or use the hint.'; }
+  }
+  function onHint() { var h = $('hint'); h.innerHTML = '<b>Hint:</b> ' + P[current].hint; h.classList.remove('hidden'); }
+  function onStarter() {
+    var p = P[current];
+    if (p.starter && !norm($('ans').value).startsWith(norm(p.starter))) { $('ans').value = p.starter + ' '; }
+    $('ans').focus();
+  }
+
+  function renderNotebook() {
+    var ol = $('nbList'); ol.innerHTML = '';
+    notebook.forEach(function (n) { var li = document.createElement('li'); li.textContent = n.text; ol.appendChild(li); });
+    $('nbCount').textContent = notebook.length;
+    $('nbEmpty').classList.toggle('hidden', notebook.length > 0);
+  }
+  function copyNotebook() {
+    var txt = notebook.map(function (n, k) { return (k + 1) + '. ' + n.text; }).join('\n');
+    if (!txt) { return; }
+    var done = function () { $('copyBtn').textContent = 'Copied ✔'; setTimeout(function () { $('copyBtn').textContent = 'Copy my notebook'; }, 1800); };
+    var fallback = function () {
+      var ta = document.createElement('textarea');
+      ta.value = txt; document.body.appendChild(ta); ta.select();
+      try { if (document.execCommand('copy')) { done(); } } catch (e) {}
+      document.body.removeChild(ta);
+    };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(txt).then(done, fallback); } else { fallback(); }
+    } catch (e) { fallback(); }
+  }
+
+  // ---------- events ----------
+  $('checkBtn').addEventListener('click', onCheck);
+  $('skipBtn').addEventListener('click', onSkip);
+  $('hintBtn').addEventListener('click', onHint);
+  $('starterBtn').addEventListener('click', onStarter);
+  $('copyBtn').addEventListener('click', copyNotebook);
+  $('ans').addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); onCheck(); } });
+  $('startBtn').addEventListener('click', function () { $('modal').classList.add('hidden'); $('ans').focus(); });
+
+  $('svgHost').innerHTML = buildSvg();
+  buildLegend();
+  renderNotebook();
+  startLevel(0);
+
+  window.__ofrenda = { P: P, check: check, ELEMENTS: ELEMENTS };
+})();
+</script>
+</body>
+</html>
